@@ -1,0 +1,22 @@
+header {
+    margin-top: 2em;
+}
+
+img, video {
+    max-width: 100%;
+    display: block;
+    margin: auto;
+    text-align: center;
+}
+
+.media-caption {
+    display: block;
+    max-width: 80%;
+    margin: auto;
+    margin-top: 0.3em;
+    margin-bottom: 0.3em;
+
+    text-align: center;
+    font-style: italic;
+    color: var(--col-secondary);
+}

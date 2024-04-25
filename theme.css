@@ -1,0 +1,97 @@
+:root {
+    --col-primary: white;
+    --col-secondary: #aaaaaa;
+
+    --bg-primary: #222222;
+    --bg-secondary: #333333;
+    --bg-tertiary: #555555;
+
+    --col-accent-primary: #1c73ff;
+
+    --col-link: #4fa4ff;
+    --col-link-hover: #8bd3ff;
+    --col-link-visited: #2c7bdc;
+
+    --content-max-width: 1600px
+}
+
+body {
+    background: var(--bg-primary);
+    max-width: var(--content-max-width);
+    margin: auto;
+    padding: 0 2em 2em 2em;
+
+    color: var(--col-primary);
+    font-family: sans-serif;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+
+    color: var(--col-secondary);
+    background-color: var(--bg-primary);
+
+    padding: 0.2em 0 0.2em 0;
+
+    width: 100%;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+a {
+    color: var(--col-link);
+    text-decoration: none;
+
+    transition: color 0.1s ease-in-out;
+}
+
+a:hover, a:visited:hover {
+    color: var(--col-link-hover);
+    transition: color 0.2s ease-in-out;
+}
+
+a:visited {
+    color: var(--col-link-visited);
+    transition: color 0.2s ease-in-out;
+}
+
+.page-heading {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0.2em;
+}
+
+.byline, .date {
+    display: block;
+    width: 100%;
+    text-align: center;
+    color: var(--col-primary);
+}
+
+.date {
+    color: var(--col-secondary);
+}
+
+.date {
+    margin-top: 7px;
+    margin-bottom: -7px;
+    font-style: italic;
+}
+
+.divider {
+    margin-top: 0.5em;
+    border-bottom: 1px solid var(--bg-tertiary);
+}
+
+#banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    padding: 0.4em 0.5em 0.2em 0.5em;
+
+    background-color: var(--bg-primary);
+}
