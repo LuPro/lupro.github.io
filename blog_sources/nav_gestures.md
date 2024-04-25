@@ -75,21 +75,21 @@ Oh would you look at that! Signal theory, control technology and filter design t
 Even though I have a course on filter design at Uni, I never said I was any good at it. I mean, I'm okay enough, but not good enough to explain this filter better than [Wikipedia does](https://en.wikipedia.org/wiki/Exponential_smoothing).
 The upshot of it is: It is a filter that does not need to store the entire history it tries to filter (*no ugly array of values to iterate through: check*), it is essentially a low pass filter (*filters out transient spikes in movement speed: check*) and it can be implemented in essentially 30 lines of code in a single function without any loops (*not overcomplicated and bloated: check*).
 
-In fact, the EWMA filter is just a single formula that takes the previous filtered velocity, the current speed in the last time step (~frame) and a magic smoothing factor and spits out the filtered velocity updated with the newest sensor values. Neat!
+In fact, the EWMA filter is just a single formula that takes the previous filtered velocity, the current speed in the last time step (~frame) and a magic smoothing factor and spits out the filtered velocity updated with the newest sensor values. So that's just two lines for the actual filter (1 per axis) and some boilerplate. Neat!
 
 ### Magic smoothing factor
 
-Usually you'd pick a smoothing factor based on knowing the sampling rate of the system and what time constant you want your filter to be. To emulate the moving averages I found elsewhere I picked a time constant of 30ms. This (very roughly) means when, starting from 0, a sudden input value is applied to the filter, it will reach ~63% of the input after 30ms - and after another 30ms it will have reached ~90%. This is roughly in line with an "proper" moving average with a window of 60-70ms.
+Usually you'd pick a smoothing factor based on the sampling rate of your system and your desired time constant. To emulate the behavior of moving averages I found elsewhere I picked a time constant of 30ms. This (very roughly) means, when starting from 0, a sudden input value is applied to the filter, it will reach ~63% of the input after 30ms - and after another 30ms it will have reached ~90%. This is roughly in line with an "proper" moving average with a window of 60-70ms.
 
-The problem we now have is that we don't have a fixed sampling interval - we get new gesture positions whenever KWin deems fit to give us some (which might be seconds apart if the user doesn't move the finger). Sooooo what now? If we get a very long timescale our "roughly equivalent to a 60ms moving average" goes right out of the window.
+The problem we now have is that we don't have a fixed sampling interval - we get new gesture positions whenever KWin deems fit to give us some (which might be seconds apart if the user doesn't move the finger for a while). Sooooo what now? If we get a very long timescale our "roughly equivalent to a 60ms moving average" goes right out of the window.
 
-Well, luckily with one simple formula we can calculate our smoothing factor based on a desired time constant and a certain sampling rate which we can call every time we get a new value:
+Well, luckily with one simple formula we can calculate our smoothing factor based on a desired time constant and a certain sampling interval which we can call every time we get a new value:
 
 ```
 smoothing_factor = 1 - exp(-delta_time/desired_time_constant)
 ```
 
-(Maybe someday I'll add a LaTeX parser to the blog. Or I just copy in a screenshot. We'll see)
+(*Maybe someday I'll add a LaTeX parser to the blog. Or I just copy in a screenshot. We'll see*)
 
 Now there is one remaining problem: As a self-respecting microcontroller dev who absolutely knows he is not restricted by a 16MHz CPU without a floating point arithmetic unit, but still cannot shake old habits having `e` to the power of a floating point number in that formula hurts.
 
@@ -147,19 +147,19 @@ Well, I really really *really* dislike what Android does with their task switche
 
 But it's also kind of a black box as to when that happens and it really annoys me a lot - besides, the quick task switch gesture is neat for one switch, but gets very tiring to use when you have to use it several times in a row.
 
-So how about a bespoke "task scrub" gesture that activates on a mostly-horizontal gesture invocation.
+So how about a bespoke "task scrub" gesture that activates on a mostly-horizontal gesture invocation and allows to scrub through a large number of recent tasks.
 
 ![](nav_gestures_ready_for_review_5.jpg)
 
-# Right
+# Right.
 
-Skipping over a lot of detail and many potential jokes in the sake of brevi-WOW HOW IS IT OVER 2000 WORDS ALREADY?!
+I've skipped over a lot of detail and some entire sidequests in this story (with a lot of potential for more jokes) for the sake of brevi-WOW HOW IS IT OVER 2000 WORDS ALREADY?!
 
 Uhm.
 
 # Wrapping Up
 
-There's still some bugs to fix, some tasks for later MRs (though much less than I thought it would be) and some decisions to make, but this has been my small odyssey about first fixing then slightly extending then completely rewriting the navigation gestures for Plasma Mobile
+There's still some bugs to fix, some tasks for later MRs (though much fewer than I thought there would be) and some decisions to make, but for now this has been my small odyssey about first fixing then slightly extending then completely rewriting the navigation gestures for Plasma Mobile
 
 
 

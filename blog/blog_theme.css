@@ -9,6 +9,17 @@ img, video {
     text-align: center;
 }
 
+code {
+    color: var(--col-accent-primary);
+}
+
+pre {
+    background: black;
+    padding: 0.5em;
+    border: 1px solid var(--col-secondary);
+    border-radius: 6px;
+}
+
 .media-caption {
     display: block;
     max-width: 80%;

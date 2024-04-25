@@ -6,7 +6,8 @@
     --bg-secondary: #333333;
     --bg-tertiary: #555555;
 
-    --col-accent-primary: #1c73ff;
+    --col-accent-primary: #b5cfff;
+    --bg-accent-primary: #0a54dc;
 
     --col-link: #4fa4ff;
     --col-link-hover: #8bd3ff;
@@ -40,6 +41,10 @@ footer {
     font-size: 0.9em;
 }
 
+footer code {
+    color: var(--col-secondary);
+}
+
 a {
     color: var(--col-link);
     text-decoration: none;
@@ -55,6 +60,10 @@ a:hover, a:visited:hover {
 a:visited {
     color: var(--col-link-visited);
     transition: color 0.2s ease-in-out;
+}
+
+code, pre {
+    font-size: 1.1em;
 }
 
 .page-heading {

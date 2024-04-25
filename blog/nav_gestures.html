@@ -104,23 +104,23 @@ Damn. Now if only someone knew how to choose and design filters.</p>
 Even though I have a course on filter design at Uni, I never said I was any good at it. I mean, I'm okay enough, but not good enough to explain this filter better than <a href="https://en.wikipedia.org/wiki/Exponential_smoothing">Wikipedia does</a>.
 The upshot of it is: It is a filter that does not need to store the entire history it tries to filter (<i>no ugly array of values to iterate through: check</i>), it is essentially a low pass filter (<i>filters out transient spikes in movement speed: check</i>) and it can be implemented in essentially 30 lines of code in a single function without any loops (<i>not overcomplicated and bloated: check</i>).</p>
 
-<p>In fact, the EWMA filter is just a single formula that takes the previous filtered velocity, the current speed in the last time step (~frame) and a magic smoothing factor and spits out the filtered velocity updated with the newest sensor values. Neat!</p>
+<p>In fact, the EWMA filter is just a single formula that takes the previous filtered velocity, the current speed in the last time step (~frame) and a magic smoothing factor and spits out the filtered velocity updated with the newest sensor values. So that's just two lines for the actual filter (1 per axis) and some boilerplate. Neat!</p>
 
 <h3>Magic smoothing factor</h3>
 
 <p>
-Usually you'd pick a smoothing factor based on knowing the sampling rate of the system and what time constant you want your filter to be. To emulate the moving averages I found elsewhere I picked a time constant of 30ms. This (very roughly) means when, starting from 0, a sudden input value is applied to the filter, it will reach ~63% of the input after 30ms - and after another 30ms it will have reached ~90%. This is roughly in line with an "proper" moving average with a window of 60-70ms.</p>
+Usually you'd pick a smoothing factor based on the sampling rate of your system and your desired time constant. To emulate the behavior of moving averages I found elsewhere I picked a time constant of 30ms. This (very roughly) means, when starting from 0, a sudden input value is applied to the filter, it will reach ~63% of the input after 30ms - and after another 30ms it will have reached ~90%. This is roughly in line with an "proper" moving average with a window of 60-70ms.</p>
 
-<p>The problem we now have is that we don't have a fixed sampling interval - we get new gesture positions whenever KWin deems fit to give us some (which might be seconds apart if the user doesn't move the finger). Sooooo what now? If we get a very long timescale our "roughly equivalent to a 60ms moving average" goes right out of the window.</p>
+<p>The problem we now have is that we don't have a fixed sampling interval - we get new gesture positions whenever KWin deems fit to give us some (which might be seconds apart if the user doesn't move the finger for a while). Sooooo what now? If we get a very long timescale our "roughly equivalent to a 60ms moving average" goes right out of the window.</p>
 
-<p>Well, luckily with one simple formula we can calculate our smoothing factor based on a desired time constant and a certain sampling rate which we can call every time we get a new value:</p>
+<p>Well, luckily with one simple formula we can calculate our smoothing factor based on a desired time constant and a certain sampling interval which we can call every time we get a new value:</p>
 
 <pre>
 smoothing_factor = 1 - exp(-delta_time/desired_time_constant)
 </pre>
 <p></p>
 
-<p>(Maybe someday I'll add a LaTeX parser to the blog. Or I just copy in a screenshot. We'll see)</p>
+<p>(<i>Maybe someday I'll add a LaTeX parser to the blog. Or I just copy in a screenshot. We'll see</i>)</p>
 
 <p>Now there is one remaining problem: As a self-respecting microcontroller dev who absolutely knows he is not restricted by a 16MHz CPU without a floating point arithmetic unit, but still cannot shake old habits having <code>e</code> to the power of a floating point number in that formula hurts.</p>
 
@@ -137,7 +137,7 @@ smoothing_factor = delta_time/desired_time_constant
 
 <p>Oh. We don't really satisfy that condition. Eh. Whatever. We only need it to filter out super high weird spikes and be roughly in the right ballpark, we don't need to propulsively land a rocket.</p>
 
-<p>Some manual checks later shows we'll not be all that far off the "correct" formula and we need to put a clamp on it anyways to always do <i>a bit</i> of smoothing so we'd deviate from the right formula anyways.</p>
+<p>Some manual checks later show we'll not be all that far off the "correct" formula and we need to put a clamp on it anyways to always do <i>a bit</i> of smoothing so we'd deviate from the right formula anyways.</p>
 
 <p>Do our "recalculate smoothing factor on every new value" shenanigans interfere with the stability or correctness of our filter? Probably, I dunno. But it's probably fine and throughout all of my testing, both throwing in arbitrary test values and empirical testing while using the gestures it all felt nice, so I give it my seal of approval!</p>
 
@@ -146,7 +146,7 @@ smoothing_factor = delta_time/desired_time_constant
 <h2>Flick!</h2>
 
 <p>
-And now with a simple check on <code>speed > threshold</code> we can see flicks! And voila - an upwards flick goes to homescreen!</p>
+And now with a simple check on <code>speed > threshold</code> we can detect flicks! And voila - an upwards flick goes to homescreen!</p>
 
 <p><img src="media/nav_gestures_ready_for_review_1.jpg" alt=""></img></p>
 
@@ -184,21 +184,21 @@ Remember how I said I have <i>opinions</i> on what good gestures are?</p>
 
 <p>But it's also kind of a black box as to when that happens and it really annoys me a lot - besides, the quick task switch gesture is neat for one switch, but gets very tiring to use when you have to use it several times in a row.</p>
 
-<p>So how about a bespoke "task scrub" gesture that activates on a mostly-horizontal gesture invocation.</p>
+<p>So how about a bespoke "task scrub" gesture that activates on a mostly-horizontal gesture invocation and allows to scrub through a large number of recent tasks.</p>
 
 <p><img src="media/nav_gestures_ready_for_review_5.jpg" alt=""></img></p>
 
-<h1>Right</h1>
+<h1>Right.</h1>
 
 <p>
-Skipping over a lot of detail and many potential jokes in the sake of brevi-WOW HOW IS IT OVER 2000 WORDS ALREADY?!</p>
+I've skipped over a lot of detail and some entire sidequests in this story (with a lot of potential for more jokes) for the sake of brevi-WOW HOW IS IT OVER 2000 WORDS ALREADY?!</p>
 
 <p>Uhm.</p>
 
 <h1>Wrapping Up</h1>
 
 <p>
-There's still some bugs to fix, some tasks for later MRs (though much less than I thought it would be) and some decisions to make, but this has been my small odyssey about first fixing then slightly extending then completely rewriting the navigation gestures for Plasma Mobile</p>
+There's still some bugs to fix, some tasks for later MRs (though much fewer than I thought there would be) and some decisions to make, but for now this has been my small odyssey about first fixing then slightly extending then completely rewriting the navigation gestures for Plasma Mobile</p>
 
 <p></p>
 
