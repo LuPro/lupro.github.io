@@ -1,65 +1,32 @@
 import argparse
-import re
+import frontmatter
 from os import listdir
 from os.path import isfile, join, splitext
+from datetime import datetime
 
 from mdparser import MarkdownParser
 
 
-def ugly_md_converter(data):
-    data = "<p>\n" + data
-    data = data.replace("\n\n", "\n</p>\n<p>\n")
-    data += "</p>"
-
-    # I know, markdown is not a regular language
-    # [\s\S] instead of . for multiline highlighting
-    # code block
-    data = re.sub(r"```([\s\S]+?)```", r"<pre>\g<1></pre>", data)
-
-    # code inline
-    data = re.sub(r"`(.+?)`", r"<code>\g<1></code>", data)
-
-    # bold
-    data = re.sub(r"\*\*(.+?)\*\*", r"<b>\g<1></b>", data)
-
-    # italics
-    data = re.sub(r"\*(.+?)\*", r"<i>\g<1></i>", data)
-
-    # links
-    data = re.sub(r"\[(.+?)\]\((.+?)\)", r'<a href="\g<2>">\g<1></a>', data)
-
-    # media video
-    data = re.sub(
-        r"\[\[vid (.+?)\]\]",
-        r'<video controls><source src="\g<1>"/>Video tag unsupported!</video>',
-        data
-    )
-
-    # media image
-    data = re.sub(r"\[\[(.+?)\]\]", r'<img src="\g<1>"/>', data)
-
-    return data
-
-
 def populate_template(md_data, template):
-    blog_lines = md_data.split('\n')
+    metadata, content = frontmatter.parse(md_data)
 
-    blog_title = blog_lines[0].replace("# ", "", 1)
-    blog_subtitle = blog_lines[1]
-    blog_date = blog_lines[2]
-    blog_content = ugly_md_converter(('\n').join(blog_lines[3:]))
+    parsed_tree = MarkdownParser().parse(content)
+    # print("----- DUMP")
+    # print(parsed_tree.dump())
+    # print("----- HTML")
+    # print(parsed_tree.html())
 
-    parsed_tree = MarkdownParser().parse(md_data)
-    print("----- DUMP")
-    print(parsed_tree.dump())
-    print("----- HTML")
-    print(parsed_tree.html())
+    title = metadata.get("title", "Untitled Blog Post")
+    byline = metadata.get("description", "")
+    date = metadata.get("date", "")
+    date_string = ""
+    if date != "":
+        date_string = date.strftime("%Y-%m-%d")
 
-    template = template.replace("$TITLE", blog_title)
-    template = template.replace("$SUBTITLE", blog_subtitle)
-    template = template.replace("$DATE", blog_date)
+    template = template.replace("$TITLE", title)
+    template = template.replace("$SUBTITLE", byline)
+    template = template.replace("$DATE", date_string)
 
-    # template = template.replace("$CONTENT", blog_content)
     template = template.replace("$CONTENT", parsed_tree.html())
     return template
 
@@ -74,7 +41,7 @@ def parse_blogs(template):
         if splitext(source_file)[1] != ".md":
             continue
 
-        print("Parsing file", source_file)
+        # print("Parsing file", source_file)
 
         with open(join(source_path, source_file), 'r') as blog_reader:
             blog_source = blog_reader.read()

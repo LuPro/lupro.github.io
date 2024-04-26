@@ -1,5 +1,9 @@
-
-
+---
+title: Revamp Plasma Mobile Navigation Gestures
+description: Down the rabbit hole
+date: 2024-04-26
+preview: Chronicles of my odyssey revamping navigation gestures for Plasma Mobile
+---
 
 A few months ago I was kind of toying with the idea to start contributing to Plasma Mobile because I was getting increasingly fed up with Android and I realized if Linux Mobile was going to be my daily driver before I need to buy a new phone I better help out.
 
@@ -113,19 +117,19 @@ Now... where were we? Right!
 
 ## Flick!
 
-And now with a simple check on `speed > threshold` we can detect flicks! And voila - an upwards flick goes to homescreen!
+And now with a simple check on `if speed > threshold` we can detect flicks! And voila - an upwards flick goes to homescreen!
 
 ![](nav_gestures_ready_for_review_1.jpg)
 
 ## 2D gestures
 
-Well, I know I said I'll replicate the old gesture behavior without touching any functionality, but the gesture feels kinda bad when it only goes up and down and doesn't follow the finger left and right as well - and KWin now also magically exposes the orthogonal gesture position so we can really quickly hook that up
+Well, I know I said I'll replicate the old gesture behavior without touching any functionality, but the gesture feels kinda bad when it only goes up and down and doesn't follow the finger left and right as well - and since our previous excursion into KWin, that also magically exposes the orthogonal gesture position so we can really quickly hook that up and have X and Y tracking.
 
 ![](nav_gestures_ready_for_review_2.jpg)
 
 ## States?!?!?!
 
-As a remnant from Devin's move to a KWin effect there was a bit of a mess of what keeps state where - he simply didn't have enough time to refactor the entire thing and so there were a few places that kept track of the same-ish state and needed to be synced or otherwise there'd be really weird logic bugs.
+As a remnant from Devin's move to a KWin effect there was a bit of a mess of what keeps state where - he simply didn't have enough time to refactor the entire thing and so there were several places that kept track of the same-ish state that made things kinda confusing and hard to work with.
 
 No problem, I can refactor that and take some work off of Devin.
 

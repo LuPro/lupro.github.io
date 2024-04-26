@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title></title>
+        <title>Revamp Plasma Mobile Navigation Gestures</title>
         <link rel="stylesheet" href="../theme.css"></link>
         <link rel="stylesheet" href="blog_theme.css"></link>
     </head>
@@ -11,17 +11,14 @@
             <a href="../index.html">&#8612; Home</a>
         </div>
         <header>
-            <h1 class="page-heading"></h1>
-            <label class="byline"></label>
-            <label class="date">Published: </label>
+            <h1 class="page-heading">Revamp Plasma Mobile Navigation Gestures</h1>
+            <label class="byline">Down the rabbit hole</label>
+            <label class="date">Published: 2024-04-26</label>
         </header>
         <div class="divider"></div>
 
 <html>
-<p></p>
-
-<p>
-A few months ago I was kind of toying with the idea to start contributing to Plasma Mobile because I was getting increasingly fed up with Android and I realized if Linux Mobile was going to be my daily driver before I need to buy a new phone I better help out.</p>
+<p>A few months ago I was kind of toying with the idea to start contributing to Plasma Mobile because I was getting increasingly fed up with Android and I realized if Linux Mobile was going to be my daily driver before I need to buy a new phone I better help out.</p>
 
 <p>Then, after a few trivial commits I've seen that for the Plasma 6 release the navigation gestures were (at least temporarily) turned off - and since I am a <b><i>very</i></b> big fan of navigation gestures <s>because they are objectively the best way to interact with a phone</s> I just couldn't have that and I went about fixing them.</p>
 
@@ -146,21 +143,21 @@ smoothing_factor = delta_time/desired_time_constant
 <h2>Flick!</h2>
 
 <p>
-And now with a simple check on <code>speed > threshold</code> we can detect flicks! And voila - an upwards flick goes to homescreen!</p>
+And now with a simple check on <code>if speed > threshold</code> we can detect flicks! And voila - an upwards flick goes to homescreen!</p>
 
 <p><img src="media/nav_gestures_ready_for_review_1.jpg" alt=""></img></p>
 
 <h2>2D gestures</h2>
 
 <p>
-Well, I know I said I'll replicate the old gesture behavior without touching any functionality, but the gesture feels kinda bad when it only goes up and down and doesn't follow the finger left and right as well - and KWin now also magically exposes the orthogonal gesture position so we can really quickly hook that up</p>
+Well, I know I said I'll replicate the old gesture behavior without touching any functionality, but the gesture feels kinda bad when it only goes up and down and doesn't follow the finger left and right as well - and since our previous excursion into KWin, that also magically exposes the orthogonal gesture position so we can really quickly hook that up and have X and Y tracking.</p>
 
 <p><img src="media/nav_gestures_ready_for_review_2.jpg" alt=""></img></p>
 
 <h2>States?!?!?!</h2>
 
 <p>
-As a remnant from Devin's move to a KWin effect there was a bit of a mess of what keeps state where - he simply didn't have enough time to refactor the entire thing and so there were a few places that kept track of the same-ish state and needed to be synced or otherwise there'd be really weird logic bugs.</p>
+As a remnant from Devin's move to a KWin effect there was a bit of a mess of what keeps state where - he simply didn't have enough time to refactor the entire thing and so there were several places that kept track of the same-ish state that made things kinda confusing and hard to work with.</p>
 
 <p>No problem, I can refactor that and take some work off of Devin.</p>
 
@@ -198,11 +195,7 @@ I've skipped over a lot of detail and some entire sidequests in this story (with
 <h1>Wrapping Up</h1>
 
 <p>
-There's still some bugs to fix, some tasks for later MRs (though much fewer than I thought there would be) and some decisions to make, but for now this has been my small odyssey about first fixing then slightly extending then completely rewriting the navigation gestures for Plasma Mobile</p>
-
-<p></p>
-
-<p></p>
+There's still some bugs to fix, some tasks for later MRs (though much fewer than I thought there would be) and some decisions to make, but for now this has been my small odyssey about first fixing then slightly extending then completely rewriting the navigation gestures for Plasma Mobil</p>
 
 
 </html>

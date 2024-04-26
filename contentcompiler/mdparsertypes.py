@@ -205,12 +205,10 @@ class MediaNode(Node):
     def __init__(self: Self, children: list[Node]):
         if len(children) == 1 and isinstance(children[0], TextNode):
             parts = children[0].text.split("](")
-            print("construct media node", parts)
             if len(parts) == 2:
                 self.text = parts[0]
                 self.source = parts[1]
                 extension = splitext(self.source)[1]
-                print("extension", extension)
                 if extension == ".png" or extension == ".jpg":
                     self.type = "image"
                 elif extension == ".mp4" or extension == ".webm":
@@ -222,7 +220,6 @@ class MediaNode(Node):
 
     def html(self: Self) -> str:
         if self.type == "image":
-            print("image html")
             out = f"<img src=\"{_media_base_path + self.source}\" alt=\"{self.text}\"></img>"
         elif self.type == "video":
             out = f"""<video controls>
