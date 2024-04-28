@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>Revamp Plasma Mobile Navigation Gestures</title>
+        <title>Revamping Plasma Mobile Navigation Gestures</title>
         <link rel="stylesheet" href="../theme.css"></link>
         <link rel="stylesheet" href="blog_theme.css"></link>
     </head>
@@ -11,7 +11,7 @@
             <a href="../index.html">&#8612; Home</a>
         </div>
         <header>
-            <h1 class="page-heading">Revamp Plasma Mobile Navigation Gestures</h1>
+            <h1 class="page-heading">Revamping Plasma Mobile Navigation Gestures</h1>
             <label class="byline">Down the rabbit hole</label>
             <label class="date">Published: 2024-04-26</label>
         </header>
@@ -44,12 +44,12 @@ As you might imagine "setting the border" is quite a crucial part of having work
 
 <p>Turns out the gestures did work - but oddly enough only after opening the Action Drawer at least once after every screen geometry change (eg: screen rotation). But the Action Drawer doesn't have anything to do with the task switcher and its gestures, how did it have an effect on them?</p>
 
-<p>Well the reason is-... Honestly, I have no freaking clue. It makes no sense, but I also didn't really investigate it all that much, because I stumbled on the root cause by accident quite quickly.</p>
+<p>Well the reason is-... Honestly, I have no freaking clue. It makes no sense, but I also didn't really investigate it all that much, because I stumbled on the cause on accident quite quickly.</p>
 
-<p>It turns out that the KWin people have done a good job at making the <code>setBorders</code> function quite safe to use and before reserving a touch border for this effect they first un-reserve anything that used to be on that border beforehand so two effects don't have to argue about who is allowed to react to the gesture.
+<p>It turns out that the KWin people have done a good job at making the <code>setBorders</code> function quite safe to use and before reserving a touch border for an effect they first un-reserve anything that used to be on that border beforehand so two effects don't have to argue about who is allowed to react to the gesture.
 The problem is that for some reason in the <code>reconfigure</code> function in the task switcher effect logic <i>also</i> unreserved and reserved the borders, kind of doing <code>setBorders</code> job already before calling it.</p>
 
-<p>Now <i>why exactly</i> that interfered with reserving the border I don't know, in theory <code>setBorders</code> should unreserve our previous stupidity and set us up properly - but evidently it didn't and when I removed our unnecessary border shenanigans in <code>reconfigure</code> suddenly gestures magically started working again.</p>
+<p>Now <i>why exactly</i> that interfered with reserving the border I don't know, in theory <code>setBorders</code> should unreserve our previous stupidity and set us up properly - but evidently it didn't and when I removed our unnecessary border shenanigans in <code>reconfigure</code> suddenly gestures magically started working again. Either way, it's <a href="https://invent.kde.org/plasma/plasma-mobile/-/merge_requests/487">fixed</a> now.</p>
 
 <h1>But define "working"</h1>
 
@@ -63,20 +63,22 @@ Well, it turns out that while KWin's border gesture infrastructure is quite nice
 <h1>The rabbit hole.</h1>
 
 <p>
-Ooooooh boy.</p>
+(<i>I'm talking about <a href="https://invent.kde.org/plasma/plasma-mobile/-/merge_requests/454">this</a> monster of an MR from here on out</i>)</p>
+
+<p>Ooooooh boy.</p>
 
 <p>I'll have you know that I have quite strong feelings towards what navigation gestures need to be able to do to be a nice user experience.</p>
 
-<p>One <i>very</i> crucial part of this for me is being able to "flick away" an app and go to the homescreen. The current navigation gestures didn't support that - to go to the homescreen you needed to open the switcher, then tap on the side to close it. That's TWO WHOLE FINGER TAPS - UNACCEPTABLE (Well, one drag and one tap, but let's not be pedantic).</p>
+<p>One <i>very</i> crucial part of this for me is being able to "flick away" an app and go to the homescreen. The old navigation gestures didn't support that - to go to the homescreen you needed to open the switcher, then tap on the side to close it. That's TWO WHOLE FINGER TAPS - UNACCEPTABLE (Well, one drag and one tap, but let's not be pedantic).</p>
 
-<p>And while we're at it, having "quick task switch" gestures would also be really nice - but those will come for later MRs, first I need to just revamp the task switcher backend to support tracking gesture velocity to discern between a drag with a pause at the end or a quick flick.</p>
+<p>And while we're at it, having "quick task switch" gestures would also be really nice - but I'll keep those for followup MRs, first I need to just revamp the task switcher backend to support tracking gesture velocity to discern between a drag with a pause at the end or a quick flick.</p>
 
 <h2>Velocity Tracking</h2>
 
 <p>
 I'm gonna gloss over a lot of the details, but for a quick too-long-didn't-care-enough-to-write-it-all-down: KWin's gesture system doesn't expose gesture positions, just percentage based activation factors so I had to do some work to massage that into giving me the right data.</p>
 
-<p>Now that we magically get the "primary" and "orthogonal" gesture position from KWin we can sit down to create velocity tracking</p>
+<p>After said massaging we now magically get the "primary" and "orthogonal" gesture position from KWin we can sit down to create velocity tracking</p>
 
 <h3>Moving average</h3>
 
@@ -150,14 +152,14 @@ And now with a simple check on <code>if speed > threshold</code> we can detect f
 <h2>2D gestures</h2>
 
 <p>
-Well, I know I said I'll replicate the old gesture behavior without touching any functionality, but the gesture feels kinda bad when it only goes up and down and doesn't follow the finger left and right as well - and since our previous excursion into KWin, that also magically exposes the orthogonal gesture position so we can really quickly hook that up and have X and Y tracking.</p>
+Well, I know I said I'll replicate the old gesture behavior without touching any functionality and keep any extra features for followup MRs, but the gesture feels kinda bad when it only goes up and down and doesn't follow the finger left and right as well - and thanks to our previous excursion into KWin it also magically exposes the orthogonal gesture position, so we can just really quickly hook that up and have X and Y tracking.</p>
 
 <p><img src="media/nav_gestures_ready_for_review_2.jpg" alt=""></img></p>
 
 <h2>States?!?!?!</h2>
 
 <p>
-As a remnant from Devin's move to a KWin effect there was a bit of a mess of what keeps state where - he simply didn't have enough time to refactor the entire thing and so there were several places that kept track of the same-ish state that made things kinda confusing and hard to work with.</p>
+As a remnant from Devin's move to a KWin effect there was a bit of a mess of what keeps state where - he simply didn't have enough time to refactor the entire thing while also updating the rest of the shell to KF6 and all the fun API breakages and so there were several places that kept track of the same-ish state that made things confusing and hard to work with.</p>
 
 <p>No problem, I can refactor that and take some work off of Devin.</p>
 
@@ -166,7 +168,7 @@ As a remnant from Devin's move to a KWin effect there was a bit of a mess of wha
 <h2>Quick task switch gesture</h2>
 
 <p>
-But you know what, now the task switcher code feels kind of clean and nice and it would be so easy to just add a few lines of logic to discern between an upwards flick and a diagonal flick to switch to neighbouring tasks.</p>
+But you know what, now the task switcher code feels really clean and nice and it would be so easy to just add a few lines of logic to discern between an upwards flick and a diagonal flick to switch to neighboring tasks.</p>
 
 <p>Ah to hell with it, let's add that as well!</p>
 

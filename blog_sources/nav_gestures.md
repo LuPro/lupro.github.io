@@ -28,12 +28,12 @@ As you might imagine "setting the border" is quite a crucial part of having work
 
 Turns out the gestures did work - but oddly enough only after opening the Action Drawer at least once after every screen geometry change (eg: screen rotation). But the Action Drawer doesn't have anything to do with the task switcher and its gestures, how did it have an effect on them?
 
-Well the reason is-... Honestly, I have no freaking clue. It makes no sense, but I also didn't really investigate it all that much, because I stumbled on the root cause by accident quite quickly.
+Well the reason is-... Honestly, I have no freaking clue. It makes no sense, but I also didn't really investigate it all that much, because I stumbled on the cause on accident quite quickly.
 
-It turns out that the KWin people have done a good job at making the `setBorders` function quite safe to use and before reserving a touch border for this effect they first un-reserve anything that used to be on that border beforehand so two effects don't have to argue about who is allowed to react to the gesture.
+It turns out that the KWin people have done a good job at making the `setBorders` function quite safe to use and before reserving a touch border for an effect they first un-reserve anything that used to be on that border beforehand so two effects don't have to argue about who is allowed to react to the gesture.
 The problem is that for some reason in the `reconfigure` function in the task switcher effect logic *also* unreserved and reserved the borders, kind of doing `setBorders` job already before calling it.
 
-Now *why exactly* that interfered with reserving the border I don't know, in theory `setBorders` should unreserve our previous stupidity and set us up properly - but evidently it didn't and when I removed our unnecessary border shenanigans in `reconfigure` suddenly gestures magically started working again.
+Now *why exactly* that interfered with reserving the border I don't know, in theory `setBorders` should unreserve our previous stupidity and set us up properly - but evidently it didn't and when I removed our unnecessary border shenanigans in `reconfigure` suddenly gestures magically started working again. Either way, it's [fixed](https://invent.kde.org/plasma/plasma-mobile/-/merge_requests/487) now.
 
 # But define "working"
 
@@ -45,19 +45,21 @@ I mean, it did allow us to set the gesture distance, but that didn't mean the ge
 
 # The rabbit hole.
 
+(*I'm talking about [this](https://invent.kde.org/plasma/plasma-mobile/-/merge_requests/454) monster of an MR from here on out*)
+
 Ooooooh boy.
 
 I'll have you know that I have quite strong feelings towards what navigation gestures need to be able to do to be a nice user experience.
 
-One *very* crucial part of this for me is being able to "flick away" an app and go to the homescreen. The current navigation gestures didn't support that - to go to the homescreen you needed to open the switcher, then tap on the side to close it. That's TWO WHOLE FINGER TAPS - UNACCEPTABLE (Well, one drag and one tap, but let's not be pedantic).
+One *very* crucial part of this for me is being able to "flick away" an app and go to the homescreen. The old navigation gestures didn't support that - to go to the homescreen you needed to open the switcher, then tap on the side to close it. That's TWO WHOLE FINGER TAPS - UNACCEPTABLE (Well, one drag and one tap, but let's not be pedantic).
 
-And while we're at it, having "quick task switch" gestures would also be really nice - but those will come for later MRs, first I need to just revamp the task switcher backend to support tracking gesture velocity to discern between a drag with a pause at the end or a quick flick.
+And while we're at it, having "quick task switch" gestures would also be really nice - but I'll keep those for followup MRs, first I need to just revamp the task switcher backend to support tracking gesture velocity to discern between a drag with a pause at the end or a quick flick.
 
 ## Velocity Tracking
 
 I'm gonna gloss over a lot of the details, but for a quick too-long-didn't-care-enough-to-write-it-all-down: KWin's gesture system doesn't expose gesture positions, just percentage based activation factors so I had to do some work to massage that into giving me the right data.
 
-Now that we magically get the "primary" and "orthogonal" gesture position from KWin we can sit down to create velocity tracking
+After said massaging we now magically get the "primary" and "orthogonal" gesture position from KWin we can sit down to create velocity tracking
 
 ### Moving average
 
@@ -123,13 +125,13 @@ And now with a simple check on `if speed > threshold` we can detect flicks! And 
 
 ## 2D gestures
 
-Well, I know I said I'll replicate the old gesture behavior without touching any functionality, but the gesture feels kinda bad when it only goes up and down and doesn't follow the finger left and right as well - and since our previous excursion into KWin, that also magically exposes the orthogonal gesture position so we can really quickly hook that up and have X and Y tracking.
+Well, I know I said I'll replicate the old gesture behavior without touching any functionality and keep any extra features for followup MRs, but the gesture feels kinda bad when it only goes up and down and doesn't follow the finger left and right as well - and thanks to our previous excursion into KWin it also magically exposes the orthogonal gesture position, so we can just really quickly hook that up and have X and Y tracking.
 
 ![](nav_gestures_ready_for_review_2.jpg)
 
 ## States?!?!?!
 
-As a remnant from Devin's move to a KWin effect there was a bit of a mess of what keeps state where - he simply didn't have enough time to refactor the entire thing and so there were several places that kept track of the same-ish state that made things kinda confusing and hard to work with.
+As a remnant from Devin's move to a KWin effect there was a bit of a mess of what keeps state where - he simply didn't have enough time to refactor the entire thing while also updating the rest of the shell to KF6 and all the fun API breakages and so there were several places that kept track of the same-ish state that made things confusing and hard to work with.
 
 No problem, I can refactor that and take some work off of Devin.
 
@@ -137,7 +139,7 @@ No problem, I can refactor that and take some work off of Devin.
 
 ## Quick task switch gesture
 
-But you know what, now the task switcher code feels kind of clean and nice and it would be so easy to just add a few lines of logic to discern between an upwards flick and a diagonal flick to switch to neighbouring tasks.
+But you know what, now the task switcher code feels really clean and nice and it would be so easy to just add a few lines of logic to discern between an upwards flick and a diagonal flick to switch to neighboring tasks.
 
 Ah to hell with it, let's add that as well!
 
