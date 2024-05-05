@@ -63,14 +63,16 @@ def parse_blogs(template):
 
     kde_feed = FeedGenerator()
     kde_feed.title("lprod Blog")
-    kde_feed.link(href=_base_url + "kde_rss", rel="alternate")
+    kde_feed.link(href=_base_url, rel="alternate")
+    kde_feed.link(href=_base_url, rel="self")
     kde_feed.description("My exploits in and around KDE projects")
     kde_feed.language("en")
     kde_feed.lastBuildDate(datetime.now(timezone.utc))
 
     global_feed = FeedGenerator()
     global_feed.title("lprod Blog")
-    global_feed.link(href=_base_url + "rss", rel="alternate"),
+    global_feed.link(href=_base_url, rel="alternate")
+    global_feed.link(href=_base_url, rel="self")
     global_feed.description("Random ramblings in various projects I ")
     global_feed.language("en-US")
     global_feed.lastBuildDate(datetime.now(timezone.utc))
