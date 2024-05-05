@@ -169,8 +169,3 @@ Uhm.
 # Wrapping Up
 
 There's still some bugs to fix, some tasks for later MRs (though much fewer than I thought there would be) and some decisions to make, but for now this has been my small odyssey about first fixing then slightly extending then completely rewriting the task switcher and navigation gestures for Plasma Mobile
-
-
-
-
-
