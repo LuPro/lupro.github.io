@@ -63,7 +63,7 @@ def parse_blogs(template):
                 blog_writer.write(blog_html)
 
     kde_feed = FeedGenerator()
-    kde_feed.title("lprod Blog")
+    kde_feed.title("lprod KDE Blog")
     kde_feed.link(href=_base_url + "kde_rss.xml", rel="alternate")
     kde_feed.link(href=_base_url + "kde_rss.xml", rel="self")
     kde_feed.description("My exploits in and around KDE projects")
