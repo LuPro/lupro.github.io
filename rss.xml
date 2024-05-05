@@ -1,24 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>lprod Blog</title><link>https://lprod.dev/rss.xml</link><description>Random ramblings in various projects I work on</description><atom:link href="https://lprod.dev/rss.xml" rel="self"/><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><language>en</language><lastBuildDate>Sun, 05 May 2024 21:41:57 +0000</lastBuildDate><item><title>Revamping Plasma Mobile Navigation Gestures</title><link>https://lprod.dev/blog/plasmo_nav_gestures.html</link><description>&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
-    &lt;head&gt;
-        &lt;meta charset="utf-8"&gt;
-        &lt;title&gt;Revamping Plasma Mobile Navigation Gestures&lt;/title&gt;
-        &lt;link rel="stylesheet" href="../theme.css"&gt;&lt;/link&gt;
-        &lt;link rel="stylesheet" href="blog_theme.css"&gt;&lt;/link&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;div id="banner"&gt;
-            &lt;a href="../index.html"&gt;&amp;#8612; Home&lt;/a&gt;
-        &lt;/div&gt;
-        &lt;header&gt;
-            &lt;h1 class="page-heading"&gt;Revamping Plasma Mobile Navigation Gestures&lt;/h1&gt;
-            &lt;label class="byline"&gt;Down the rabbit hole&lt;/label&gt;
-            &lt;label class="date"&gt;Published: 2024-05-05&lt;/label&gt;
-        &lt;/header&gt;
-        &lt;div class="divider"&gt;&lt;/div&gt;
-
-&lt;html&gt;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>lprod Blog</title><link>https://lprod.dev/rss.xml</link><description>Random ramblings in various projects I work on</description><atom:link href="https://lprod.dev/rss.xml" rel="self"/><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><language>en</language><lastBuildDate>Sun, 05 May 2024 21:48:43 +0000</lastBuildDate><item><title>Revamping Plasma Mobile Navigation Gestures</title><link>https://lprod.dev/blog/plasmo_nav_gestures.html</link><description>&lt;html&gt;
 &lt;p&gt;A few months ago I was kind of toying with the idea to start contributing to Plasma Mobile because I was getting increasingly fed up with Android and I realized if Linux Mobile was going to be my daily driver before I need to buy a new phone I better help out.&lt;/p&gt;
 
 &lt;p&gt;Then, after a few trivial commits I've seen that for the Plasma 6 release the navigation gestures were (at least temporarily) turned off - and since I am a &lt;b&gt;&lt;i&gt;very&lt;/i&gt;&lt;/b&gt; big fan of navigation gestures &lt;s&gt;because they are objectively the best way to interact with a phone&lt;/s&gt; I just couldn't have that and I went about fixing them.&lt;/p&gt;
@@ -201,10 +182,5 @@ I've skipped over a lot of detail and some entire sidequests in this story (with
 There's still some bugs to fix, some tasks for later MRs (though much fewer than I thought there would be) and some decisions to make, but for now this has been my small odyssey about first fixing then slightly extending then completely rewriting the task switcher and navigation gestures for Plasma Mobil&lt;/p&gt;
 
 
-&lt;/html&gt;
-
-
-        &lt;footer&gt;Luis / &lt;code&gt;lprod&lt;/code&gt; 2024&lt;/footer&gt;
-    &lt;/body&gt;
 &lt;/html&gt;
 </description><guid isPermaLink="false">https://lprod.dev/blog/plasmo_nav_gestures.html</guid><pubDate>Sun, 05 May 2024 00:00:00 +0000</pubDate></item></channel></rss>

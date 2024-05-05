@@ -30,14 +30,16 @@ def populate_template(md_data, template):
     template = template.replace("$SUBTITLE", byline)
     template = template.replace("$DATE", date_string)
 
-    template = template.replace("$CONTENT", parsed_tree.html())
+    content_html = parsed_tree.html()
+    template = template.replace("$CONTENT", content_html)
     return {
         "title": title,
         "byline": byline,
         "preview": preview,
         "date": full_date,
         "tags": tags,
-        "body": template
+        "body": template,
+        "embed_body": content_html
     }
 
 
@@ -85,7 +87,7 @@ def parse_blogs(template):
         global_entry.id(blog["url"])
         global_entry.title(blog["title"])
         global_entry.link(href=blog["url"])
-        global_entry.description(blog["body"])
+        global_entry.description(blog["embed_body"])
         global_entry.author({"name": "Luis Büchi"})
         global_entry.published(blog["date"])
 
@@ -94,7 +96,7 @@ def parse_blogs(template):
             kde_entry.id(blog["url"])
             kde_entry.title(blog["title"])
             kde_entry.link(href=blog["url"])
-            kde_entry.description(blog["body"])
+            kde_entry.description(blog["embed_body"])
             kde_entry.author({"name": "Luis Büchi"})
             kde_entry.published(blog["date"])
 
