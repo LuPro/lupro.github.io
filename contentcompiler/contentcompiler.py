@@ -39,7 +39,7 @@ def populate_template(md_data, template):
         "date": full_date,
         "tags": tags,
         "body": template,
-        "embed_body": content_html
+        "embed_body": byline + "\n\n" + content_html
     }
 
 
