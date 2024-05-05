@@ -28,7 +28,7 @@ As you might imagine "setting the border" is quite a crucial part of having work
 
 Turns out the gestures did work - but oddly enough only after opening the Action Drawer at least once after every screen geometry change (eg: screen rotation). But the Action Drawer doesn't have anything to do with the task switcher and its gestures, how did it have an effect on them?
 
-Well the reason is-... Honestly, I have no freaking clue. It makes no sense, but I also didn't really investigate it all that much, because I stumbled on the cause on accident quite quickly.
+Well the reason is-... Honestly, I have no freaking clue. It makes no sense, but I also didn't really investigate it all that much, because I stumbled on the cause by accident quite quickly.
 
 It turns out that the KWin people have done a good job at making the `setBorders` function quite safe to use and before reserving a touch border for an effect they first un-reserve anything that used to be on that border beforehand so two effects don't have to argue about who is allowed to react to the gesture.
 The problem is that for some reason in the `reconfigure` function in the task switcher effect logic *also* unreserved and reserved the borders, kind of doing `setBorders` job already before calling it.
