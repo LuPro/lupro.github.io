@@ -7,7 +7,8 @@ from feedgen.feed import FeedGenerator
 
 from mdparser import MarkdownParser
 
-_base_url = "https://lprod.dev/blog/"
+_base_url = "https://lprod.dev/"
+_base_blog_url = _base_url + "blog/"
 
 
 def populate_template(md_data, template):
@@ -54,7 +55,7 @@ def parse_blogs(template):
             (blog_html, metadata) = populate_template(blog_source, template)
 
             file_name = splitext(source_file)[0]
-            metadata["url"] = _base_url + file_name + ".html"
+            metadata["url"] = _base_blog_url + file_name + ".html"
             blogs.append(metadata)
 
             dest_full_path = join(dest_path, file_name + ".html")
