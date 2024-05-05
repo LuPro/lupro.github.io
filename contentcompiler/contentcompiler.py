@@ -74,8 +74,8 @@ def parse_blogs(template):
     global_feed.title("lprod Blog")
     global_feed.link(href=_base_url + "rss.xml", rel="alternate")
     global_feed.link(href=_base_url + "rss.xml", rel="self")
-    global_feed.description("Random ramblings in various projects I ")
-    global_feed.language("en-US")
+    global_feed.description("Random ramblings in various projects I work on")
+    global_feed.language("en")
     global_feed.lastBuildDate(datetime.now(timezone.utc))
 
     for blog in blogs:
@@ -88,7 +88,7 @@ def parse_blogs(template):
         global_entry.published(blog["date"])
 
         if "KDE" in blog["tags"]:
-            kde_entry = global_feed.add_entry()
+            kde_entry = kde_feed.add_entry()
             kde_entry.id(blog["url"])
             kde_entry.title(blog["title"])
             kde_entry.link(href=blog["url"])
