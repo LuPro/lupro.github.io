@@ -100,7 +100,7 @@ smoothing_factor = 1 - exp(-delta_time/desired_time_constant)
 
 (*Maybe someday I'll add a LaTeX parser to the blog. Or I just copy in a screenshot. We'll see*)
 
-Now there is one remaining problem: As a self-respecting microcontroller dev who absolutely knows he is not restricted by a 16MHz CPU without a floating point arithmetic unit, but still cannot shake old habits having `e` to the power of a floating point number in that formula hurts.
+Now there is one remaining problem: As a self-respecting microcontroller dev who absolutely knows he is not restricted by a 16MHz CPU without a floating point arithmetic unit, but still cannot shake old habits that having `e` to the power of a floating point number in that formula hurts.
 
 Luckily there is an approximation formula that is a bit cheaper
 

@@ -31,12 +31,14 @@ def populate_template(md_data, template):
     template = template.replace("$DATE", date_string)
 
     template = template.replace("$CONTENT", parsed_tree.html())
-    return (template, {
+    return {
         "title": title,
-        "description": preview,
+        "byline": byline,
+        "preview": preview,
         "date": full_date,
-        "tags": tags
-    })
+        "tags": tags,
+        "body": template
+    }
 
 
 def parse_blogs(template):
@@ -52,15 +54,15 @@ def parse_blogs(template):
 
         with open(join(source_path, source_file), 'r') as blog_reader:
             blog_source = blog_reader.read()
-            (blog_html, metadata) = populate_template(blog_source, template)
+            data = populate_template(blog_source, template)
 
             file_name = splitext(source_file)[0]
-            metadata["url"] = _base_blog_url + file_name + ".html"
-            blogs.append(metadata)
+            data["url"] = _base_blog_url + file_name + ".html"
+            blogs.append(data)
 
             dest_full_path = join(dest_path, file_name + ".html")
             with open(dest_full_path, "w") as blog_writer:
-                blog_writer.write(blog_html)
+                blog_writer.write(data["body"])
 
     kde_feed = FeedGenerator()
     kde_feed.title("lprod KDE Blog")
@@ -83,7 +85,7 @@ def parse_blogs(template):
         global_entry.id(blog["url"])
         global_entry.title(blog["title"])
         global_entry.link(href=blog["url"])
-        global_entry.description(blog["description"])
+        global_entry.description(blog["body"])
         global_entry.author({"name": "Luis Büchi"})
         global_entry.published(blog["date"])
 
@@ -92,7 +94,7 @@ def parse_blogs(template):
             kde_entry.id(blog["url"])
             kde_entry.title(blog["title"])
             kde_entry.link(href=blog["url"])
-            kde_entry.description(blog["description"])
+            kde_entry.description(blog["body"])
             kde_entry.author({"name": "Luis Büchi"})
             kde_entry.published(blog["date"])
 
