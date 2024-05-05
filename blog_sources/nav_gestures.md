@@ -1,7 +1,7 @@
 ---
 title: Revamping Plasma Mobile Navigation Gestures
 description: Down the rabbit hole
-date: 2024-04-26
+date: 2024-05-05
 preview: Chronicles of my odyssey revamping navigation gestures for Plasma Mobile
 ---
 
