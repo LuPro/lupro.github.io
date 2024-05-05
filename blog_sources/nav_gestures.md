@@ -41,11 +41,11 @@ Well, it turns out that while KWin's border gesture infrastructure is quite nice
 
 Luckily the fix is quite easy and a [quick MR](https://invent.kde.org/plasma/kwin/-/merge_requests/5336) to KWin allowed us to set custom gesture distances-... or so I thought.
 
-I mean, it did allow us to set the gesture distance, but that didn't mean the gestures were much better.
+I mean, it did allow us to set the gesture distance, but that didn't mean the gestures were much better, so I went for another approach.
 
 # The rabbit hole.
 
-(*I'm talking about [this](https://invent.kde.org/plasma/plasma-mobile/-/merge_requests/454) monster of an MR from here on out*)
+(*I'm talking about [this](https://invent.kde.org/plasma/plasma-mobile/-/merge_requests/454) monster of an MR from here on out, it also contains a video example of the almost-final product*)
 
 Ooooooh boy.
 
