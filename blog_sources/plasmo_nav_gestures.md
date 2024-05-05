@@ -3,6 +3,9 @@ title: Revamping Plasma Mobile Navigation Gestures
 description: Down the rabbit hole
 date: 2024-05-05
 preview: Chronicles of my odyssey revamping navigation gestures for Plasma Mobile
+tags:
+    - KDE
+    - Plasma Mobile
 ---
 
 A few months ago I was kind of toying with the idea to start contributing to Plasma Mobile because I was getting increasingly fed up with Android and I realized if Linux Mobile was going to be my daily driver before I need to buy a new phone I better help out.

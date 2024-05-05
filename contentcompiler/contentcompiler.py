@@ -2,55 +2,99 @@ import argparse
 import frontmatter
 from os import listdir
 from os.path import isfile, join, splitext
-from datetime import datetime
+from datetime import datetime, timezone
+from feedgen.feed import FeedGenerator
 
 from mdparser import MarkdownParser
+
+_base_url = "https://lprod.dev/blog/"
 
 
 def populate_template(md_data, template):
     metadata, content = frontmatter.parse(md_data)
 
     parsed_tree = MarkdownParser().parse(content)
-    # print("----- DUMP")
-    # print(parsed_tree.dump())
-    # print("----- HTML")
-    # print(parsed_tree.html())
 
     title = metadata.get("title", "Untitled Blog Post")
     byline = metadata.get("description", "")
+    preview = metadata.get("preview", "")
     date = metadata.get("date", "")
+    full_date = datetime(date.year, date.month, date.day, tzinfo=timezone.utc)
     date_string = ""
     if date != "":
         date_string = date.strftime("%Y-%m-%d")
+    tags = metadata.get("tags", "")
 
     template = template.replace("$TITLE", title)
     template = template.replace("$SUBTITLE", byline)
     template = template.replace("$DATE", date_string)
 
     template = template.replace("$CONTENT", parsed_tree.html())
-    return template
+    return (template, {
+        "title": title,
+        "description": preview,
+        "date": full_date,
+        "tags": tags
+    })
 
 
 def parse_blogs(template):
     source_path = "blog_sources"
     dest_path = "blog"
     source_files = [f for f in listdir(source_path) if isfile(join(source_path, f))]
-    print("Found files", source_files)
+    blogs = []
+    print("Parsing blogs", source_files)
 
     for source_file in source_files:
         if splitext(source_file)[1] != ".md":
             continue
 
-        # print("Parsing file", source_file)
-
         with open(join(source_path, source_file), 'r') as blog_reader:
             blog_source = blog_reader.read()
-            compiled_blog = populate_template(blog_source, template)
+            (blog_html, metadata) = populate_template(blog_source, template)
 
             file_name = splitext(source_file)[0]
+            metadata["url"] = _base_url + file_name + ".html"
+            blogs.append(metadata)
+
             dest_full_path = join(dest_path, file_name + ".html")
             with open(dest_full_path, "w") as blog_writer:
-                blog_writer.write(compiled_blog)
+                blog_writer.write(blog_html)
+
+    kde_feed = FeedGenerator()
+    kde_feed.title("lprod Blog")
+    kde_feed.link(href=_base_url + "kde_rss", rel="alternate")
+    kde_feed.description("My exploits in and around KDE projects")
+    kde_feed.language("en")
+
+    global_feed = FeedGenerator()
+    global_feed.title("lprod Blog")
+    global_feed.link(href=_base_url + "rss", rel="alternate"),
+    global_feed.description("Random ramblings in various projects I ")
+    global_feed.language("en-US")
+
+    for blog in blogs:
+        global_entry = global_feed.add_entry()
+        global_entry.id(blog["url"])
+        global_entry.title(blog["title"])
+        global_entry.link(href=blog["url"])
+        global_entry.description(blog["description"])
+        global_entry.author({"name": "Luis Büchi"})
+        global_entry.published(blog["date"])
+
+        if "KDE" in blog["tags"]:
+            kde_entry = global_feed.add_entry()
+            kde_entry.id(blog["url"])
+            kde_entry.title(blog["title"])
+            kde_entry.link(href=blog["url"])
+            kde_entry.description(blog["description"])
+            kde_entry.author({"name": "Luis Büchi"})
+            kde_entry.published(blog["date"])
+
+    # print(global_feed.rss_str(pretty=True))
+    global_feed.rss_file("global_rss.xml")
+    # print(kde_feed.rss_str(pretty=True))
+    kde_feed.rss_file("kde_rss.xml")
 
 
 def main():
