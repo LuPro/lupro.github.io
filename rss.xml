@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>lprod Blog</title><link>https://lprod.dev/rss.xml</link><description>Random ramblings in various projects I work on</description><atom:link href="https://lprod.dev/rss.xml" rel="self"/><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><language>en</language><lastBuildDate>Sun, 05 May 2024 21:57:53 +0000</lastBuildDate><item><title>Revamping Plasma Mobile Navigation Gestures</title><link>https://lprod.dev/blog/plasmo_nav_gestures.html</link><description>Down the rabbit hole
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>lprod Blog</title><link>https://lprod.dev/rss.xml</link><description>Random ramblings in various projects I work on</description><atom:link href="https://lprod.dev/rss.xml" rel="self"/><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><language>en</language><lastBuildDate>Sat, 22 Jun 2024 12:12:31 +0000</lastBuildDate><item><title>Revamping Plasma Mobile Navigation Gestures</title><link>https://lprod.dev/blog/plasmo_nav_gestures.html</link><description>Down the rabbit hole
 
 &lt;html&gt;
 &lt;p&gt;A few months ago I was kind of toying with the idea to start contributing to Plasma Mobile because I was getting increasingly fed up with Android and I realized if Linux Mobile was going to be my daily driver before I need to buy a new phone I better help out.&lt;/p&gt;
@@ -131,14 +131,14 @@ smoothing_factor = delta_time/desired_time_constant
 &lt;p&gt;
 And now with a simple check on &lt;code&gt;if speed &gt; threshold&lt;/code&gt; we can detect flicks! And voila - an upwards flick goes to homescreen!&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="media/nav_gestures_ready_for_review_1.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/nav_gestures_ready_for_review_1.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;h2&gt;2D gestures&lt;/h2&gt;
 
 &lt;p&gt;
 Well, I know I said I'll replicate the old gesture behavior without touching any functionality and keep any extra features for followup MRs, but the gesture feels kinda bad when it only goes up and down and doesn't follow the finger left and right as well - and thanks to our previous excursion into KWin it also magically exposes the orthogonal gesture position, so we can just really quickly hook that up and have X and Y tracking.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="media/nav_gestures_ready_for_review_2.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/nav_gestures_ready_for_review_2.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;h2&gt;States?!?!?!&lt;/h2&gt;
 
@@ -147,7 +147,7 @@ As a remnant from Devin's move to a KWin effect there was a bit of a mess of wha
 
 &lt;p&gt;No problem, I can refactor that and take some work off of Devin.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="media/nav_gestures_ready_for_review_3.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/nav_gestures_ready_for_review_3.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;h2&gt;Quick task switch gesture&lt;/h2&gt;
 
@@ -156,7 +156,7 @@ But you know what, now the task switcher code feels really clean and nice and it
 
 &lt;p&gt;Ah to hell with it, let's add that as well!&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="media/nav_gestures_ready_for_review_4.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/nav_gestures_ready_for_review_4.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;h2&gt;Task Scrub&lt;/h2&gt;
 
@@ -169,7 +169,7 @@ Remember how I said I have &lt;i&gt;opinions&lt;/i&gt; on what good gestures are
 
 &lt;p&gt;So how about a bespoke "task scrub" gesture that activates on a mostly-horizontal gesture invocation and allows to scrub through a large number of recent tasks.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="media/nav_gestures_ready_for_review_5.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/nav_gestures_ready_for_review_5.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;h1&gt;Right.&lt;/h1&gt;
 

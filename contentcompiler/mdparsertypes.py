@@ -4,6 +4,7 @@ from typing import Self
 from os.path import splitext
 
 _media_base_path = "media/"
+_external_media_base_path = "https://lprod.dev/blog/media/"
 
 
 class Node(ABC):
@@ -23,10 +24,10 @@ class Tree:
             out += child.dump(0)
         return out
 
-    def html(self: Self) -> str:
+    def html(self: Self, external: bool = False) -> str:
         out = "<html>\n"
         for child in self.children:
-            out += child.html()
+            out += child.html(external)
         return out + "\n</html>\n"
 
 # Block Nodes
@@ -43,10 +44,10 @@ class ParagraphNode(Node):
             out += child.dump(indent + 1)
         return out
 
-    def html(self: Self) -> str:
+    def html(self: Self, external: bool) -> str:
         out = "<p>"
         for child in self.children:
-            out += child.html()
+            out += child.html(external)
         return out + "</p>\n\n"
 
 
@@ -60,10 +61,10 @@ class CodeBlockNode(Node):
             out += child.dump(indent + 1)
         return out
 
-    def html(self: Self) -> str:
+    def html(self: Self, external: bool) -> str:
         out = "<pre>\n"
         for child in self.children:
-            out += child.html().strip()
+            out += child.html(external).strip()
             # WARNING does strip have side effects here?
         return out + "\n</pre>\n"
 
@@ -79,12 +80,12 @@ class ListBlockNode(Node):
             out += child.dump(indent + 1)
         return out
 
-    def html(self: Self) -> str:
+    def html(self: Self, external: bool) -> str:
         out = ""
         if self.type == "unordered":
             out = "<ul>\n"
             for child in self.children:
-                out += child.html().strip()
+                out += child.html(external).strip()
                 # WARNING does strip have side effects here?
         return out + "\n</ul>\n"
 
@@ -102,10 +103,10 @@ class HeaderNode(Node):
             out += child.dump(indent + 1)
         return out
 
-    def html(self: Self) -> str:
+    def html(self: Self, external: bool) -> str:
         out = f"<h{self.level}>"
         for child in self.children:
-            out += child.html()
+            out += child.html(external)
         return out + f"</h{self.level}>\n\n"
 
 
@@ -119,10 +120,10 @@ class InlineCodeNode(Node):
             out += child.dump(indent + 1)
         return out
 
-    def html(self: Self) -> str:
+    def html(self: Self, external: bool) -> str:
         out = "<code>"
         for child in self.children:
-            out += child.html()
+            out += child.html(external)
         return out + "</code>"
 
 
@@ -136,10 +137,10 @@ class ListElementNode(Node):
             out += child.dump(indent + 1)
         return out
 
-    def html(self: Self) -> str:
+    def html(self: Self, external: bool) -> str:
         out = "<li>"
         for child in self.children:
-            out += child.html()
+            out += child.html(external)
         return out + "</li>"
 
 
@@ -153,10 +154,10 @@ class StrikethroughNode(Node):
             out += child.dump(indent + 1)
         return out
 
-    def html(self: Self) -> str:
+    def html(self: Self, external: bool) -> str:
         out = "<s>"
         for child in self.children:
-            out += child.html()
+            out += child.html(external)
         return out + "</s>"
 
 
@@ -170,10 +171,10 @@ class ItalicsNode(Node):
             out += child.dump(indent + 1)
         return out
 
-    def html(self: Self) -> str:
+    def html(self: Self, external: bool) -> str:
         out = "<i>"
         for child in self.children:
-            out += child.html()
+            out += child.html(external)
         return out + "</i>"
 
 
@@ -187,10 +188,10 @@ class BoldNode(Node):
             out += child.dump(indent + 1)
         return out
 
-    def html(self: Self) -> str:
+    def html(self: Self, external: bool) -> str:
         out = "<b>"
         for child in self.children:
-            out += child.html()
+            out += child.html(external)
         return out + "</b>"
 
 # Leaf Nodes
@@ -218,12 +219,15 @@ class MediaNode(Node):
         return (" " * 4 * indent) + f"""Media Node:
             {self.type} - {self.source} - {self.text}\n"""
 
-    def html(self: Self) -> str:
+    def html(self: Self, external: bool) -> str:
+        base_path = _media_base_path
+        if external:
+            base_path = _external_media_base_path
         if self.type == "image":
-            out = f"<img src=\"{_media_base_path + self.source}\" alt=\"{self.text}\"></img>"
+            out = f"<img src=\"{base_path + self.source}\" alt=\"{self.text}\"></img>"
         elif self.type == "video":
             out = f"""<video controls>
-            <source src=\"{_media_base_path + self.source}\"/>
+            <source src=\"{base_path + self.source}\"/>
             Video tag unsupported!</video>"""
         if self.text != "":
             out += f"<label class=\"media-caption\">{self.text}</label>"
@@ -245,7 +249,7 @@ class LinkNode(Node):
     def dump(self: Self, indent: int) -> str:
         return (" " * 4 * indent) + f"Link Node: {self.source}, {self.text}\n"
 
-    def html(self: Self) -> str:
+    def html(self: Self, external: bool) -> str:
         return f"<a href=\"{self.source}\">{self.text}</a>"
 
 
@@ -256,5 +260,5 @@ class TextNode:
     def dump(self: Self, indent: int) -> str:
         return (" " * 4 * indent) + "Text Node: \"" + self.text + "\"\n"
 
-    def html(self: Self) -> str:
+    def html(self: Self, external: bool) -> str:
         return self.text
