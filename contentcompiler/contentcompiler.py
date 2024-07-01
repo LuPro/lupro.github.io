@@ -31,6 +31,7 @@ def populate_template(md_data, template):
     template = template.replace("$DATE", date_string)
 
     content_html = parsed_tree.html()
+    # print(parsed_tree.dump())
     feed_html = parsed_tree.html(True)
     template = template.replace("$CONTENT", content_html)
     return {

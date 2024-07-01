@@ -5,6 +5,7 @@ from mdparsertypes import (
     HeaderNode,
     ParagraphNode,
     ListBlockNode,
+    ListElementNode,
     StrikethroughNode,
     ItalicsNode,
     BoldNode,
@@ -48,6 +49,7 @@ class MarkdownParser:
             self._reset_flags()
 
             header_level = self._determine_header_level()
+            list_level = self._determine_list_indent_level()
             if header_level > 0:
                 self._consume(header_level + 1)
                 children.append(self._parse_header(header_level))
@@ -55,13 +57,15 @@ class MarkdownParser:
             # TODO that check is ugly
             elif self._peek() == "`" and self._peek(1) == "`" and self._peek(2) == "`":
                 children.append(self._parse_code_block())
+            elif list_level > 0:
+                children.append(self._parse_unordered_list(list_level))
             else:
                 children.append(self._parse_paragraph())
 
         return children
 
     # Figures out header level, returns 0 if it's not a header
-    def _determine_header_level(self: Self) -> bool:
+    def _determine_header_level(self: Self) -> int:
         level = 0
         while self._peek(level) == "#":
             level += 1
@@ -74,6 +78,26 @@ class MarkdownParser:
             return level
 
         return 0
+
+    def _determine_list_indent_level(self: Self) -> int:
+        level = 0
+        # TODO that check is ugly
+        while self._peek(level) == " " and self._peek(level + 1) == " " and self._peek(level + 2) == " " and self._peek(level + 3) == " ":
+            level += 1
+
+        # Keep my insanity of nesting stuff in check
+        if level > 3:
+            return 0
+
+        if self._peek(level * 4) == "-" and self._peek(level * 4 + 1) == " ":
+            return level + 1
+        return 0
+
+    def _consume_list_indent(self: Self) -> None:
+        while self._peek() == " ":
+            self._consume()
+
+        self._consume(2)
 
     def _parse_header(self: Self, level: int) -> HeaderNode:
         self._stop_on_single_newline = True
@@ -93,8 +117,19 @@ class MarkdownParser:
         # TODO I don't actually want rich text in a code block
         return CodeBlockNode(children)
 
-    def _parse_unordered_list(self: Self) -> ListBlockNode:
-        pass
+    def _parse_unordered_list(self: Self, list_level: int) -> ListBlockNode:
+        self._consume_list_indent()
+        self._stop_on_single_newline = True
+        children = []
+        while True:
+            children.append(ListElementNode(self._parse_rich_text()))
+            new_list_level = self._determine_list_indent_level()
+            if new_list_level < list_level:
+                break
+            elif new_list_level > list_level:
+                children.append(self._parse_unordered_list(new_list_level))
+            self._consume_list_indent()
+        return ListBlockNode(children)
 
     def _run_symmetric_content_rule(self: Self,
                                     rule: tuple[str, str, Callable],
@@ -146,6 +181,7 @@ class MarkdownParser:
         children: list[Node] = []
 
         start_index = self._index
+        end_index = self._index
         while not self._is_eof():
             end_index = self._index
 

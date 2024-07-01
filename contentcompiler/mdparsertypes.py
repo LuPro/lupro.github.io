@@ -40,7 +40,7 @@ class ParagraphNode(Node):
     def dump(self: Self, indent: int) -> str:
         out = (" " * 4 * indent) + "Paragraph Node\n"
         for child in self.children:
-            print("hello", child, type(child))
+            # print(child, type(child))
             out += child.dump(indent + 1)
         return out
 
@@ -85,8 +85,7 @@ class ListBlockNode(Node):
         if self.type == "unordered":
             out = "<ul>\n"
             for child in self.children:
-                out += child.html(external).strip()
-                # WARNING does strip have side effects here?
+                out += child.html(external)
         return out + "\n</ul>\n"
 
 # Inline Nodes

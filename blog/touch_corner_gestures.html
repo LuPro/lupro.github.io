@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Touchscreen Corner Gestures</title>
+        <link rel="stylesheet" href="../theme.css"></link>
+        <link rel="stylesheet" href="blog_theme.css"></link>
+    </head>
+    <body>
+        <div id="banner">
+            <a href="../index.html">&#8612; Home</a>
+        </div>
+        <header>
+            <h1 class="page-heading">Touchscreen Corner Gestures</h1>
+            <label class="byline">Because there aren't enough gestures yet</label>
+            <label class="date">Published: 2024-07-01</label>
+        </header>
+        <div class="divider"></div>
+
+<html>
+<p>After working on a thorough overhaul of the gesture navigation mode of the Plasma Mobile task switcher (see my <a href="https://lprod.dev/blog/plasmo_nav_gestures.html">previous blog</a>) I've been thinking about some more things I could do to improve interaction and navigation for Plasma Mobile. As a self-proclaimed gesture connoisseur this obviously means adding more gesture capabilities.</p>
+
+<p>Now, something that would be really cool is having the ability for setting custom gestures in the screen corners, specifically the lower screen corners. This should very nicely complement the task switcher navigation gesture on the lower border and provide a convenient shortcut to <i>something</i>, more on that later.</p>
+
+<p>Ideally for this I want to leverage KWin's gesture capabilities to not have to reinvent the wheel. There is just one tiny problem: KWin doesn't support touch screen corner gestures.</p>
+
+<h1>Why not?</h1>
+
+<p>
+Ultimately: I don't know. But having now worked on adding them I think I know a likely reason: It's surprisingly hard.</p>
+
+<p>Before we can continue let's pause for a second to get some terminology out of the way. In KWin's codebase <code>ScreenEdge</code> (as well as <code>Edge</code>) refers to classes that store information regarding, well, the edges of a screen. Crucially, this also includes screen <i>corners</i>, not just the side edges.</p>
+
+<p>The same screen edge instances are shared between the "hot corner" functionality for mouse input (triggered by moving the mouse cursor into a corner or side edge), as well as touch gestures. The screen edges were however restricted to only listen for touch input when they are actually an edge and <i>not</i> a corner.</p>
+
+<p>The screen edges themselves had little reason to do so, but it was restricted that way because corner gestures made two important things a lot more complex:</p>
+
+<ul>
+<li>The <code>GestureRecognizer</code> which... recognizes gestures (who'd have thought) has a slightly harder time doing its gesture recognizing because corner gestures don't have a strict direction; They should be invokable by a mostly upwards, mostly horizontal or diagonal move - the only relevant part is that the gesture started in the corner. Compare this to the edge gestures which only trigger on orthogonal movement (ie: The bottom edge gesture only triggers on mostly upwards movement)</li><li>The creation of the actual "hitbox" of the screen corners, which is especially complicated because some screens have that pesky habit of having a corner radius. Especially phones.</li>
+</ul>
+<p>
+I want to elaborate a bit on the second part: The previous <code>ScreenEdge</code> geometry logic was delightfully simple. There was a hardcoded value of 3 logical pixels (= pixels, but scaled by the display scaling factor) of thickness. This applied to the edges making them 3 logical pixels thick and otherwise completely fill their respective screen edge. Corners on the other hand got "the rest" making them a neat 3x3 logical pixels in size. Great for a mouse since you can just throw that into the screen corner and the edges make your cursor properly "find" the exact corner.</p>
+
+<p>However, this is not quite as usable for touch inputs. A thin edge is no problem, just swipe in from the edge and the first pixels you touch from the touch sensitive screen area will be in the 3 pixels area. The corner however is not as easily hittable with a finger. So it needs to be bigger. But we can't make it a square otherwise it would majorly overlap with on-screen elements like for example the application launcher in the bottom left corner or window close buttons in the top right.</p>
+
+<h1>What did I do?</h1>
+
+<p>
+Now that's the big question. A big part of my changes were making the wonderfully simple hitbox creation logic much less wonderfully simple.</p>
+
+<p>The new hitbox logic creates a thin border consisting of "two" rectangles, one horizontal and one vertical, with the same thickness as the normal screen edge geometry (3 logical pixels). Additionally, it allows to set a variable corner radius to allow the screen edge to adapt to screen corner radii.</p>
+
+<p><img src="media/touch_corner_gestures.png" alt="Here, have a not very good looking sketch"></img><label class="media-caption">Here, have a not very good looking sketch</label></p>
+
+<p>Due to the variable corner radius the hitbox logic needs to account for 2 distinct cases:</p>
+
+<ul>
+<li>The radius is smaller than the corner: Here we need to create two extra rectangles to be subtracted from the "full" corner (square) geometry as the circle alone doesn't remove all we need</li><li>The radius is larger than the corner: Here we don't need need the extra rectangles, but we do need to make sure we position the circle correctly to be concentric with any potential screen corner radius.</li>
+</ul>
+<p>
+I also had to do some house keeping to get corner gestures to actually be registered because before this they were manually excluded, but for brevity's sake let's not go too deep into that.</p>
+
+<h2>I. don't. caaaareee!</h2>
+
+<p>
+An interesting side note is that my changes initially didn't touch too many places in the KWin logic, but after discussing with KWin maintainers a bit we landed on wanting to change the logic of the <code>GestureRecognizer</code>. Initially corner gestures were marked as having the <code>SwipeDirection</code> <b>"DontCare"</b> - this was needed because gesture recognition logic loops through all registered gestures and checks their conditions: Whether they require a specific start location and if so if the location matches and whether the direction of the user's swipe matches with what they expect.
+This is great for all gestures KWin supported so far, but touch corner gestures - as mentioned before - need to be triggerable by any kind of movement; because they're in the corner they don't care which direction the finger moves (as long as it's still on the screen of course). Hence a new <code>SwipeDirection</code>: "DontCare".</p>
+
+<p>I'll not bore you with the implementation details of why this wasn't ideal, but in the end I moved the old <code>SwipeDirection</code> enum to a <a href="https://doc.qt.io/qt-6/qflags.html">QFlags</a> implementation - each direction gets its own location in a bit field and we can do flag based assignment. This means that for example the bottom left corner gesture now gets the direction <code>SwipeDirection::Up | SwipeDirection::Right</code> set, which means <i>"I listen to both swipes that go upwards and ones that go to the right"</i>. An interesting benefit of this is that this allows gestures in general to become multidirectional, not just corner gestures, but any of the other ones as well. Whether that actually has a practical use... We'll see in time, but it sure is interesting!</p>
+
+<h1>Limitations</h1>
+
+<p>
+A new feature implementation wouldn't be complete without its own fun list of limitations. As this post is becoming quite long already let's do a quick short list:</p>
+
+<ul>
+<li>We don't know the actual screen corner radius programmatically, so we just default to setting the radius to the corner radius. Yes, also for normal, non-rounded screens.</li><li>The corner radius is the same for all screens and all corners, so even if we knew the actual radius if it is not the same for all corners and all screens we're out of luck.</li><li>The corner gesture hitbox can overlap with UI elements making them impossible to tap on with a finger (mouse clicks are not affected). This is more of a theoretical issue as the geometry was chosen to be small enough to <i>mostly</i> not interfere with UI elements <img src="media/touch_corner_overlap.png" alt="This is the most overlap with an onscreen UI element corners will have by default"></img><label class="media-caption">This is the most overlap with an onscreen UI element corners will have by default</label></li><li>Because of the corner radius being hard coded screens that have a radius larger than that will have mostly inaccessible touch corner gestures</li>
+</ul>
+<p></p>
+
+<h1>That's all, folks</h1>
+
+<p>
+I think that about covers it - and I'm at just above half the word count from my last blog post! Just three more and I'll be at a reasonable length :))</p>
+
+
+</html>
+
+
+        <footer>Luis / <code>lprod</code> 2024</footer>
+    </body>
+</html>
