@@ -267,6 +267,11 @@ class MarkdownParser:
                         if not in_recursion:
                             self._consume()
                         break
+                    if self._peek(1) == "-":
+                        # Next line starts with dash -> potential list
+                        if not in_recursion:
+                            self._consume()
+                        break
 
             self._consume()
 

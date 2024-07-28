@@ -1,75 +1,54 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>lprod KDE Blog</title><link>https://lprod.dev/kde_rss.xml</link><description>My exploits in and around KDE projects</description><atom:link href="https://lprod.dev/kde_rss.xml" rel="self"/><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><language>en</language><lastBuildDate>Mon, 01 Jul 2024 21:38:31 +0000</lastBuildDate><item><title>Touchscreen Corner Gestures</title><link>https://lprod.dev/blog/touch_corner_gestures.html</link><description>Because there aren't enough gestures yet
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>lprod KDE Blog</title><link>https://lprod.dev/kde_rss.xml</link><description>My exploits in and around KDE projects</description><atom:link href="https://lprod.dev/kde_rss.xml" rel="self"/><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><language>en</language><lastBuildDate>Sun, 28 Jul 2024 11:18:16 +0000</lastBuildDate><item><title>What I did in KDE/Plasma Mobile land in July-ish</title><link>https://lprod.dev/blog/monthly_2024_07.html</link><description>Miscellaneous improvements
 
 &lt;html&gt;
-&lt;p&gt;After working on a thorough overhaul of the gesture navigation mode of the Plasma Mobile task switcher (see my &lt;a href="https://lprod.dev/blog/plasmo_nav_gestures.html"&gt;previous blog&lt;/a&gt;) I've been thinking about some more things I could do to improve interaction and navigation for Plasma Mobile. As a self-proclaimed gesture connoisseur this obviously means adding more gesture capabilities.&lt;/p&gt;
+&lt;p&gt;After my gargantuan post around the overhauled navigation gestures (and a still-in-progress one about KWin corner touch gesture support I'll hopefully have ready soon:tm:) let's tackle a few more smaller things. I'll try to make these somewhat regular (dare I say maybe even monthly?), but let's see how that shakes out, probably more like every 2-3 months if at all.&lt;/p&gt;
 
-&lt;p&gt;Now, something that would be really cool is having the ability for setting custom gestures in the screen corners, specifically the lower screen corners. This should very nicely complement the task switcher navigation gesture on the lower border and provide a convenient shortcut to &lt;i&gt;something&lt;/i&gt;, more on that later.&lt;/p&gt;
+&lt;p&gt;As an exciting update, near the end of June (the 25th to be exact) I got accepted to the KDE dev team. This means I now have the ability to properly manage submitted issues on GitLab and, only slightly terrifyingly, I'm now allowed to push code changes to the main repositories and review MRs. Let's see when, if ever, this feeling of trepidation over having to make quadruple sure I don't accidentally do stupid stuff subsides. Should it even subside or is being very extra super duper careful a good thing. I'll keep you posted whenever I find an answer to that :D&lt;/p&gt;
 
-&lt;p&gt;Ideally for this I want to leverage KWin's gesture capabilities to not have to reinvent the wheel. There is just one tiny problem: KWin doesn't support touch screen corner gestures.&lt;/p&gt;
+&lt;p&gt;Anyways, let's get to code changes:&lt;/p&gt;
 
-&lt;h1&gt;Why not?&lt;/h1&gt;
+&lt;h1&gt;Merged Changes&lt;/h1&gt;
 
-&lt;p&gt;
-Ultimately: I don't know. But having now worked on adding them I think I know a likely reason: It's surprisingly hard.&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
 
-&lt;p&gt;Before we can continue let's pause for a second to get some terminology out of the way. In KWin's codebase &lt;code&gt;ScreenEdge&lt;/code&gt; (as well as &lt;code&gt;Edge&lt;/code&gt;) refers to classes that store information regarding, well, the edges of a screen. Crucially, this also includes screen &lt;i&gt;corners&lt;/i&gt;, not just the side edges.&lt;/p&gt;
+&lt;h2&gt;Task Switcher/Gesture Navigation&lt;/h2&gt;
 
-&lt;p&gt;The same screen edge instances are shared between the "hot corner" functionality for mouse input (triggered by moving the mouse cursor into a corner or side edge), as well as touch gestures. The screen edges were however restricted to only listen for touch input when they are actually an edge and &lt;i&gt;not&lt;/i&gt; a corner.&lt;/p&gt;
-
-&lt;p&gt;The screen edges themselves had little reason to do so, but it was restricted that way because corner gestures made two important things a lot more complex:&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;The &lt;code&gt;GestureRecognizer&lt;/code&gt; which... recognizes gestures (who'd have thought) has a slightly harder time doing its gesture recognizing because corner gestures don't have a strict direction; They should be invokable by a mostly upwards, mostly horizontal or diagonal move - the only relevant part is that the gesture started in the corner. Compare this to the edge gestures which only trigger on orthogonal movement (ie: The bottom edge gesture only triggers on mostly upwards movement)&lt;/li&gt;&lt;li&gt;The creation of the actual "hitbox" of the screen corners, which is especially complicated because some screens have that pesky habit of having a corner radius. Especially phones.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;
-I want to elaborate a bit on the second part: The previous &lt;code&gt;ScreenEdge&lt;/code&gt; geometry logic was delightfully simple. There was a hardcoded value of 3 logical pixels (= pixels, but scaled by the display scaling factor) of thickness. This applied to the edges making them 3 logical pixels thick and otherwise completely fill their respective screen edge. Corners on the other hand got "the rest" making them a neat 3x3 logical pixels in size. Great for a mouse since you can just throw that into the screen corner and the edges make your cursor properly "find" the exact corner.&lt;/p&gt;
-
-&lt;p&gt;However, this is not quite as usable for touch inputs. A thin edge is no problem, just swipe in from the edge and the first pixels you touch from the touch sensitive screen area will be in the 3 pixels area. The corner however is not as easily hittable with a finger. So it needs to be bigger. But we can't make it a square otherwise it would majorly overlap with on-screen elements like for example the application launcher in the bottom left corner or window close buttons in the top right.&lt;/p&gt;
-
-&lt;h1&gt;What did I do?&lt;/h1&gt;
-
-&lt;p&gt;
-Now that's the big question. A big part of my changes were making the wonderfully simple hitbox creation logic much less wonderfully simple.&lt;/p&gt;
-
-&lt;p&gt;The new hitbox logic creates a thin border consisting of "two" rectangles, one horizontal and one vertical, with the same thickness as the normal screen edge geometry (3 logical pixels). Additionally, it allows to set a variable corner radius to allow the screen edge to adapt to screen corner radii.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/touch_corner_gestures.png" alt="Here, have a not very good looking sketch"&gt;&lt;/img&gt;&lt;label class="media-caption"&gt;Here, have a not very good looking sketch&lt;/label&gt;&lt;/p&gt;
-
-&lt;p&gt;Due to the variable corner radius the hitbox logic needs to account for 2 distinct cases:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The radius is smaller than the corner: Here we need to create two extra rectangles to be subtracted from the "full" corner (square) geometry as the circle alone doesn't remove all we need&lt;/li&gt;&lt;li&gt;The radius is larger than the corner: Here we don't need need the extra rectangles, but we do need to make sure we position the circle correctly to be concentric with any potential screen corner radius.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;
-I also had to do some house keeping to get corner gestures to actually be registered because before this they were manually excluded, but for brevity's sake let's not go too deep into that.&lt;/p&gt;
-
-&lt;h2&gt;I. don't. caaaareee!&lt;/h2&gt;
-
-&lt;p&gt;
-An interesting side note is that my changes initially didn't touch too many places in the KWin logic, but after discussing with KWin maintainers a bit we landed on wanting to change the logic of the &lt;code&gt;GestureRecognizer&lt;/code&gt;. Initially corner gestures were marked as having the &lt;code&gt;SwipeDirection&lt;/code&gt; &lt;b&gt;"DontCare"&lt;/b&gt; - this was needed because gesture recognition logic loops through all registered gestures and checks their conditions: Whether they require a specific start location and if so if the location matches and whether the direction of the user's swipe matches with what they expect.
-This is great for all gestures KWin supported so far, but touch corner gestures - as mentioned before - need to be triggerable by any kind of movement; because they're in the corner they don't care which direction the finger moves (as long as it's still on the screen of course). Hence a new &lt;code&gt;SwipeDirection&lt;/code&gt;: "DontCare".&lt;/p&gt;
-
-&lt;p&gt;I'll not bore you with the implementation details of why this wasn't ideal, but in the end I moved the old &lt;code&gt;SwipeDirection&lt;/code&gt; enum to a &lt;a href="https://doc.qt.io/qt-6/qflags.html"&gt;QFlags&lt;/a&gt; implementation - each direction gets its own location in a bit field and we can do flag based assignment. This means that for example the bottom left corner gesture now gets the direction &lt;code&gt;SwipeDirection::Up | SwipeDirection::Right&lt;/code&gt; set, which means &lt;i&gt;"I listen to both swipes that go upwards and ones that go to the right"&lt;/i&gt;. An interesting benefit of this is that this allows gestures in general to become multidirectional, not just corner gestures, but any of the other ones as well. Whether that actually has a practical use... We'll see in time, but it sure is interesting!&lt;/p&gt;
-
-&lt;h1&gt;Limitations&lt;/h1&gt;
-
-&lt;p&gt;
-A new feature implementation wouldn't be complete without its own fun list of limitations. As this post is becoming quite long already let's do a quick short list:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;We don't know the actual screen corner radius programmatically, so we just default to setting the radius to the corner radius. Yes, also for normal, non-rounded screens.&lt;/li&gt;&lt;li&gt;The corner radius is the same for all screens and all corners, so even if we knew the actual radius if it is not the same for all corners and all screens we're out of luck.&lt;/li&gt;&lt;li&gt;The corner gesture hitbox can overlap with UI elements making them impossible to tap on with a finger (mouse clicks are not affected). This is more of a theoretical issue as the geometry was chosen to be small enough to &lt;i&gt;mostly&lt;/i&gt; not interfere with UI elements &lt;img src="https://lprod.dev/blog/media/touch_corner_overlap.png" alt="This is the most overlap with an onscreen UI element corners will have by default"&gt;&lt;/img&gt;&lt;label class="media-caption"&gt;This is the most overlap with an onscreen UI element corners will have by default&lt;/label&gt;&lt;/li&gt;&lt;li&gt;Because of the corner radius being hard coded screens that have a radius larger than that will have mostly inaccessible touch corner gestures&lt;/li&gt;
+&lt;li&gt;I sat down and overhauled some of the animations around the navigation gestures of the mobile task switcher: The diagonal quick switch should now look smoother and not be nearly-instantaneous and the flick to homescreen is now a tad smoother and actually makes the task preview smaller while animating instead of looking like it's opening the selected task before suddenly vanishing.&lt;/li&gt;&lt;li&gt;Fixed minor logic bug around task switcher quick switch gesture. It should now correctly open the task switcher when you're trying to quick switch towards the end of a list - if there's nothing to quick switch to, it's better to open the full task switcher instead of just returning to the app you were in before.&lt;/li&gt;&lt;li&gt;I added a task icon list to the task scrub gesture in the switcher to make it visually more distinct to the "normal" task switcher and provide more useful info about the open apps you can switch to. In case you didn't know: In gesture-only mode w (I'll admit this one is a bit older, but this is the first installment of this kind of post so I'm not tooooo strict on the "in July" part): &lt;img src="https://lprod.dev/blog/media/taskswitcher_scrub_icon_list.png" alt=""&gt;&lt;/img&gt; I'm still tracking an issue with this where when the task list becomes too long it's not properly centered anymore.&lt;/li&gt;&lt;li&gt;The main task switcher opening gesture now stops tracking the finger 1:1 in the vertical direction once it's moved a bit past its "fully activated" point. This is a bit awkward to explain, but basically it makes it "more reluctant" to follow the finger infinitely far up. If that still doesn't make sense, here's a video: &lt;video controls&gt;
+            &lt;source src="https://lprod.dev/blog/media/taskswitcher_tracking_reluctance.mp4"/&gt;
+            Video tag unsupported!&lt;/video&gt;&lt;/li&gt;&lt;li&gt;The task switcher gestures now have a haptic feedback in some places: When the conditions are met for the task switcher to open (eg: gesture progress is far enough and finger movement speed is slow enough) and when the task scrub mode starts there'll now be a bit of haptic feedback.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;/p&gt;
 
-&lt;h1&gt;That's all, folks&lt;/h1&gt;
+&lt;h2&gt;Misc&lt;/h2&gt;
 
 &lt;p&gt;
-I think that about covers it - and I'm at just above half the word count from my last blog post! Just three more and I'll be at a reasonable length :))&lt;/p&gt;
+I've done some bug triaging and reproduction here and there, as well as tried to keep up to date on merge requests in the Plasma Mobile world. I still haven't really done a proper review and merge, but I'm trying to look through all of the other ones to hopefully learn how good reviews look like so at some point I'll be able to do them.&lt;/p&gt;
+
+&lt;h1&gt;Unfinished&lt;/h1&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;I tried my hand at fixing the task switcher navigation gestures being always active instead of just when the gesture navigation mode is actually turned on. To do this properly we probably need to refactor the &lt;code&gt;mobileshellsettings&lt;/code&gt; plugin to be accessible via C++ (it's just a QML plugin currently), so let's see how that goes.&lt;/li&gt;&lt;li&gt;I started work on more mobile friendly notification popups. The new design uses a swipe-to-dismiss interaction instead of having a close button. While technically "working" from a functionality perspective, the visuals are kind of broken still. I hope to have this complete by 6.2, but there's still some open questions. I'll probably have to get in touch with other devs to brainstorm why this is going wrong so badly, but I've not quite given up at bashing my head against this myself. Oh and before I forget: this also affects Plasma Desktop when in Touch Mode. &lt;video controls&gt;
+            &lt;source src="https://lprod.dev/blog/media/mobile_notifications_fail_1.mp4"/&gt;
+            Video tag unsupported!&lt;/video&gt;&lt;label class="media-caption"&gt;This was my first try, which was smooth but left behind the window shadow&lt;/label&gt; &lt;video controls&gt;
+            &lt;source src="https://lprod.dev/blog/media/mobile_notifications_fail_2.webm"/&gt;
+            Video tag unsupported!&lt;/video&gt;&lt;label class="media-caption"&gt;And this my second try which is more technically correct and properly moves the window, but... I mean, you can see it yourself&lt;/label&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h1&gt;Upcoming&lt;/h1&gt;
+
+&lt;p&gt;
+For the next month I wanna try and finish up my work on KWin touch corner gestures and implement those into Plasma Mobile and then go more on bug fixing, triaging and looking at knocking out some tickets for planned bigger picture improvements for 6.2. Let's see next month if a) I get any of this done or b) I even manage to make a blog post since I'll not be home for a while&lt;/p&gt;
 
 
 &lt;/html&gt;
-</description><guid isPermaLink="false">https://lprod.dev/blog/touch_corner_gestures.html</guid><pubDate>Mon, 01 Jul 2024 00:00:00 +0000</pubDate></item><item><title>Revamping Plasma Mobile Navigation Gestures</title><link>https://lprod.dev/blog/plasmo_nav_gestures.html</link><description>Down the rabbit hole
+</description><guid isPermaLink="false">https://lprod.dev/blog/monthly_2024_07.html</guid><pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate></item><item><title>Revamping Plasma Mobile Navigation Gestures</title><link>https://lprod.dev/blog/plasmo_nav_gestures.html</link><description>Down the rabbit hole
 
 &lt;html&gt;
 &lt;p&gt;A few months ago I was kind of toying with the idea to start contributing to Plasma Mobile because I was getting increasingly fed up with Android and I realized if Linux Mobile was going to be my daily driver before I need to buy a new phone I better help out.&lt;/p&gt;
