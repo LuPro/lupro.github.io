@@ -20,7 +20,11 @@ def populate_template(md_data, template):
     byline = metadata.get("description", "")
     preview = metadata.get("preview", "")
     date = metadata.get("date", "")
-    full_date = datetime(date.year, date.month, date.day, tzinfo=timezone.utc)
+    if type(date) == datetime:
+        full_date = datetime(date.year, date.month, date.day, date.hour, tzinfo=timezone.utc)
+    else:
+        full_date = datetime(date.year, date.month, date.day, tzinfo=timezone.utc)
+
     date_string = ""
     if date != "":
         date_string = date.strftime("%Y-%m-%d")
