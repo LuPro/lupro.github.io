@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>lprod Blog</title><link>https://lprod.dev/rss.xml</link><description>Random ramblings in various projects I work on</description><atom:link href="https://lprod.dev/rss.xml" rel="self"/><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><language>en</language><lastBuildDate>Wed, 30 Apr 2025 16:17:04 +0000</lastBuildDate><item><title>Plasma Sprint and more</title><link>https://lprod.dev/blog/monthly_2025_04.html</link><description>So many phones!
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>lprod Blog</title><link>https://lprod.dev/rss.xml</link><description>Random ramblings in various projects I work on</description><atom:link href="https://lprod.dev/rss.xml" rel="self"/><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><language>en</language><lastBuildDate>Wed, 30 Apr 2025 17:21:00 +0000</lastBuildDate><item><title>Plasma Sprint and more</title><link>https://lprod.dev/blog/monthly_2025_04.html</link><description>So many phones!
 
 &lt;html&gt;
 &lt;p&gt;What happens when you put three mobile OS devs into one room for more than a few minutes?&lt;/p&gt;
@@ -67,7 +67,7 @@ I want to circle back to the Sprint and emphasize again how amazing it was - and
 
 
 &lt;/html&gt;
-</description><guid isPermaLink="false">https://lprod.dev/blog/monthly_2025_04.html</guid><pubDate>Wed, 30 Apr 2025 18:00:00 +0000</pubDate></item><item><title>What I did in KDE/Plasma Mobile land in July-ish</title><link>https://lprod.dev/blog/monthly_2024_07.html</link><description>Miscellaneous improvements
+</description><guid isPermaLink="false">https://lprod.dev/blog/monthly_2025_04.html</guid><pubDate>Wed, 30 Apr 2025 16:00:00 +0000</pubDate></item><item><title>What I did in KDE/Plasma Mobile land in July-ish</title><link>https://lprod.dev/blog/monthly_2024_07.html</link><description>Miscellaneous improvements
 
 &lt;html&gt;
 &lt;p&gt;After my gargantuan post around the overhauled navigation gestures (and a still-in-progress one about KWin corner touch gesture support I'll hopefully have ready soon:tm:) let's tackle a few more smaller things. I'll try to make these somewhat regular (dare I say maybe even monthly?), but let's see how that shakes out, probably more like every 2-3 months if at all.&lt;/p&gt;

@@ -1,7 +1,7 @@
 ---
 title: Plasma Sprint and more
 description: So many phones!
-date: 2025-04-30T18:20:00
+date: 2025-04-30T16:20:00
 preview: Random updates from yours truly
 tags:
     - KDE
