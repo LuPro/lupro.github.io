@@ -147,14 +147,14 @@ smoothing_factor = delta_time/desired_time_constant
 <p>
 And now with a simple check on <code>if speed > threshold</code> we can detect flicks! And voila - an upwards flick goes to homescreen!</p>
 
-<p><img src="media/nav_gestures_ready_for_review_1.jpg" alt=""></img></p>
+<p><img src="media/plasmo_nav_gestures/nav_gestures_ready_for_review_1.jpg" alt=""></img></p>
 
 <h2>2D gestures</h2>
 
 <p>
 Well, I know I said I'll replicate the old gesture behavior without touching any functionality and keep any extra features for followup MRs, but the gesture feels kinda bad when it only goes up and down and doesn't follow the finger left and right as well - and thanks to our previous excursion into KWin it also magically exposes the orthogonal gesture position, so we can just really quickly hook that up and have X and Y tracking.</p>
 
-<p><img src="media/nav_gestures_ready_for_review_2.jpg" alt=""></img></p>
+<p><img src="media/plasmo_nav_gestures/nav_gestures_ready_for_review_2.jpg" alt=""></img></p>
 
 <h2>States?!?!?!</h2>
 
@@ -163,7 +163,7 @@ As a remnant from Devin's move to a KWin effect there was a bit of a mess of wha
 
 <p>No problem, I can refactor that and take some work off of Devin.</p>
 
-<p><img src="media/nav_gestures_ready_for_review_3.jpg" alt=""></img></p>
+<p><img src="media/plasmo_nav_gestures/nav_gestures_ready_for_review_3.jpg" alt=""></img></p>
 
 <h2>Quick task switch gesture</h2>
 
@@ -172,7 +172,7 @@ But you know what, now the task switcher code feels really clean and nice and it
 
 <p>Ah to hell with it, let's add that as well!</p>
 
-<p><img src="media/nav_gestures_ready_for_review_4.jpg" alt=""></img></p>
+<p><img src="media/plasmo_nav_gestures/nav_gestures_ready_for_review_4.jpg" alt=""></img></p>
 
 <h2>Task Scrub</h2>
 
@@ -185,7 +185,7 @@ Remember how I said I have <i>opinions</i> on what good gestures are?</p>
 
 <p>So how about a bespoke "task scrub" gesture that activates on a mostly-horizontal gesture invocation and allows to scrub through a large number of recent tasks.</p>
 
-<p><img src="media/nav_gestures_ready_for_review_5.jpg" alt=""></img></p>
+<p><img src="media/plasmo_nav_gestures/nav_gestures_ready_for_review_5.jpg" alt=""></img></p>
 
 <h1>Right.</h1>
 

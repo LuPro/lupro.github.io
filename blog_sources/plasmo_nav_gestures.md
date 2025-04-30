@@ -124,13 +124,13 @@ Now... where were we? Right!
 
 And now with a simple check on `if speed > threshold` we can detect flicks! And voila - an upwards flick goes to homescreen!
 
-![](nav_gestures_ready_for_review_1.jpg)
+![](plasmo_nav_gestures/nav_gestures_ready_for_review_1.jpg)
 
 ## 2D gestures
 
 Well, I know I said I'll replicate the old gesture behavior without touching any functionality and keep any extra features for followup MRs, but the gesture feels kinda bad when it only goes up and down and doesn't follow the finger left and right as well - and thanks to our previous excursion into KWin it also magically exposes the orthogonal gesture position, so we can just really quickly hook that up and have X and Y tracking.
 
-![](nav_gestures_ready_for_review_2.jpg)
+![](plasmo_nav_gestures/nav_gestures_ready_for_review_2.jpg)
 
 ## States?!?!?!
 
@@ -138,7 +138,7 @@ As a remnant from Devin's move to a KWin effect there was a bit of a mess of wha
 
 No problem, I can refactor that and take some work off of Devin.
 
-![](nav_gestures_ready_for_review_3.jpg)
+![](plasmo_nav_gestures/nav_gestures_ready_for_review_3.jpg)
 
 ## Quick task switch gesture
 
@@ -146,7 +146,7 @@ But you know what, now the task switcher code feels really clean and nice and it
 
 Ah to hell with it, let's add that as well!
 
-![](nav_gestures_ready_for_review_4.jpg)
+![](plasmo_nav_gestures/nav_gestures_ready_for_review_4.jpg)
 
 ## Task Scrub
 
@@ -158,7 +158,7 @@ But it's also kind of a black box as to when that happens and it really annoys m
 
 So how about a bespoke "task scrub" gesture that activates on a mostly-horizontal gesture invocation and allows to scrub through a large number of recent tasks.
 
-![](nav_gestures_ready_for_review_5.jpg)
+![](plasmo_nav_gestures/nav_gestures_ready_for_review_5.jpg)
 
 # Right.
 
