@@ -33,6 +33,7 @@ def populate_template(md_data, template):
     template = template.replace("$TITLE", title)
     template = template.replace("$SUBTITLE", byline)
     template = template.replace("$DATE", date_string)
+    template = template.replace("$CURR_YEAR", str(datetime.now().year))
 
     content_html = parsed_tree.html()
     # print(parsed_tree.dump())
