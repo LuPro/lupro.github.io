@@ -59,6 +59,7 @@ def parse_blogs(template):
     source_files = [f for f in listdir(source_path) if isfile(join(source_path, f))]
     source_files += [join(s, f) for s in subfolders for f in listdir(join(source_path, s)) if isfile(join(source_path, s, f))]
     blogs = []
+    written_blogs = []
     print("Parsing blogs", source_files)
 
     for source_file in source_files:
@@ -75,8 +76,13 @@ def parse_blogs(template):
             blogs.append(data)
 
             dest_full_path = join(dest_path, file_name + ".html")
+            if dest_full_path in written_blogs:
+                raise Exception(f"Name collision with previous blog: {file_name}")
+
             with open(dest_full_path, "w") as blog_writer:
                 blog_writer.write(data["body"])
+
+            written_blogs.append(dest_full_path)
 
     kde_feed = FeedGenerator()
     kde_feed.title("lprod KDE Blog")
