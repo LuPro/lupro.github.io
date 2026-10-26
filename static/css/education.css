@@ -1,0 +1,5 @@
+button.education:hover, button.education:active, button.education:focus
+{
+    border-color: var(--accent-primary);
+    background-color: var(--bg-primary);
+}

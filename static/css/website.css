@@ -1,0 +1,5 @@
+button.website:hover, button.website:active, button.website:focus
+{
+    border-color: var(--accent-primary);
+    background-color: var(--bg-primary);
+}

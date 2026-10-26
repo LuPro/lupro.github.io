@@ -1,0 +1,183 @@
+:root {
+    --accent-primary: lightblue; /* todo */
+
+
+    --content-max-width: 1600px;
+
+    --project-button-width: 25em;
+}
+
+body {
+    transition: all var(--trans-out) ease-in-out;
+    transition-property: background;
+
+    background: var(--bg-primary);
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+
+    color: var(--col-primary);
+    font-family: sans-serif;
+}
+
+#previewer {
+    width: 100px;
+    height: 100px;
+    background: conic-gradient(from 0deg at center, transparent 35%, white 40%, white 60%, transparent 65%);
+}
+
+#projects-container {
+    display: flex;
+
+    gap: 1em;
+}
+
+#selection-container {
+    flex-direction: column;
+}
+
+#preview-container {
+    position: relative;
+
+    flex-grow: 1;
+}
+
+.selection-preview ul {
+    list-style: none;
+}
+
+li {
+    margin-bottom: 1.5em;
+    position: relative;
+}
+
+button.selector {
+    position: relative;
+
+    border-radius: 5px;
+    border: var(--border-button) 1px solid;
+
+    color: var(--col-primary);
+    background: var(--bg-button);
+
+    overflow: visible;
+
+    padding: 1em;
+    width: var(--project-button-width);
+
+    transition: all var(--trans-out) ease-in-out;
+    transition-property: border, color, background, transform;
+}
+
+.hovering:not(:hover, :active, :focus) {
+    animation-name: glow;
+    animation-duration: 2s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-fill-mode: forwards;
+}
+
+button.selector:focus-visible {
+    transition: filter 0s;
+    outline: none;
+    filter: drop-shadow(1px 1px var(--col-focus-outline))
+        drop-shadow(-1px 1px var(--col-focus-outline))
+        drop-shadow(1px -1px var(--col-focus-outline))
+        drop-shadow(-1px -1px var(--col-focus-outline));
+}
+
+button.selector:hover, button.selector:focus, button.selector:active {
+    border: var(--border-button-hover) 1px solid;
+    background: transparent;
+
+    transition: all var(--trans-in) ease-in-out;
+    transition-property: border, color, background, transform;
+}
+
+button.selector:focus, button.selector:active {
+    transform: translateX(5%);
+}
+
+#filterSource {
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+
+.selection-preview {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1em;
+
+    height: fit-content;
+
+    transition: all var(--trans-out) ease-in-out;
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+#preview-placeholder-container
+{
+    position: relative;
+    height: 0;
+    width: 0;
+}
+
+#preview-placeholder
+{
+    position: absolute;
+    top: 2em;
+    left: 5em;
+    width: calc(100vw - 10em - 2em - var(--project-button-width));
+    max-width: calc(var(--content-max-width) - 10em - 2em - var(--project-button-width));
+    text-align: center;
+}
+
+#projects-container:has(button:focus, #preview-container:focus-within) #preview-placeholder
+{
+    transition: all var(--trans-in) ease-in-out;
+    transition-property: transform, opacity;
+    transform: translateX(-10%);
+    opacity: 0;
+}
+
+#projects-container:not(:has(button:focus, #previe-container:focus-within)) #preview-placeholder
+{
+    transition: all var(--trans-out) ease-in-out;
+    transition-property: transform, opacity;
+    transform: translateX(0);
+    opacity: 1;
+}
+
+#projects-container:has(button.talespire:focus, #talespire-preview:focus-within) #talespire-preview,
+#projects-container:has(button.kde:focus, #kde-preview:focus-within) #kde-preview,
+#projects-container:has(button.tust:focus, #tust-preview:focus-within) #tust-preview,
+#projects-container:has(button.website:focus, #website-preview:focus-within) #website-preview,
+#projects-container:has(button.education:focus, #education-preview:focus-within) #education-preview
+{
+    transition: all var(--trans-in) ease-in-out;
+    transform: translateX(0);
+    opacity: 1;
+}
+
+@keyframes glow {
+
+}
+
+@keyframes hover {
+    0% {
+        transform: translate(0, 0);
+        filter: drop-shadow(2px 3px 1px black);
+    }
+    50% {
+        transform: translate(-3px, -5px);
+        filter: drop-shadow(4px 6px 2px black);
+    }
+    100% {
+        transform: translate(0, 0);
+        filter: drop-shadow(2px 3px 1px black);
+    }
+}

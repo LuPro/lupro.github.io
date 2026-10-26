@@ -1,0 +1,6 @@
+/* select all preceding and following siblings */
+button.selector:has(~button.selector:active, ~button.selector:focus),
+button.selector:active~button.selector,
+button.selector:focus~button.selector {
+    transform: translateX(-5%);
+}

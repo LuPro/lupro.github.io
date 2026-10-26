@@ -1,0 +1,229 @@
+/* montserrat-regular - latin */
+@font-face {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/montserrat-v24-latin-regular.woff2') format('woff2'); /* Super Modern Browsers */
+    src: url('../fonts/montserrat-v24-latin-regular.woff') format('woff'); /* Modern Browsers */
+    src: url('../fonts/montserrat-v24-latin-regular.ttf') format('truetype'); /* Safari, Android, iOS */
+}
+
+:root {
+    --bg-space: #131340;
+}
+
+:root:has(button.tust:hover, button.tust:focus, button.tust:active, #tust-preview:focus-within) {
+    --col-primary: white;
+
+    --bg-primary: black;
+    --bg-secondary: var(--bg-space);
+
+    --col-focus-outline: #455a8e;
+}
+
+body:has(button.tust:hover, button.tust:focus, button.tust:active) {
+    transition: all var(--trans-in) ease-in-out;
+    transition-property: background;
+}
+
+#tust-preview.selection-preview {
+    font: 1em "Montserrat";
+}
+
+button.tust:after {
+    position: absolute;
+
+    content: "";
+    pointer-events: none;
+    z-index: -1;
+
+    top: -10%;
+    bottom: -10%;
+    left: -10%;
+    right: -10%;
+
+    background: radial-gradient(circle, white, white 1px, transparent 2px) 2% 10% / 35% 50% no-repeat,
+        radial-gradient(circle, white, white 0px, transparent 1px) 7% 15% / 5% 30% no-repeat,
+        radial-gradient(ellipse 50% 50% at center, var(--bg-space) 50%, transparent 100%) 0 0 / 100% 100%;
+
+    transition: all var(--trans-out) ease-in-out;
+    transition-property: opacity;
+
+    opacity: 0;
+}
+
+button.tust:hover:after, button.tust:focus:after, button.tust:active:after {
+    transition: all var(--trans-in) ease-in-out;
+    transition-property: opacity;
+
+    opacity: 1;
+}
+
+button.tust:not(:hover, :active, :focus) .mission-patch,
+button.tust:not(:hover, :active, :focus) .logo {
+    transition: all var(--trans-out) ease-in-out;
+    transition-property: opacity;
+
+    opacity: 0;
+}
+
+button.tust:hover, button.tust:active, button.tust:focus {
+    transition: all var(--trans-in) ease-in-out;
+    transition-property: color, transform;
+
+    color: transparent;
+}
+
+.logo {
+    position: absolute;
+
+    height: 200%;
+
+    top: 42%;
+    left: 50%;
+
+    pointer-events: none;
+
+    transform: translate(-50%, -50%);
+
+    transition: all var(--trans-in) ease-in-out;
+    transition-property: opacity, transform;
+}
+
+.mission-patch {
+    position: absolute;
+
+    width: 3em;
+    height: 3em;
+
+    z-index: 1;
+    /*pointer-events: none;*/
+
+    transition: all var(--trans-in) ease-in-out;
+    transition-property: opacity, transform;
+
+    opacity: 1;
+}
+
+button.tust.selector .mission-patch:nth-child(1) {
+    top: -0.8em;
+    left: -0.5em;
+
+    transition-timing-function: ease-in-out, ease-in;
+    transform: translate(0, 0);
+}
+
+button.tust:not(:hover, :active, :focus) .mission-patch:nth-child(1) {
+    transition: all var(--trans-out) ease-in-out;
+    transition-property: opacity, transform;
+
+    transform: translate(-1em, -4em);
+}
+
+
+button.tust.selector .mission-patch:nth-child(2) {
+    bottom: -0.8em;
+    left: 2.7em;
+
+    transition-delay: calc(var(--trans-in) + 0.2s);
+    transform: translate(0, 0);
+}
+
+button.tust:not(:hover, :active, :focus) .mission-patch:nth-child(2) {
+    transition: all var(--trans-out) ease-in-out;
+    transition-property: opacity, transform;
+
+    transform: translate(-2em, 2.5em);
+}
+
+button.tust.selector .mission-patch:nth-child(3) {
+    top: -0.5em;
+    right: -1em;
+
+    transition-delay: calc(2 * (var(--trans-in) + 0.2s));
+    transform: translate(0, 0);
+}
+
+button.tust:not(:hover, :active, :focus) .mission-patch:nth-child(3) {
+    transition: all var(--trans-out) ease-in-out;
+    transition-property: opacity, transform;
+
+    transform: translate(2.5em, -1.5em);
+}
+
+button.spacey {
+    position: relative;
+    min-width: 12em;
+
+    background: var(--bg-primary);
+    font-size: 1.4em;
+    color: var(--col-primary);
+
+    border: none;/*1px solid var(--col-primary);*/
+
+    padding: 0.4em;
+
+    /* corner-shape doesn't work on firefox yet and safari is only experimental
+    but the round corners that it falls back to until support exists don't
+    look bad either */
+    corner-top-right-shape: bevel;
+    corner-bottom-left-shape: bevel;
+    border-top-right-radius: 0.4em;
+    border-bottom-left-radius: 0.4em;
+}
+
+@property --gradient-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+button.spacey:before {
+    content: "";
+
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: calc(100% + 2px);
+    height: calc(100% + 2px);
+
+    z-index: -1;
+    --gradient-angle: 220deg;
+    background: conic-gradient(from var(--gradient-angle) at center, transparent 20%, white 40%, white 60%, transparent 65%);
+
+    corner-top-right-shape: bevel;
+    corner-bottom-left-shape: bevel;
+    border-top-right-radius: 0.4em;
+    border-bottom-left-radius: 0.4em;
+
+    transition: all calc(2 * var(--trans-out)) ease-in-out;
+    transition-property: --gradient-angle;
+}
+
+button.spacey:hover:before {
+    --gradient-angle: 400deg;
+    background: conic-gradient(from var(--gradient-angle) at center, transparent 20%, white 40%, white 60%, transparent 65%);
+
+    transition: all calc(2 * var(--trans-in)) ease-in-out;
+    transition-property: --gradient-angle;
+}
+
+button.spacey .mission-patch {
+    width: 2.5em;
+    height: 2.5em;
+
+    top: 50%;
+    left: 0;
+    transform: translate(-50%, -50%);
+
+    transition: all var(--trans-out) ease-in-out;
+    transition-property: width, height;
+}
+
+button.spacey:hover .mission-patch {
+    width: 3em;
+    height: 3em;
+
+    transition: all var(--trans-in) ease-in-out;
+    transition-property: width, height;
+}

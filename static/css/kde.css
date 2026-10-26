@@ -1,0 +1,33 @@
+:root {
+    --kde-button-bg: #292c30;
+
+    --kde-button-border: #48494c;
+    --kde-button-border-hover: #3daee9;
+
+    --kde-separator-color: #4e5359;
+}
+
+:root:has(button.kde:hover, button.kde:focus, button.kde:active, button.kde:focus-within) {
+    --col-primary: white;
+
+    --bg-primary: #202326;
+    --bg-secondary: #292c30;
+}
+
+button.kde:active, button.kde:focus {
+    border-color: var(--kde-button-border);
+    background-color: var(--kde-button-bg);
+}
+
+button.kde:hover {
+    border-color: var(--kde-button-border-hover);
+    background-color: var(--kde-button-bg);
+}
+
+:root:has(button.kde:hover, button.kde:focus, button.kde:active, button.kde:focus-within) header:before {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--kde-separator-color);
+
+    transition: all var(--trans-in) ease-in-out;
+    transition-property: border, color, background;
+}
