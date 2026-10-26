@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Search Postmortem Part 3</title>
+        <link rel="stylesheet" href="../css/theme.css"/>
+        <link rel="stylesheet" href="../css/common.css"/>
+        <link rel="stylesheet" href="blog_theme.css"/>
+    </head>
+    <body>
+        <div id="banner">
+            <a href="../index.html">&#8612; Home</a>
+        </div>
+        <header>
+            <h1 class="page-heading">Search Postmortem Part 3</h1>
+            <label class="byline">A deeper dive into TaleSpire's new search</label>
+            <label class="date">Published: 2026-08-24</label>
+        </header>
+        <main>
+        <div class="divider"></div>
+
+<html>
+<p>While I already talked a bit about tag discoverability and consistency, especially the latter is a bit more involved and will need more explanation.</p>
+
+<p>It's already tricky enough to get any <i>two</i> people to agree on how to tag things, however this problem gets exponentially harder once we consider the practically unlimited number of community content creators who are also creating assets for TaleSpire - so for us it was extremely important to provide good tools that allow such a large and diverse group of people to still land on a mostly consistent set of tags.
+If we reframe this problem, we realize we need a tool where if we tell 10 different people to tag the same mini, they should land on (roughly) the same set of tags - ideally while still leaving room for "artist's intent".</p>
+
+<h1>Tag Questionnaire</h1>
+
+<p>
+The solution we came up with is the Tag Questionnaire. It works by providing a list of simple questions about a mini, like "Is your creature a human?" and "Is your creature Undead?" that the artist can go through. While answering said questions, it builds up a list of tags that fit the responses. At the end of the questionnaire, most relevant categories and tags have been covered, crucially in a way that is reasonably consistent across different people.</p>
+
+<p>A big benefit of asking questions in "normal language" like this is that we can explain and guide towards responses that fit some of the idiosyncrasies of our tagging system. As I mentioned in a previous post, all tag systems are inherently and unavoidably subjective, so there will always be some grey areas and ambiguities, but with careful phrasing and extra explanations, we can remove some uncertainty about "which way" to resolve some of those ambiguities.</p>
+
+<p>However, we are aware that going through a lengthy questionnaire for each miniature you create can take a long time and be annoying, so we also tried making it as "smart" as possible - some questions only show up if others were previously answered in a specific way, we try to glean some information to auto-fill-in responses based on the name of the miniature and you can also copy and paste entire filled-in questionnaires if you're creating a bunch of minis that require similar tags.</p>
+
+<p>It's important to note that the questionnaire is not the "be-all and end-all" of tagging and is only intended to cover the "basics". While it's likely not necessary for many miniatures, you are absolutely able (and encouraged!) to add any tags you feel are still missing after going through the questionnaire.</p>
+
+<h1>Custom Tags</h1>
+
+<p>
+An important part of supporting tags and searching for custom miniatures is the ability to create custom tags. So far, all I've written about refers to our "official" list of tags, however you're also able to add completely new tags to your minis if you feel they're missing.</p>
+
+<p>This can range from tags we may have simply forgotten to create to tags that only apply to your assets, like the name of a cool new species you came up with. No matter which of those you add as custom tags, they will be searchable exactly like our built-in tags.</p>
+
+<p>Additionally, custom tags allow us to monitor commonly added tags and evaluate whether to add them to the official tag list. Just keep in mind that sometimes less is more, and we have kept the official tag list deliberately on the smaller side.</p>
+
+<p>Broadly speaking, you can add whatever custom tag you want with one restriction: Custom tags that are identical to a recognized synonym or example_of are instead replaced by the tags the synonym points to, as they would otherwise degrade the search experience. For example, if you want to add "dragonfolk" as custom tag, it would instead be replaced with the tags "humanoid" and "dragon".</p>
+
+<p>As of right now, this only covers actual tags - custom synonyms and example_of's cannot be created yet. We can't make any promises on that front, as badly designed synonyms have the potential to degrade the search experience a lot and their installation would potentially be able to happen "as a side product" of installing a custom mini<a class='footnote-link' href='#footnote_0'>[0]</a>.</p>
+
+<p>
+With all that out of the way, we've gone through the basics of our new tag system and why it works the way it does. That doesn't mean we're done with this series though!</p>
+
+<p></p>
+
+<div class='footnote'><p class='footnote-index'><a name='footnote_0'></a>0</p> <p> Creating the tooling for custom synonym and example_of creation would also be surprisingly complex as all of this is interacting with a fairly large directed graph and making that intuitive and readable is challenging</p>
+
+</div>
+</html>
+
+
+        </main>
+        <footer>Luis / <code>lprod</code> 2026</footer>
+    </body>
+</html>
