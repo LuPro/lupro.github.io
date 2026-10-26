@@ -244,12 +244,45 @@ class LinkNode(Node):
             if len(parts) == 2:
                 self.text = parts[0]
                 self.source = parts[1]
+            else:
+                print("Didn't find two parts in Link Node!", children[0].text)
 
     def dump(self: Self, indent: int) -> str:
         return (" " * 4 * indent) + f"Link Node: {self.source}, {self.text}\n"
 
     def html(self: Self, external: bool) -> str:
         return f"<a href=\"{self.source}\">{self.text}</a>"
+
+
+@dataclass
+class FootnoteLinkNode(Node):
+    index: int
+
+    def __init__(self: Self, children: list[Node]):
+        if len(children) == 1 and isinstance(children[0], TextNode):
+            self.index = int(children[0].text)
+
+    def dump(self: Self, indent: int) -> str:
+        return (" " * 4 * indent) + f"FootnoteLinkNode: {self.index}\n"
+
+    def html(self: Self, external: bool) -> str:
+        return f"<a class='footnote-link' href='#footnote_{self.index}'>[{self.index}]</a>"
+
+
+@dataclass
+class FootnoteTargetNode(Node):
+    index: int
+    paragraph: ParagraphNode
+
+    def __init__(self: Self, index: int, paragraph: ParagraphNode):
+        self.index = index
+        self.paragraph = paragraph
+
+    def dump(self: Self, indent: int) -> str:
+        return (" " * 4 * indent) + f"FootnoteTargetNode: {self.index}, {self.paragraph.dump(indent + 1)}\n"
+
+    def html(self: Self, external: bool) -> str:
+        return f"<div class='footnote'><p class='footnote-index'><a name='footnote_{self.index}'></a>{self.index}</p> {self.paragraph.html(external)}</div>"
 
 
 @dataclass

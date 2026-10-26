@@ -13,6 +13,8 @@ from mdparsertypes import (
     InlineCodeNode,
     CodeBlockNode,
     LinkNode,
+    FootnoteLinkNode,
+    FootnoteTargetNode,
     MediaNode
 )
 
@@ -50,6 +52,7 @@ class MarkdownParser:
 
             header_level = self._determine_header_level()
             list_level = self._determine_list_indent_level()
+            footnote_index = self._determine_footnote_target_index()
             if header_level > 0:
                 self._consume(header_level + 1)
                 children.append(self._parse_header(header_level))
@@ -59,6 +62,9 @@ class MarkdownParser:
                 children.append(self._parse_code_block())
             elif list_level > 0:
                 children.append(self._parse_unordered_list(list_level))
+            elif footnote_index != -1:
+                self._consume(3 + len(str(footnote_index)))
+                children.append(self._parse_footnote_target(footnote_index))
             else:
                 children.append(self._parse_paragraph())
 
@@ -92,6 +98,25 @@ class MarkdownParser:
         if self._peek(level * 4) == "-" and self._peek(level * 4 + 1) == " ":
             return level + 1
         return 0
+
+    def _determine_footnote_target_index(self: Self) -> int:
+        index = -1
+        if self._peek() == "[":
+            offset = 1
+            string = ""
+            peeked = self._peek(offset)
+            while peeked != "]" and not self._is_eof():
+                string += peeked
+                offset += 1
+                peeked = self._peek(offset)
+
+            if self._peek(offset + 1) != ":":
+                return -1
+
+            index = int(string)
+
+        return index
+
 
     def _consume_list_indent(self: Self) -> None:
         while self._peek() == " ":
@@ -130,6 +155,11 @@ class MarkdownParser:
                 children.append(self._parse_unordered_list(new_list_level))
             self._consume_list_indent()
         return ListBlockNode(children)
+
+    def _parse_footnote_target(self: Self, index: int) -> FootnoteTargetNode:
+        self._stop_on_single_newline = False
+        paragraph = self._parse_paragraph()
+        return FootnoteTargetNode(index, paragraph)
 
     def _run_symmetric_content_rule(self: Self,
                                     rule: tuple[str, str, Callable],
@@ -221,6 +251,7 @@ class MarkdownParser:
                     ("inline_code", "`", InlineCodeNode),
                     ("strikethrough", "~~", StrikethroughNode),
                     ("link", "[", ")", LinkNode),
+                    ("footnote", "^[", "]", FootnoteLinkNode),
                     ("media", "![", ")", MediaNode)
                 ]
 
@@ -272,6 +303,10 @@ class MarkdownParser:
                         if not in_recursion:
                             self._consume()
                         break
+                    if self._peek(1) == "[":
+                        # Next line starts with [ -> potential footnote target
+                        if not in_recursion:
+                            self._consume()
 
             self._consume()
 
@@ -361,3 +396,4 @@ class MarkdownParser:
         self._inside_flags["quote"] = False
         self._inside_flags["link"] = False
         self._inside_flags["media"] = False
+        self._inside_flags["footnote"] = False
