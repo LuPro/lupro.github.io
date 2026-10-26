@@ -104,3 +104,44 @@ code, pre {
 
     background-color: var(--bg-primary);
 }
+
+.gallery-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    width: 14em;
+    height: 18em;
+
+    padding: 0.4em 0.5em;
+
+    background: var(--bg-secondary);
+    border-radius: 0.3em;
+}
+
+.gallery-title {
+    margin: 0;
+
+    width: 100%;
+    text-align: center;
+}
+
+.gallery-description {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 100%;
+}
+
+.gallery-date {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+
+    width: 100%;
+    text-align: center;
+
+    margin-bottom: 0.4em;
+
+    color: var(--col-secondary);
+    font-size: 0.9em;
+}

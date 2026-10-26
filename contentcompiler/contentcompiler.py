@@ -1,7 +1,7 @@
 import argparse
 import frontmatter
 from os import listdir
-from os.path import isfile, join, splitext
+from os.path import isfile, join, splitext, basename
 from datetime import datetime, timezone
 from feedgen.feed import FeedGenerator
 
@@ -11,7 +11,7 @@ _base_url = "https://lprod.dev/"
 _base_blog_url = _base_url + "blog/"
 
 
-def populate_template(md_data, template):
+def populate_blog_template(md_data, template):
     metadata, content = frontmatter.parse(md_data)
 
     parsed_tree = MarkdownParser().parse(content)
@@ -20,7 +20,7 @@ def populate_template(md_data, template):
     byline = metadata.get("description", "")
     preview = metadata.get("preview", "")
     date = metadata.get("date", "")
-    if type(date) == datetime:
+    if date is datetime:
         full_date = datetime(date.year, date.month, date.day, date.hour, tzinfo=timezone.utc)
     else:
         full_date = datetime(date.year, date.month, date.day, tzinfo=timezone.utc)
@@ -44,6 +44,7 @@ def populate_template(md_data, template):
         "byline": byline,
         "preview": preview,
         "date": full_date,
+        "datestr": date_string,
         "tags": tags,
         "body": template,
         "embed_body": byline + "\n\n" + feed_html
@@ -53,20 +54,24 @@ def populate_template(md_data, template):
 def parse_blogs(template):
     source_path = "blog_sources"
     dest_path = "blog"
+    folder_entries = [f for f in listdir(source_path)]
+    subfolders = [f for f in folder_entries if not isfile(join(source_path, f))]
     source_files = [f for f in listdir(source_path) if isfile(join(source_path, f))]
+    source_files += [join(s, f) for s in subfolders for f in listdir(join(source_path, s)) if isfile(join(source_path, s, f))]
     blogs = []
     print("Parsing blogs", source_files)
 
     for source_file in source_files:
+        print("Parsing", source_file)
         if splitext(source_file)[1] != ".md":
             continue
 
         with open(join(source_path, source_file), 'r') as blog_reader:
             blog_source = blog_reader.read()
-            data = populate_template(blog_source, template)
-
-            file_name = splitext(source_file)[0]
+            data = populate_blog_template(blog_source, template)
+            file_name = splitext(basename(source_file))[0]
             data["url"] = _base_blog_url + file_name + ".html"
+
             blogs.append(data)
 
             dest_full_path = join(dest_path, file_name + ".html")
@@ -114,17 +119,66 @@ def parse_blogs(template):
     kde_feed.rss_file("kde_rss.xml")
     # kde_feed.atom_file("kde_atom.xml")
 
+    return blogs
+
+
+def populate_card_template(data, template):
+    template = template.replace("$TITLE", data["title"])
+    template = template.replace("$PREVIEW", data["preview"])
+    template = template.replace("$DATE", data["datestr"])
+    template = template.replace("$URL", data["url"])
+    template = template.replace("$TAGS", "\n".join([f"<span class='tag'>#{t}</span>" for t in data["tags"]]))
+
+    return template
+
+
+def update_main_page(blogs, main_template, card_template):
+    cards = []
+    blogList = ""
+
+    blogs.sort(key=lambda x: x["date"], reverse=True)
+
+    for blog in blogs:
+        iconSrc = ""
+        altText = ""
+        if "TaleSpire" in blog["tags"]:
+            iconSrc = "static/assets/talespire-logo.svg"
+            altText = "TaleSpire Logo"
+        elif "KDE" in blog["tags"]:
+            iconSrc = "static/assets/kde-logo-blue.svg"
+            altText = "KDE Logo"
+
+        blogList += '<li>{}: <img class="icon" src="{}" alt="{}"/><a href="{}">{}</a></li>'.format(blog["datestr"], iconSrc, altText, blog["url"], blog["title"])
+        if (len(cards) < 3):
+            cards.append(populate_card_template(blog, card_template))
+
+    main_template = main_template.replace("$GALLERY", "\n".join(cards))
+    main_template = main_template.replace("$BLOGS", blogList)
+
+    with open("index.html", "w") as index_writer:
+        index_writer.write(main_template)
+
 
 def main():
     arg_parser = argparse.ArgumentParser(
         description="Compile Markdown files into HTML files based on template")
     arguments = arg_parser.parse_args()
 
-    template = ""
+    post_template = ""
     with open('blog/blog_template.html', 'r') as template_reader:
-        template = template_reader.read()
+        post_template = template_reader.read()
 
-    parse_blogs(template)
+    blogs = parse_blogs(post_template)
+
+    blog_template = ""
+    with open('gallery_card_template.html', 'r') as template_reader:
+        blog_template = template_reader.read()
+
+    main_template = ""
+    with open('main_page_template.html', 'r') as template_reader:
+        main_template = template_reader.read()
+
+    update_main_page(blogs, main_template, blog_template)
 
 
 if __name__ == '__main__':
