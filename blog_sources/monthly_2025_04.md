@@ -2,7 +2,7 @@
 title: Plasma Sprint and more
 description: So many phones!
 date: 2025-04-30T16:20:00
-preview: Random updates from yours truly
+preview: Meeting lots of people and fixing some bugs! A good ol' time.
 tags:
     - KDE
     - Plasma Mobile
