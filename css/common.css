@@ -143,3 +143,9 @@ footer {
 footer code {
     color: var(--col-secondary);
 }
+
+@media (-webkit-min-device-pixel-ratio: 2) {
+    body {
+        font-size: 1.1em;
+    }
+}

@@ -16,6 +16,8 @@ pre {
     padding: 0.5em;
     border: 1px solid var(--col-secondary);
     border-radius: 6px;
+
+    overflow-x: auto;
 }
 
 li {
@@ -65,4 +67,12 @@ li {
     text-align: center;
     font-style: italic;
     color: var(--col-secondary);
+}
+
+@media (-webkit-min-device-pixel-ratio: 2) {
+    @media (orientation: portrait) {
+    }
+    img {
+        max-width: min(95%, 75vh);
+    }
 }

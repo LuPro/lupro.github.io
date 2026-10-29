@@ -17,17 +17,19 @@ code, pre {
 }
 
 #banner {
-    position: fixed;
+    position: sticky;
     top: 0;
     left: 0;
     height: 0;
-
-    padding: 0.7em 0.4em;
 
     /*background-color: var(--bg-primary);*/
 }
 
 #banner a {
+    position: relative;
+    top: 0.7em;
+    left: 0.4em;
+    transform: translateY(0.7em);
     padding: 0.3em;
     background: var(--bg-primary);
     border-radius: 0.5em;
@@ -48,8 +50,8 @@ li {
     flex-direction: column;
     gap: 0.4em;
 
-    width: 13em;
-    height: 15em;
+    width: 14em;
+    height: 16em;
 
     padding: 0.4em 0.5em;
 
