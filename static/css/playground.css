@@ -4,3 +4,30 @@ button.selector:active~button.selector,
 button.selector:focus~button.selector {
     transform: translateX(-5%);
 }
+
+.hovering:not(:hover, :active, :focus) {
+    animation-name: glow;
+    animation-duration: 2s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-fill-mode: forwards;
+}
+
+@keyframes glow {
+
+}
+
+@keyframes hover {
+    0% {
+        transform: translate(0, 0);
+        filter: drop-shadow(2px 3px 1px black);
+    }
+    50% {
+        transform: translate(-3px, -5px);
+        filter: drop-shadow(4px 6px 2px black);
+    }
+    100% {
+        transform: translate(0, 0);
+        filter: drop-shadow(2px 3px 1px black);
+    }
+}
