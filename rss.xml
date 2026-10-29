@@ -1,263 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>lprod Blog</title><link>https://lprod.dev/rss.xml</link><description>Random ramblings in various projects I work on</description><atom:link href="https://lprod.dev/rss.xml" rel="self"/><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><language>en</language><lastBuildDate>Mon, 26 Oct 2026 01:02:03 +0000</lastBuildDate><item><title>Search Postmortem Part 3</title><link>https://lprod.dev/blog/search_postmortem_03_Custom_Assets.html</link><description>A deeper dive into TaleSpire's new search
-
-&lt;html&gt;
-&lt;p&gt;While I already talked a bit about tag discoverability and consistency, especially the latter is a bit more involved and will need more explanation.&lt;/p&gt;
-
-&lt;p&gt;It's already tricky enough to get any &lt;i&gt;two&lt;/i&gt; people to agree on how to tag things, however this problem gets exponentially harder once we consider the practically unlimited number of community content creators who are also creating assets for TaleSpire - so for us it was extremely important to provide good tools that allow such a large and diverse group of people to still land on a mostly consistent set of tags.
-If we reframe this problem, we realize we need a tool where if we tell 10 different people to tag the same mini, they should land on (roughly) the same set of tags - ideally while still leaving room for "artist's intent".&lt;/p&gt;
-
-&lt;h1&gt;Tag Questionnaire&lt;/h1&gt;
-
-&lt;p&gt;
-The solution we came up with is the Tag Questionnaire. It works by providing a list of simple questions about a mini, like "Is your creature a human?" and "Is your creature Undead?" that the artist can go through. While answering said questions, it builds up a list of tags that fit the responses. At the end of the questionnaire, most relevant categories and tags have been covered, crucially in a way that is reasonably consistent across different people.&lt;/p&gt;
-
-&lt;p&gt;A big benefit of asking questions in "normal language" like this is that we can explain and guide towards responses that fit some of the idiosyncrasies of our tagging system. As I mentioned in a previous post, all tag systems are inherently and unavoidably subjective, so there will always be some grey areas and ambiguities, but with careful phrasing and extra explanations, we can remove some uncertainty about "which way" to resolve some of those ambiguities.&lt;/p&gt;
-
-&lt;p&gt;However, we are aware that going through a lengthy questionnaire for each miniature you create can take a long time and be annoying, so we also tried making it as "smart" as possible - some questions only show up if others were previously answered in a specific way, we try to glean some information to auto-fill-in responses based on the name of the miniature and you can also copy and paste entire filled-in questionnaires if you're creating a bunch of minis that require similar tags.&lt;/p&gt;
-
-&lt;p&gt;It's important to note that the questionnaire is not the "be-all and end-all" of tagging and is only intended to cover the "basics". While it's likely not necessary for many miniatures, you are absolutely able (and encouraged!) to add any tags you feel are still missing after going through the questionnaire.&lt;/p&gt;
-
-&lt;h1&gt;Custom Tags&lt;/h1&gt;
-
-&lt;p&gt;
-An important part of supporting tags and searching for custom miniatures is the ability to create custom tags. So far, all I've written about refers to our "official" list of tags, however you're also able to add completely new tags to your minis if you feel they're missing.&lt;/p&gt;
-
-&lt;p&gt;This can range from tags we may have simply forgotten to create to tags that only apply to your assets, like the name of a cool new species you came up with. No matter which of those you add as custom tags, they will be searchable exactly like our built-in tags.&lt;/p&gt;
-
-&lt;p&gt;Additionally, custom tags allow us to monitor commonly added tags and evaluate whether to add them to the official tag list. Just keep in mind that sometimes less is more, and we have kept the official tag list deliberately on the smaller side.&lt;/p&gt;
-
-&lt;p&gt;Broadly speaking, you can add whatever custom tag you want with one restriction: Custom tags that are identical to a recognized synonym or example_of are instead replaced by the tags the synonym points to, as they would otherwise degrade the search experience. For example, if you want to add "dragonfolk" as custom tag, it would instead be replaced with the tags "humanoid" and "dragon".&lt;/p&gt;
-
-&lt;p&gt;As of right now, this only covers actual tags - custom synonyms and example_of's cannot be created yet. We can't make any promises on that front, as badly designed synonyms have the potential to degrade the search experience a lot and their installation would potentially be able to happen "as a side product" of installing a custom mini&lt;a class='footnote-link' href='#footnote_0'&gt;[0]&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;
-With all that out of the way, we've gone through the basics of our new tag system and why it works the way it does. That doesn't mean we're done with this series though!&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;
-
-&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_0'&gt;&lt;/a&gt;0&lt;/p&gt; &lt;p&gt; Creating the tooling for custom synonym and example_of creation would also be surprisingly complex as all of this is interacting with a fairly large directed graph and making that intuitive and readable is challenging&lt;/p&gt;
-
-&lt;/div&gt;
-&lt;/html&gt;
-</description><guid isPermaLink="false">https://lprod.dev/blog/search_postmortem_03_Custom_Assets.html</guid><pubDate>Mon, 24 Aug 2026 00:00:00 +0000</pubDate></item><item><title>Search Postmortem Part 2</title><link>https://lprod.dev/blog/search_postmortem_02_Tag_Relations.html</link><description>A deeper dive into TaleSpire's new search
-
-&lt;html&gt;
-&lt;h1&gt;Tag Relations&lt;/h1&gt;
-
-&lt;p&gt;
-In the last post, I mentioned that tags allow us to add extra information to a mini without ballooning its name.
-One of the examples I gave was the "Half-Elf Blacksmith" which I claimed is a bad name for a mini, which might have caught some of you off guard. In reality, while being a perfectly cromulent name, it gets messy when the name is the only way to search for something. Why, you might ask?&lt;/p&gt;
-
-&lt;p&gt;Imagine you want a blacksmith for your Elven village, you search for "Elf Blacksmith" and... nothing. Because we have a Half-Elf blacksmith, not an Elven one, even though a Half-Elf would visually fulfill the same role&lt;a class='footnote-link' href='#footnote_0'&gt;[0]&lt;/a&gt;. We &lt;i&gt;could&lt;/i&gt; bodge the search implementation to try and get better results, but it's hard to improve this specific case without making others worse&lt;a class='footnote-link' href='#footnote_1'&gt;[1]&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Tags help here: We can now add both "Half-Elf" and "Elf" tags to said blacksmith mini and can search for either of them to find it by simply directly matching the texts, which is exactly what we want.&lt;/p&gt;
-
-&lt;p&gt;That does however only delay the issue so that whoever makes the mini has to actually add both of those tags for this approach to work. We cannot rely on every creator getting this right every time.&lt;/p&gt;
-
-&lt;p&gt;This is where tag relations come in: The "Half-Elf" tag relates to the "Elf" tag in a way where if you add it, the "Elf" tag also gets added automatically&lt;a class='footnote-link' href='#footnote_2'&gt;[2]&lt;/a&gt;. This is step one in improving the odds that both our official assets and community-made ones have a consistent set of tags that people can rely on.&lt;/p&gt;
-
-&lt;h2&gt;Synonyms&lt;/h2&gt;
-
-&lt;p&gt;
-Even within the same language, humans have many different ways of naming the same thing. One person may call a container that's supposed to hold discarded and broken things "garbage bin", another person "dustbin", yet another person just "trash", and yet another ... I think you get the gist.&lt;/p&gt;
-
-&lt;p&gt;We don't want to add a tag for every possibility, it would have the same issue as with Half-Elf and Elf: Not everyone would add all of the different ways to call a trash can as tags, and suddenly, people won't find it with those names.&lt;/p&gt;
-
-&lt;p&gt;We needed an extra tool to guide people towards useful tags and part of our answer for that is synonyms.&lt;/p&gt;
-
-&lt;p&gt;With synonyms, we pick one of those "possible ways to call something" to be an actual tag, and all the others are "synonyms" of this (even if linguistically speaking they aren't &lt;i&gt;technically&lt;/i&gt; 100% synonymous). While searching for that thing, you can enter any of the recognized synonyms, and the search will know to convert it to a tag TaleSpire knows and show the relevant asset&lt;a class='footnote-link' href='#footnote_3'&gt;[3]&lt;/a&gt;.
-We can even have synonyms resolve to multiple tags, which opens some interesting possibilities!&lt;/p&gt;
-
-&lt;h2&gt;Example_of's&lt;/h2&gt;
-
-&lt;p&gt;
-Just as we cannot have tags for every way of calling something, we can't have tags for every kind of thing either. In fact, past a certain point, ultra specific tags hurt discoverability instead of helping it.
-So to complement synonyms, we have "example_of's" (no, we've not found a better term for it). To players they work the same as synonyms, but don't encode quite the same idea.
-As an example, there are many different birds like ostriches, pheasants, geese, cranes, gulls, cuckoos, owls, storks, penguins, eagles, hawks, ... and while our search does recognize a number of those, they are all "example_of" birds - so when entering any of those words into search, TaleSpire suggest "bird". If you do require a more specific bird species, asset name matching has you covered.&lt;/p&gt;
-
-&lt;p&gt;To make this less abstract, here are some screenshots from our graph database - red means "example_of", orange are synonyms and blue are "true" tags. Let's start with an overview over the mammal taxonomy:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/search_postmortem/graph_db_mammal.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
-
-&lt;p&gt;Now let's look at catfolk: It's an example_of pointing to both "human" and "feline":&lt;/p&gt;
-
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/search_postmortem/graph_db_catfolk.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
-
-&lt;p&gt;Jobs were also an interesting challenge - see all the synonyms of "merchant":&lt;/p&gt;
-
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/search_postmortem/graph_db_jobs.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
-
-&lt;p&gt;And here you can see why I did zoomed-in pictures before: This is the whole tag (and synonym/example_of) set for minis:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/search_postmortem/graph_db_all.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;
-
-&lt;h2&gt;Final result&lt;/h2&gt;
-
-&lt;p&gt;
-All of the above techniques, paired with name search, deliver quite nice results:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;You can still find an eagle by searching for "eagle" (which suggests "bird", but still searches for "eagle" in the name of assets), without us needing a tag for every single species (real and fantastical) in existence.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;You can find decent stand-in assets in case the exact thing you were searching for doesn't exist: Maybe there is no eagle miniature, but there is a hawk, which is an okay stand-in and findable by the "next closest group", which is "bird".&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;You can search for names and words that are familiar to you and consistently find the related assets; Both "dragonfolk" as well as "dragonborn" will correctly work for searching.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;
-There is however one more thing I want to mention. Whenever we give any tools to all of you, we're responsible for keeping them working (potentially forever). This is no less true for tags than it is for TaleSpire's slab strings. However because synonyms and example_ofs aren't stored on the assets themselves, but are encoded and recognized in the  search engine, so it is something we (Bouncyrock) can adjust and expand on more easily over time.&lt;/p&gt;
-
-&lt;p&gt;Obviously, on top of all of this you can also add your own custom tags&lt;a class='footnote-link' href='#footnote_4'&gt;[4]&lt;/a&gt; - I'll be talking about those some more later in this series.&lt;/p&gt;
-
-&lt;p&gt;And that wraps up this part. See you in the next one!&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;
-
-&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_0'&gt;&lt;/a&gt;0&lt;/p&gt; &lt;p&gt; It might be that in your specific world/game setting, this is not the case, which illustrates the other issue with widely used fantasy terms: They don't always mean exactly the same thing in all games/worlds, yet TaleSpire tries to be as widely applicable to as many games as possible, so we do have to make some compromises here and there.&lt;/p&gt;
-
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_1'&gt;&lt;/a&gt;1&lt;/p&gt; &lt;p&gt; This might be surprising to hear for non-developers, and unfortunately, it is hard to explain concisely, but here's the run-down: To find something with the text "Elf" when you type in "Half-Elf", an obvious approach would be to split "Half" and "Elf" from the search input and check for both individually. However, this would then also match other Half-creatures (like Half-Demons, Half-Orcs, Half-...), making the search results practically useless. There are, of course, also ways to get around &lt;i&gt;those&lt;/i&gt; issues, but the "smarter" you try to make these kinds of algorithms, the more weird edge cases you introduce and the more likely it is that those won't be fixable by even more added "smartness". This gets even trickier when we remember that we also support community-made content, so we need a system that works reliably across all possible inputs.&lt;/p&gt;
-
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_2'&gt;&lt;/a&gt;2&lt;/p&gt; &lt;p&gt; This can be overridden if there is a need for it - we don't envision this to happen with the Half-Elf -&gt; Elf example, but there are many cross-connections between tags, and sometimes the relation might not always be what the artist had in mind when creating the mini.&lt;/p&gt;
-
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_3'&gt;&lt;/a&gt;3&lt;/p&gt; &lt;p&gt; We will, of course, also not have synonyms for every possible way to call things, that'd be the same impossible task as making all of those tags, but because synonyms aren't stored on the asset and instead are only in the search engine, we can continually update the list of available synonyms without us (or you!) needing to update each individual mini.&lt;/p&gt;
-
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_4'&gt;&lt;/a&gt;4&lt;/p&gt; &lt;p&gt; There is one limitation to custom tags: Any custom tag that is identical to a synonym or example_of term (eg: "dragonfolk") will be replaced by the tags the synonym points to, as it would break search otherwise&lt;/p&gt;
-
-&lt;/div&gt;
-&lt;/html&gt;
-</description><guid isPermaLink="false">https://lprod.dev/blog/search_postmortem_02_Tag_Relations.html</guid><pubDate>Wed, 05 Aug 2026 00:00:00 +0000</pubDate></item><item><title>Search Postmortem Part 5</title><link>https://lprod.dev/blog/search_postmortem_05_Fun_Sidenotes.html</link><description>A deeper dive into TaleSpire's new search
-
-&lt;html&gt;
-&lt;p&gt;Hi!&lt;/p&gt;
-
-&lt;p&gt;This is the fifth and final part of the deep(er) dive into the new tag and search system &lt;/p&gt;
-
-&lt;p&gt;Instead of "engineering" problems, in this devlog, I want to get into a few examples of why the heck all of this took so long. The actual "writing code" part of this journey was (while substantial) not the real issue. Most of the time was spent sitting and brooding about which tags to include, how to relate them to each other, and going back and forth on decisions for many valid reasons.&lt;/p&gt;
-
-&lt;p&gt;So, to share some of our struggles, I'm just going to illuminate a few of the oddities and tricky decisions we encountered along the way. But do know: Those are by far not the only ones.&lt;/p&gt;
-
-&lt;h1&gt;Cats and Dogs&lt;/h1&gt;
-
-&lt;p&gt;
-We really wanted to keep tags reasonably consistent across the board and decided early on that we won't have tags for every single possible species - we just couldn't possibly have a tag for every single animal, real and fantastical. This (and a few other) considerations led to the concept of searching for asset names: if we don't have tags for mouse, weasel, lemur, rabbit, ... we still need a way to find those animals, so we added asset-name search.&lt;/p&gt;
-
-&lt;p&gt;However, while we don't have a "Black-footed Ferret" asset, we only have a "Ferret"; we &lt;i&gt;do&lt;/i&gt; have a "German Shepherd" instead of just "Dog" - the nature of our relationship with our beloved furry companions makes us care more about the smaller details and differences. So try as we might, we can't just have "canine" as the only tag for dogs, the same way we only have "mustelid" for ferrets and weasels, even if that would be "more consistent". No problem, let's just add the dog and cat tag.&lt;/p&gt;
-
-&lt;p&gt;But there's another problem. In part 3, I talked about one goal of the new tag system we aimed for: tag sets being somewhat consistent across different people tagging the same mini. For dogs, this was fine: A Labrador is tagged dog, a Gray Wolf is tagged wolf.
-But what about cats? Sure, a Maine Coone gets the "cat" tag, no problem - but what about a Lion? Leopard? Lynx? Many people consider these felines to be "big cats"&lt;a class='footnote-link' href='#footnote_0'&gt;[0]&lt;/a&gt;, so it's not unlikely they'd also use the "cat" tag for those. Once even just a few do that, there’s no consistent way to distinguish between a cuddly Siamese cat and a decidedly less cuddly tiger.
-To solve this, we got rid of the "cat" tag and instead made it an example_of relation pointing to "feline"&lt;a class='footnote-link' href='#footnote_1'&gt;[1]&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h1&gt;Art Style and Games&lt;/h1&gt;
-
-&lt;p&gt;
-Another frequent cause of trouble is the freedom assets can be used in and how "interpretable" our art style is: There's nothing visually distinguishable between an elf and a half-elf. Both look vaguely human with pointy ears (even worse if they're wearing something with a hood!), but that's about it&lt;a class='footnote-link' href='#footnote_2'&gt;[2]&lt;/a&gt;. A similar story for demons and half-demons. For these "half" tags, we mostly rely on tag relations solving inconsistency, so all of those are findable under "elf", "demon", ... and if the artist making the asset feels like "but that is actually a half-something for real!" they can additionally tag them as said half-something.&lt;/p&gt;
-
-&lt;p&gt;A more interesting problem is tagging assets that are entirely up to interpretation. This happens less with creatures, but we also started working on tags for tiles and props, which encountered this a lot: For example, who's to say whether a white/yellow-ish grainy substance in a sack of grains is actually grains? It could just as well be sand, flour, small pebbles, or some futuristic composite material.&lt;/p&gt;
-
-&lt;p&gt;Job tags had similar problems - we want them so you can easily find a blacksmith to put in your smithy or a scientist for your evil corporation laboratory. But we noticed that, especially in modern and sci-fi settings, people who do a certain job don't really "look" like that job. An accountant has no special features to distinguish them from any other office worker - this is less of an issue for more "physical" jobs (eg: a blacksmith carrying a hammer and wearing heavy duty apron and gloves), but even then, if a barkeep doesn't happen to carry a glass but instead just a towel for cleaning the bar it might as well be a janitor.&lt;/p&gt;
-
-&lt;p&gt;So which ones are visually distinct and important enough to add, and which ones aren't?&lt;/p&gt;
-
-&lt;h1&gt;Not everyone is a biologist&lt;/h1&gt;
-
-&lt;p&gt;
-While we ended up with a fairly in-depth taxonomic tree, getting there was challenging: first, how do made-up fantasy creatures fit into real-world taxonomy, and second, not everyone is a biologist.&lt;/p&gt;
-
-&lt;p&gt;Let's look at the latter some more. While we could reasonably assume that most people know what canine and feline mean, the same isn't true for mustelid (eg: weasels, ferrets, badgers), cetacean (eg: whales, dolphins), or whatever the fresh hell "procyonidae" (eg: raccoons) are. However, to find relevant stand-ins&lt;a class='footnote-link' href='#footnote_3'&gt;[3]&lt;/a&gt; we do need these grouping tags. It was incredibly difficult to draw the line between "this is too obscure (looking at you, procyonidae)" and "this is reasonable (equine, bovine, mustelid, ...)". But even those "reasonable" ones still need to be learnable and discoverable for people who don't know them.&lt;/p&gt;
-
-&lt;p&gt;In some cases, we could also use the more commonly known word instead of the "scientifically correct" one: For example, as far as "animals that most people can name and care about in a TTRPG" go, Procyonidae pretty much only contain raccoons, so we skipped this horrible word and just added a "raccoon" tag instead. Similarly, for bears, we could have added "ursine"&lt;a class='footnote-link' href='#footnote_4'&gt;[4]&lt;/a&gt;, but all the ursines we care about are just "something bear", so we went with just adding a "bear" tag instead.&lt;/p&gt;
-
-&lt;h1&gt;Synonym Kinds&lt;/h1&gt;
-
-&lt;p&gt;
-While fleshing out the tag list we came across another language oddity - not only do different terms for the same thing exist, but also the same term can have different (mutually exclusive) meanings depending on context. For example, a "dragonfolk" person will always be well described by "dragon" and "humanoid" - however "exoskeleton" can relate to insects, or robots/mechs with people inside, but crucially not both at the same time.
-This difference between some synonyms that point to more than one tag implying all of those tags and some implying only one of those made them incompatible with each other with regards to the search UI tooling. Luckily, all of the cases we encountered where only one of the pointed tags could be true at a time were quite niche and unimportant terms, so for the time being we just removed them instead of having to work around (and intuitively show) this difference for just two very rare uses.&lt;/p&gt;
-
-&lt;h1&gt;Ordering&lt;/h1&gt;
-
-&lt;p&gt;
-Tag relations make it easy to group tags and synonyms together while keeping duplicates in check, but what remained tricky was choosing which one becomes the "main" one - should fighter point to warrior or warrior to fighter? Turtles and tortoises are different, but not really (visually) different enough to warrant two separate tags. But which of the two should we keep and which should only be a "synonym" of the other?
-This was a frequent source of discussion, followed by researching word usage frequency and definitions, followed by discussion, followed by...&lt;/p&gt;
-
-&lt;h1&gt;Ambiguity&lt;/h1&gt;
-
-&lt;p&gt;
-Originally, we intended for minis to be categorized between "Alive", "Undead", and "Animated", where the latter would be some sort of made-to-move-through-magic-or-technology - so things like golems, floating armors, and robots.
-But we quickly realized that whether a floating armor is magically floating (enchanted), or possessed by a ghost (undead), and whether undead is even different from animated or still counts as "magic" or not, was extremely subjective and depended on the particular world and setting you looked at.
-However, we still wanted to be able to search for undead as enemies, while also having the distinction to be able to populate an evil wizard tower with appropriate magical workers/guards.
-In the end, we went for Alive/Undead/Enchanted, where "Alive" is the "default assumption" (any mini that's not undead or enchanted), "Undead" is the default "fuzzy" definition of undead, so your typical zombies, ghouls, skeletons, and company, while "Enchanted" refers to inanimate objects that were compelled to move by magic. The "robot" use case is handled separately through the "machine" tag instead.&lt;/p&gt;
-
-&lt;p&gt;And with this we have reached the end of this deep dive series into (some parts of) the new search and tag system! I hope you've enjoyed this slightly different kind of devlog, but now it's back to coding for me. See you in the next log!&lt;/p&gt;
-
-&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_0'&gt;&lt;/a&gt;0&lt;/p&gt; &lt;p&gt; I'm a bit annoyed at that term in English - while German does also have "Großkatze" (which literally translates to "big cat"), we also have "Raubkatze" which roughly translates to something akin to "cat of prey" (like bird of prey), or more literally "Preying Cat" which - in my opinion - does a better job at distinguishing domesticated/"pet" cats from wild cats (and especially the big ones), even though I know our fuzzy little house friends are also vicious hunters in their own right.&lt;/p&gt;
-
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_1'&gt;&lt;/a&gt;1&lt;/p&gt; &lt;p&gt; We also added a "house cat" example_of which points to both feline and domestic to be able to find specifically just pet cats quicker.&lt;/p&gt;
-
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_2'&gt;&lt;/a&gt;2&lt;/p&gt; &lt;p&gt; I've already touched on this a bit in part 2 about tag relations - it might of course be that there is a more pronounced visual difference in whatever fantasy world you are playing in, but since TaleSpire strives to be as system- and world-agnostic as reasonably possible, we can't really account for that. In most worlds, the differences are minor to non-existent, especially with our "zoomed out miniature" style.&lt;/p&gt;
-
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_3'&gt;&lt;/a&gt;3&lt;/p&gt; &lt;p&gt; "Stand-ins" as in, "Oh, I wanted to have a hawk, but that asset doesn't exist, let's instead see birds for the next best/closest thing".&lt;/p&gt;
-
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_4'&gt;&lt;/a&gt;4&lt;/p&gt; &lt;p&gt; &lt;i&gt;Technically&lt;/i&gt; Ursid or Ursidae, "ursine" is the accompanying adjective roughly meaning "resembling an Ursidae (bear)". The same goes for Canidae, Felidae, ... but in normal language use, the terms are often used interchangeably, and from what we could gather, the -ne adjectives were more common&lt;/p&gt;
-
-&lt;/div&gt;
-&lt;/html&gt;
-</description><guid isPermaLink="false">https://lprod.dev/blog/search_postmortem_05_Fun_Sidenotes.html</guid><pubDate>Wed, 14 Oct 2026 00:00:00 +0000</pubDate></item><item><title>Search Postmortem Part 1</title><link>https://lprod.dev/blog/search_postmortem_01_Tags_Basics.html</link><description>A deeper dive into TaleSpire's new search
-
-&lt;html&gt;
-&lt;h1&gt;Tags&lt;/h1&gt;
-
-&lt;p&gt;
-So, what are tags and why do we need them? In short, tags are "some text" that describes a thing or properties of a thing. Usually that’s a single word, where in our case the "the thing" is minis&lt;a class='footnote-link' href='#footnote_0'&gt;[0]&lt;/a&gt;. For example, a tag for a mini might be "human", and for a tile it could be "wood".&lt;/p&gt;
-
-&lt;p&gt;Technically, all of the information of tags could be contained in the name, but that would quickly become unwieldy - "Armed Dragonborn Warrior with Bow and Sword" or "Half-Elf Blacksmith" aren't great names.
-These aren't good for a few reasons: Names get super long, search algorithms have a hard time actually finding things, and people tend not to always agree on how exactly to call things. The Half-Elf Blacksmith is especially interesting, but I’ll leave that for a future post.&lt;/p&gt;
-
-&lt;p&gt;Tags solve that.&lt;/p&gt;
-
-&lt;h1&gt;What does "solve" mean&lt;/h1&gt;
-
-&lt;p&gt;
-No two people will always agree on how to name things, how to describe them, and especially not how to categorize them. No tag system will ever truly "solve" that problem, because there are no true correct answers.&lt;/p&gt;
-
-&lt;p&gt;We can, at best, make useful tools that allow most people to have a better experience than without them. So when I say "Tags solve that", what I really mean is "Tags solve some of the aforementioned problems to varying degrees of success and bring a bunch of their own issues and idiosyncrasies, but we’d on average be worse off without them."&lt;/p&gt;
-
-&lt;h1&gt;We cannot ship our memories&lt;/h1&gt;
-
-&lt;p&gt;
-Unfortunately, there are many perfectly valid ways to tag things - there is no "objectively correct" way. For example: Let's pretend we want to learn about worms. First, we'll check the Wikipedia article on worms: "Worms are many different distantly related bilateral animals[...]".&lt;/p&gt;
-
-&lt;p&gt;Wait what.&lt;/p&gt;
-
-&lt;p&gt;We got half a sentence in, and suddenly worms are different, &lt;i&gt;distantly&lt;/i&gt; related animals? And that sentence doesn't even let on just how distant "distantly" is, believe me, it's wild&lt;a class='footnote-link' href='#footnote_1'&gt;[1]&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;But maybe we can at least be perfectly objective with tiles? Also, no, because all we can do in TaleSpire is look at things to describe them, we have no way of reliably distinguishing between brass and gold just by looking at it - and we don't even want to! A big part of building in TaleSpire is using and even more so "mis"using assets; It's not up to us (Bouncyrock) whether an asset is a telescope or a mortar tube, that's up to you (the players) when using them!&lt;/p&gt;
-
-&lt;p&gt;So if objective isn't an option, subjective tags it is - unfortunately, that means different people will have different ideas on how that should be done and we need to pick one way. But, as the section heading already said: we cannot ship our memories and knowledge about how our decisions for the tag system work. So we need some way for TaleSpire to (intuitively) show you all how our tags work, which ones we have, and when to use them.&lt;/p&gt;
-
-&lt;p&gt;
-How we tackled all that is what I'll get into the next part of this series, this one is already getting long enough.
-See you then!&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;
-
-&lt;p&gt;
-[0]: Everything is already set up for tiles and props to use the new tag system, but we have not finalized the actual list of new tags for them, which is a significant part of the work.&lt;/p&gt;
-
-&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_1'&gt;&lt;/a&gt;1&lt;/p&gt; &lt;p&gt; The only taxonomic classification&lt;a class='footnote-link' href='#footnote_2'&gt;[2]&lt;/a&gt; that Nematodes (wormy-looking things that account for 80% of all living animals in the world) and Earthworms have in common is that they're animals. That's it. There's no more taxonomic common ground between the two. They are pretty much as distant from each other as they are from humans. (And yes, I know Nematode is a Phylum and Earthworm a Suborder, which is a whole different story that a biologist should get into, not a software developer) Of course, when all is said and done, we require words that adequately describe the visuals of assets, so the "worm" tag does in fact exist, and it is useful - this was only to illustrate the impossibility of being "factual and objective". Also, don't even get me started on fish.&lt;/p&gt;
-
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_2'&gt;&lt;/a&gt;2&lt;/p&gt; &lt;p&gt; I didn't want to use recursive footnotes, yet here we are. I want to add at this point, while we're talking about "objective" classifiers, that as much as taxonomy is rooted in verifiable science, it is also still a bunch of subjective, human-made words trying to classify the unclassifiable reality into more-or-less neat boxes, because that’s what our human brains have evolved to prefer. In the end, as much as taxonomy is a science (and it is!), it is also an imprecise, subjective tool for humans to try to wrap their brains around the impossible complexity of life. Also, it often isn't all that useful for classifying things "based on looks" which we need for TaleSpire, as we've long since moved away from "look based taxonomy" like that&lt;/p&gt;
-
-&lt;/div&gt;
-&lt;/html&gt;
-</description><guid isPermaLink="false">https://lprod.dev/blog/search_postmortem_01_Tags_Basics.html</guid><pubDate>Wed, 29 Jul 2026 00:00:00 +0000</pubDate></item><item><title>Search Postmortem Part 4</title><link>https://lprod.dev/blog/search_postmortem_04_Tag_Ranking.html</link><description>A deeper dive into TaleSpire's new search
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>lprod Blog</title><link>https://lprod.dev/rss.xml</link><description>Random ramblings in various projects I work on</description><atom:link href="https://lprod.dev/rss.xml" rel="self"/><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><language>en</language><lastBuildDate>Thu, 29 Oct 2026 21:28:45 +0000</lastBuildDate><item><title>Search Postmortem Part 4</title><link>https://lprod.dev/blog/search_postmortem_04_Tag_Ranking.html</link><description>A deeper dive into TaleSpire's new search
 
 &lt;html&gt;
 &lt;p&gt;After covering a lot of the broad ideas behind the tag system, I now want to turn some attention to the nitty-gritty: How do we go from "some text a player entered in the search field" to a list of (hopefully relevant) results?&lt;/p&gt;
@@ -395,7 +137,265 @@ For other components like capacitors, inductors, diodes, ... the water-pipe anal
 
 &lt;/div&gt;
 &lt;/html&gt;
-</description><guid isPermaLink="false">https://lprod.dev/blog/search_postmortem_04_Tag_Ranking.html</guid><pubDate>Mon, 31 Aug 2026 00:00:00 +0000</pubDate></item><item><title>Plasma Sprint and more</title><link>https://lprod.dev/blog/monthly_2025_04.html</link><description>So many phones!
+</description><guid isPermaLink="false">https://lprod.dev/blog/search_postmortem_04_Tag_Ranking.html</guid><pubDate>Mon, 31 Aug 2026 00:00:00 +0000</pubDate></item><item><title>Search Postmortem Part 5</title><link>https://lprod.dev/blog/search_postmortem_05_Fun_Sidenotes.html</link><description>A deeper dive into TaleSpire's new search
+
+&lt;html&gt;
+&lt;p&gt;Hi!&lt;/p&gt;
+
+&lt;p&gt;This is the fifth and final part of the deep(er) dive into the new tag and search system &lt;/p&gt;
+
+&lt;p&gt;Instead of "engineering" problems, in this devlog, I want to get into a few examples of why the heck all of this took so long. The actual "writing code" part of this journey was (while substantial) not the real issue. Most of the time was spent sitting and brooding about which tags to include, how to relate them to each other, and going back and forth on decisions for many valid reasons.&lt;/p&gt;
+
+&lt;p&gt;So, to share some of our struggles, I'm just going to illuminate a few of the oddities and tricky decisions we encountered along the way. But do know: Those are by far not the only ones.&lt;/p&gt;
+
+&lt;h1&gt;Cats and Dogs&lt;/h1&gt;
+
+&lt;p&gt;
+We really wanted to keep tags reasonably consistent across the board and decided early on that we won't have tags for every single possible species - we just couldn't possibly have a tag for every single animal, real and fantastical. This (and a few other) considerations led to the concept of searching for asset names: if we don't have tags for mouse, weasel, lemur, rabbit, ... we still need a way to find those animals, so we added asset-name search.&lt;/p&gt;
+
+&lt;p&gt;However, while we don't have a "Black-footed Ferret" asset, we only have a "Ferret"; we &lt;i&gt;do&lt;/i&gt; have a "German Shepherd" instead of just "Dog" - the nature of our relationship with our beloved furry companions makes us care more about the smaller details and differences. So try as we might, we can't just have "canine" as the only tag for dogs, the same way we only have "mustelid" for ferrets and weasels, even if that would be "more consistent". No problem, let's just add the dog and cat tag.&lt;/p&gt;
+
+&lt;p&gt;But there's another problem. In part 3, I talked about one goal of the new tag system we aimed for: tag sets being somewhat consistent across different people tagging the same mini. For dogs, this was fine: A Labrador is tagged dog, a Gray Wolf is tagged wolf.
+But what about cats? Sure, a Maine Coone gets the "cat" tag, no problem - but what about a Lion? Leopard? Lynx? Many people consider these felines to be "big cats"&lt;a class='footnote-link' href='#footnote_0'&gt;[0]&lt;/a&gt;, so it's not unlikely they'd also use the "cat" tag for those. Once even just a few do that, there’s no consistent way to distinguish between a cuddly Siamese cat and a decidedly less cuddly tiger.
+To solve this, we got rid of the "cat" tag and instead made it an example_of relation pointing to "feline"&lt;a class='footnote-link' href='#footnote_1'&gt;[1]&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1&gt;Art Style and Games&lt;/h1&gt;
+
+&lt;p&gt;
+Another frequent cause of trouble is the freedom assets can be used in and how "interpretable" our art style is: There's nothing visually distinguishable between an elf and a half-elf. Both look vaguely human with pointy ears (even worse if they're wearing something with a hood!), but that's about it&lt;a class='footnote-link' href='#footnote_2'&gt;[2]&lt;/a&gt;. A similar story for demons and half-demons. For these "half" tags, we mostly rely on tag relations solving inconsistency, so all of those are findable under "elf", "demon", ... and if the artist making the asset feels like "but that is actually a half-something for real!" they can additionally tag them as said half-something.&lt;/p&gt;
+
+&lt;p&gt;A more interesting problem is tagging assets that are entirely up to interpretation. This happens less with creatures, but we also started working on tags for tiles and props, which encountered this a lot: For example, who's to say whether a white/yellow-ish grainy substance in a sack of grains is actually grains? It could just as well be sand, flour, small pebbles, or some futuristic composite material.&lt;/p&gt;
+
+&lt;p&gt;Job tags had similar problems - we want them so you can easily find a blacksmith to put in your smithy or a scientist for your evil corporation laboratory. But we noticed that, especially in modern and sci-fi settings, people who do a certain job don't really "look" like that job. An accountant has no special features to distinguish them from any other office worker - this is less of an issue for more "physical" jobs (eg: a blacksmith carrying a hammer and wearing heavy duty apron and gloves), but even then, if a barkeep doesn't happen to carry a glass but instead just a towel for cleaning the bar it might as well be a janitor.&lt;/p&gt;
+
+&lt;p&gt;So which ones are visually distinct and important enough to add, and which ones aren't?&lt;/p&gt;
+
+&lt;h1&gt;Not everyone is a biologist&lt;/h1&gt;
+
+&lt;p&gt;
+While we ended up with a fairly in-depth taxonomic tree, getting there was challenging: first, how do made-up fantasy creatures fit into real-world taxonomy, and second, not everyone is a biologist.&lt;/p&gt;
+
+&lt;p&gt;Let's look at the latter some more. While we could reasonably assume that most people know what canine and feline mean, the same isn't true for mustelid (eg: weasels, ferrets, badgers), cetacean (eg: whales, dolphins), or whatever the fresh hell "procyonidae" (eg: raccoons) are. However, to find relevant stand-ins&lt;a class='footnote-link' href='#footnote_3'&gt;[3]&lt;/a&gt; we do need these grouping tags. It was incredibly difficult to draw the line between "this is too obscure (looking at you, procyonidae)" and "this is reasonable (equine, bovine, mustelid, ...)". But even those "reasonable" ones still need to be learnable and discoverable for people who don't know them.&lt;/p&gt;
+
+&lt;p&gt;In some cases, we could also use the more commonly known word instead of the "scientifically correct" one: For example, as far as "animals that most people can name and care about in a TTRPG" go, Procyonidae pretty much only contain raccoons, so we skipped this horrible word and just added a "raccoon" tag instead. Similarly, for bears, we could have added "ursine"&lt;a class='footnote-link' href='#footnote_4'&gt;[4]&lt;/a&gt;, but all the ursines we care about are just "something bear", so we went with just adding a "bear" tag instead.&lt;/p&gt;
+
+&lt;h1&gt;Synonym Kinds&lt;/h1&gt;
+
+&lt;p&gt;
+While fleshing out the tag list we came across another language oddity - not only do different terms for the same thing exist, but also the same term can have different (mutually exclusive) meanings depending on context. For example, a "dragonfolk" person will always be well described by "dragon" and "humanoid" - however "exoskeleton" can relate to insects, or robots/mechs with people inside, but crucially not both at the same time.
+This difference between some synonyms that point to more than one tag implying all of those tags and some implying only one of those made them incompatible with each other with regards to the search UI tooling. Luckily, all of the cases we encountered where only one of the pointed tags could be true at a time were quite niche and unimportant terms, so for the time being we just removed them instead of having to work around (and intuitively show) this difference for just two very rare uses.&lt;/p&gt;
+
+&lt;h1&gt;Ordering&lt;/h1&gt;
+
+&lt;p&gt;
+Tag relations make it easy to group tags and synonyms together while keeping duplicates in check, but what remained tricky was choosing which one becomes the "main" one - should fighter point to warrior or warrior to fighter? Turtles and tortoises are different, but not really (visually) different enough to warrant two separate tags. But which of the two should we keep and which should only be a "synonym" of the other?
+This was a frequent source of discussion, followed by researching word usage frequency and definitions, followed by discussion, followed by...&lt;/p&gt;
+
+&lt;h1&gt;Ambiguity&lt;/h1&gt;
+
+&lt;p&gt;
+Originally, we intended for minis to be categorized between "Alive", "Undead", and "Animated", where the latter would be some sort of made-to-move-through-magic-or-technology - so things like golems, floating armors, and robots.
+But we quickly realized that whether a floating armor is magically floating (enchanted), or possessed by a ghost (undead), and whether undead is even different from animated or still counts as "magic" or not, was extremely subjective and depended on the particular world and setting you looked at.
+However, we still wanted to be able to search for undead as enemies, while also having the distinction to be able to populate an evil wizard tower with appropriate magical workers/guards.
+In the end, we went for Alive/Undead/Enchanted, where "Alive" is the "default assumption" (any mini that's not undead or enchanted), "Undead" is the default "fuzzy" definition of undead, so your typical zombies, ghouls, skeletons, and company, while "Enchanted" refers to inanimate objects that were compelled to move by magic. The "robot" use case is handled separately through the "machine" tag instead.&lt;/p&gt;
+
+&lt;p&gt;And with this we have reached the end of this deep dive series into (some parts of) the new search and tag system! I hope you've enjoyed this slightly different kind of devlog, but now it's back to coding for me. See you in the next log!&lt;/p&gt;
+
+&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_0'&gt;&lt;/a&gt;0&lt;/p&gt; &lt;p&gt; I'm a bit annoyed at that term in English - while German does also have "Großkatze" (which literally translates to "big cat"), we also have "Raubkatze" which roughly translates to something akin to "cat of prey" (like bird of prey), or more literally "Preying Cat" which - in my opinion - does a better job at distinguishing domesticated/"pet" cats from wild cats (and especially the big ones), even though I know our fuzzy little house friends are also vicious hunters in their own right.&lt;/p&gt;
+
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_1'&gt;&lt;/a&gt;1&lt;/p&gt; &lt;p&gt; We also added a "house cat" example_of which points to both feline and domestic to be able to find specifically just pet cats quicker.&lt;/p&gt;
+
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_2'&gt;&lt;/a&gt;2&lt;/p&gt; &lt;p&gt; I've already touched on this a bit in part 2 about tag relations - it might of course be that there is a more pronounced visual difference in whatever fantasy world you are playing in, but since TaleSpire strives to be as system- and world-agnostic as reasonably possible, we can't really account for that. In most worlds, the differences are minor to non-existent, especially with our "zoomed out miniature" style.&lt;/p&gt;
+
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_3'&gt;&lt;/a&gt;3&lt;/p&gt; &lt;p&gt; "Stand-ins" as in, "Oh, I wanted to have a hawk, but that asset doesn't exist, let's instead see birds for the next best/closest thing".&lt;/p&gt;
+
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_4'&gt;&lt;/a&gt;4&lt;/p&gt; &lt;p&gt; &lt;i&gt;Technically&lt;/i&gt; Ursid or Ursidae, "ursine" is the accompanying adjective roughly meaning "resembling an Ursidae (bear)". The same goes for Canidae, Felidae, ... but in normal language use, the terms are often used interchangeably, and from what we could gather, the -ne adjectives were more common&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/html&gt;
+</description><guid isPermaLink="false">https://lprod.dev/blog/search_postmortem_05_Fun_Sidenotes.html</guid><pubDate>Wed, 14 Oct 2026 00:00:00 +0000</pubDate></item><item><title>Search Postmortem Part 3</title><link>https://lprod.dev/blog/search_postmortem_03_Custom_Assets.html</link><description>A deeper dive into TaleSpire's new search
+
+&lt;html&gt;
+&lt;p&gt;While I already talked a bit about tag discoverability and consistency, especially the latter is a bit more involved and will need more explanation.&lt;/p&gt;
+
+&lt;p&gt;It's already tricky enough to get any &lt;i&gt;two&lt;/i&gt; people to agree on how to tag things, however this problem gets exponentially harder once we consider the practically unlimited number of community content creators who are also creating assets for TaleSpire - so for us it was extremely important to provide good tools that allow such a large and diverse group of people to still land on a mostly consistent set of tags.
+If we reframe this problem, we realize we need a tool where if we tell 10 different people to tag the same mini, they should land on (roughly) the same set of tags - ideally while still leaving room for "artist's intent".&lt;/p&gt;
+
+&lt;h1&gt;Tag Questionnaire&lt;/h1&gt;
+
+&lt;p&gt;
+The solution we came up with is the Tag Questionnaire. It works by providing a list of simple questions about a mini, like "Is your creature a human?" and "Is your creature Undead?" that the artist can go through. While answering said questions, it builds up a list of tags that fit the responses. At the end of the questionnaire, most relevant categories and tags have been covered, crucially in a way that is reasonably consistent across different people.&lt;/p&gt;
+
+&lt;p&gt;A big benefit of asking questions in "normal language" like this is that we can explain and guide towards responses that fit some of the idiosyncrasies of our tagging system. As I mentioned in a previous post, all tag systems are inherently and unavoidably subjective, so there will always be some grey areas and ambiguities, but with careful phrasing and extra explanations, we can remove some uncertainty about "which way" to resolve some of those ambiguities.&lt;/p&gt;
+
+&lt;p&gt;However, we are aware that going through a lengthy questionnaire for each miniature you create can take a long time and be annoying, so we also tried making it as "smart" as possible - some questions only show up if others were previously answered in a specific way, we try to glean some information to auto-fill-in responses based on the name of the miniature and you can also copy and paste entire filled-in questionnaires if you're creating a bunch of minis that require similar tags.&lt;/p&gt;
+
+&lt;p&gt;It's important to note that the questionnaire is not the "be-all and end-all" of tagging and is only intended to cover the "basics". While it's likely not necessary for many miniatures, you are absolutely able (and encouraged!) to add any tags you feel are still missing after going through the questionnaire.&lt;/p&gt;
+
+&lt;h1&gt;Custom Tags&lt;/h1&gt;
+
+&lt;p&gt;
+An important part of supporting tags and searching for custom miniatures is the ability to create custom tags. So far, all I've written about refers to our "official" list of tags, however you're also able to add completely new tags to your minis if you feel they're missing.&lt;/p&gt;
+
+&lt;p&gt;This can range from tags we may have simply forgotten to create to tags that only apply to your assets, like the name of a cool new species you came up with. No matter which of those you add as custom tags, they will be searchable exactly like our built-in tags.&lt;/p&gt;
+
+&lt;p&gt;Additionally, custom tags allow us to monitor commonly added tags and evaluate whether to add them to the official tag list. Just keep in mind that sometimes less is more, and we have kept the official tag list deliberately on the smaller side.&lt;/p&gt;
+
+&lt;p&gt;Broadly speaking, you can add whatever custom tag you want with one restriction: Custom tags that are identical to a recognized synonym or example_of are instead replaced by the tags the synonym points to, as they would otherwise degrade the search experience. For example, if you want to add "dragonfolk" as custom tag, it would instead be replaced with the tags "humanoid" and "dragon".&lt;/p&gt;
+
+&lt;p&gt;As of right now, this only covers actual tags - custom synonyms and example_of's cannot be created yet. We can't make any promises on that front, as badly designed synonyms have the potential to degrade the search experience a lot and their installation would potentially be able to happen "as a side product" of installing a custom mini&lt;a class='footnote-link' href='#footnote_0'&gt;[0]&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;
+With all that out of the way, we've gone through the basics of our new tag system and why it works the way it does. That doesn't mean we're done with this series though!&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_0'&gt;&lt;/a&gt;0&lt;/p&gt; &lt;p&gt; Creating the tooling for custom synonym and example_of creation would also be surprisingly complex as all of this is interacting with a fairly large directed graph and making that intuitive and readable is challenging&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/html&gt;
+</description><guid isPermaLink="false">https://lprod.dev/blog/search_postmortem_03_Custom_Assets.html</guid><pubDate>Mon, 24 Aug 2026 00:00:00 +0000</pubDate></item><item><title>Search Postmortem Part 1</title><link>https://lprod.dev/blog/search_postmortem_01_Tags_Basics.html</link><description>A deeper dive into TaleSpire's new search
+
+&lt;html&gt;
+&lt;h1&gt;Tags&lt;/h1&gt;
+
+&lt;p&gt;
+So, what are tags and why do we need them? In short, tags are "some text" that describes a thing or properties of a thing. Usually that’s a single word, where in our case the "the thing" is minis&lt;a class='footnote-link' href='#footnote_0'&gt;[0]&lt;/a&gt;. For example, a tag for a mini might be "human", and for a tile it could be "wood".&lt;/p&gt;
+
+&lt;p&gt;Technically, all of the information of tags could be contained in the name, but that would quickly become unwieldy - "Armed Dragonborn Warrior with Bow and Sword" or "Half-Elf Blacksmith" aren't great names.
+These aren't good for a few reasons: Names get super long, search algorithms have a hard time actually finding things, and people tend not to always agree on how exactly to call things. The Half-Elf Blacksmith is especially interesting, but I’ll leave that for a future post.&lt;/p&gt;
+
+&lt;p&gt;Tags solve that.&lt;/p&gt;
+
+&lt;h1&gt;What does "solve" mean&lt;/h1&gt;
+
+&lt;p&gt;
+No two people will always agree on how to name things, how to describe them, and especially not how to categorize them. No tag system will ever truly "solve" that problem, because there are no true correct answers.&lt;/p&gt;
+
+&lt;p&gt;We can, at best, make useful tools that allow most people to have a better experience than without them. So when I say "Tags solve that", what I really mean is "Tags solve some of the aforementioned problems to varying degrees of success and bring a bunch of their own issues and idiosyncrasies, but we’d on average be worse off without them."&lt;/p&gt;
+
+&lt;h1&gt;We cannot ship our memories&lt;/h1&gt;
+
+&lt;p&gt;
+Unfortunately, there are many perfectly valid ways to tag things - there is no "objectively correct" way. For example: Let's pretend we want to learn about worms. First, we'll check the Wikipedia article on worms: "Worms are many different distantly related bilateral animals[...]".&lt;/p&gt;
+
+&lt;p&gt;Wait what.&lt;/p&gt;
+
+&lt;p&gt;We got half a sentence in, and suddenly worms are different, &lt;i&gt;distantly&lt;/i&gt; related animals? And that sentence doesn't even let on just how distant "distantly" is, believe me, it's wild&lt;a class='footnote-link' href='#footnote_1'&gt;[1]&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;But maybe we can at least be perfectly objective with tiles? Also, no, because all we can do in TaleSpire is look at things to describe them, we have no way of reliably distinguishing between brass and gold just by looking at it - and we don't even want to! A big part of building in TaleSpire is using and even more so "mis"using assets; It's not up to us (Bouncyrock) whether an asset is a telescope or a mortar tube, that's up to you (the players) when using them!&lt;/p&gt;
+
+&lt;p&gt;So if objective isn't an option, subjective tags it is - unfortunately, that means different people will have different ideas on how that should be done and we need to pick one way. But, as the section heading already said: we cannot ship our memories and knowledge about how our decisions for the tag system work. So we need some way for TaleSpire to (intuitively) show you all how our tags work, which ones we have, and when to use them.&lt;/p&gt;
+
+&lt;p&gt;
+How we tackled all that is what I'll get into the next part of this series, this one is already getting long enough.
+See you then!&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;
+[0]: Everything is already set up for tiles and props to use the new tag system, but we have not finalized the actual list of new tags for them, which is a significant part of the work.&lt;/p&gt;
+
+&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_1'&gt;&lt;/a&gt;1&lt;/p&gt; &lt;p&gt; The only taxonomic classification&lt;a class='footnote-link' href='#footnote_2'&gt;[2]&lt;/a&gt; that Nematodes (wormy-looking things that account for 80% of all living animals in the world) and Earthworms have in common is that they're animals. That's it. There's no more taxonomic common ground between the two. They are pretty much as distant from each other as they are from humans. (And yes, I know Nematode is a Phylum and Earthworm a Suborder, which is a whole different story that a biologist should get into, not a software developer) Of course, when all is said and done, we require words that adequately describe the visuals of assets, so the "worm" tag does in fact exist, and it is useful - this was only to illustrate the impossibility of being "factual and objective". Also, don't even get me started on fish.&lt;/p&gt;
+
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_2'&gt;&lt;/a&gt;2&lt;/p&gt; &lt;p&gt; I didn't want to use recursive footnotes, yet here we are. I want to add at this point, while we're talking about "objective" classifiers, that as much as taxonomy is rooted in verifiable science, it is also still a bunch of subjective, human-made words trying to classify the unclassifiable reality into more-or-less neat boxes, because that’s what our human brains have evolved to prefer. In the end, as much as taxonomy is a science (and it is!), it is also an imprecise, subjective tool for humans to try to wrap their brains around the impossible complexity of life. Also, it often isn't all that useful for classifying things "based on looks" which we need for TaleSpire, as we've long since moved away from "look based taxonomy" like that&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/html&gt;
+</description><guid isPermaLink="false">https://lprod.dev/blog/search_postmortem_01_Tags_Basics.html</guid><pubDate>Wed, 29 Jul 2026 00:00:00 +0000</pubDate></item><item><title>Search Postmortem Part 2</title><link>https://lprod.dev/blog/search_postmortem_02_Tag_Relations.html</link><description>A deeper dive into TaleSpire's new search
+
+&lt;html&gt;
+&lt;h1&gt;Tag Relations&lt;/h1&gt;
+
+&lt;p&gt;
+In the last post, I mentioned that tags allow us to add extra information to a mini without ballooning its name.
+One of the examples I gave was the "Half-Elf Blacksmith" which I claimed is a bad name for a mini, which might have caught some of you off guard. In reality, while being a perfectly cromulent name, it gets messy when the name is the only way to search for something. Why, you might ask?&lt;/p&gt;
+
+&lt;p&gt;Imagine you want a blacksmith for your Elven village, you search for "Elf Blacksmith" and... nothing. Because we have a Half-Elf blacksmith, not an Elven one, even though a Half-Elf would visually fulfill the same role&lt;a class='footnote-link' href='#footnote_0'&gt;[0]&lt;/a&gt;. We &lt;i&gt;could&lt;/i&gt; bodge the search implementation to try and get better results, but it's hard to improve this specific case without making others worse&lt;a class='footnote-link' href='#footnote_1'&gt;[1]&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Tags help here: We can now add both "Half-Elf" and "Elf" tags to said blacksmith mini and can search for either of them to find it by simply directly matching the texts, which is exactly what we want.&lt;/p&gt;
+
+&lt;p&gt;That does however only delay the issue so that whoever makes the mini has to actually add both of those tags for this approach to work. We cannot rely on every creator getting this right every time.&lt;/p&gt;
+
+&lt;p&gt;This is where tag relations come in: The "Half-Elf" tag relates to the "Elf" tag in a way where if you add it, the "Elf" tag also gets added automatically&lt;a class='footnote-link' href='#footnote_2'&gt;[2]&lt;/a&gt;. This is step one in improving the odds that both our official assets and community-made ones have a consistent set of tags that people can rely on.&lt;/p&gt;
+
+&lt;h2&gt;Synonyms&lt;/h2&gt;
+
+&lt;p&gt;
+Even within the same language, humans have many different ways of naming the same thing. One person may call a container that's supposed to hold discarded and broken things "garbage bin", another person "dustbin", yet another person just "trash", and yet another ... I think you get the gist.&lt;/p&gt;
+
+&lt;p&gt;We don't want to add a tag for every possibility, it would have the same issue as with Half-Elf and Elf: Not everyone would add all of the different ways to call a trash can as tags, and suddenly, people won't find it with those names.&lt;/p&gt;
+
+&lt;p&gt;We needed an extra tool to guide people towards useful tags and part of our answer for that is synonyms.&lt;/p&gt;
+
+&lt;p&gt;With synonyms, we pick one of those "possible ways to call something" to be an actual tag, and all the others are "synonyms" of this (even if linguistically speaking they aren't &lt;i&gt;technically&lt;/i&gt; 100% synonymous). While searching for that thing, you can enter any of the recognized synonyms, and the search will know to convert it to a tag TaleSpire knows and show the relevant asset&lt;a class='footnote-link' href='#footnote_3'&gt;[3]&lt;/a&gt;.
+We can even have synonyms resolve to multiple tags, which opens some interesting possibilities!&lt;/p&gt;
+
+&lt;h2&gt;Example_of's&lt;/h2&gt;
+
+&lt;p&gt;
+Just as we cannot have tags for every way of calling something, we can't have tags for every kind of thing either. In fact, past a certain point, ultra specific tags hurt discoverability instead of helping it.
+So to complement synonyms, we have "example_of's" (no, we've not found a better term for it). To players they work the same as synonyms, but don't encode quite the same idea.
+As an example, there are many different birds like ostriches, pheasants, geese, cranes, gulls, cuckoos, owls, storks, penguins, eagles, hawks, ... and while our search does recognize a number of those, they are all "example_of" birds - so when entering any of those words into search, TaleSpire suggest "bird". If you do require a more specific bird species, asset name matching has you covered.&lt;/p&gt;
+
+&lt;p&gt;To make this less abstract, here are some screenshots from our graph database - red means "example_of", orange are synonyms and blue are "true" tags. Let's start with an overview over the mammal taxonomy:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/search_postmortem/graph_db_mammal.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+
+&lt;p&gt;Now let's look at catfolk: It's an example_of pointing to both "human" and "feline":&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/search_postmortem/graph_db_catfolk.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+
+&lt;p&gt;Jobs were also an interesting challenge - see all the synonyms of "merchant":&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/search_postmortem/graph_db_jobs.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+
+&lt;p&gt;And here you can see why I did zoomed-in pictures before: This is the whole tag (and synonym/example_of) set for minis:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/search_postmortem/graph_db_all.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2&gt;Final result&lt;/h2&gt;
+
+&lt;p&gt;
+All of the above techniques, paired with name search, deliver quite nice results:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;You can still find an eagle by searching for "eagle" (which suggests "bird", but still searches for "eagle" in the name of assets), without us needing a tag for every single species (real and fantastical) in existence.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;You can find decent stand-in assets in case the exact thing you were searching for doesn't exist: Maybe there is no eagle miniature, but there is a hawk, which is an okay stand-in and findable by the "next closest group", which is "bird".&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;You can search for names and words that are familiar to you and consistently find the related assets; Both "dragonfolk" as well as "dragonborn" will correctly work for searching.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;
+There is however one more thing I want to mention. Whenever we give any tools to all of you, we're responsible for keeping them working (potentially forever). This is no less true for tags than it is for TaleSpire's slab strings. However because synonyms and example_ofs aren't stored on the assets themselves, but are encoded and recognized in the  search engine, so it is something we (Bouncyrock) can adjust and expand on more easily over time.&lt;/p&gt;
+
+&lt;p&gt;Obviously, on top of all of this you can also add your own custom tags&lt;a class='footnote-link' href='#footnote_4'&gt;[4]&lt;/a&gt; - I'll be talking about those some more later in this series.&lt;/p&gt;
+
+&lt;p&gt;And that wraps up this part. See you in the next one!&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_0'&gt;&lt;/a&gt;0&lt;/p&gt; &lt;p&gt; It might be that in your specific world/game setting, this is not the case, which illustrates the other issue with widely used fantasy terms: They don't always mean exactly the same thing in all games/worlds, yet TaleSpire tries to be as widely applicable to as many games as possible, so we do have to make some compromises here and there.&lt;/p&gt;
+
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_1'&gt;&lt;/a&gt;1&lt;/p&gt; &lt;p&gt; This might be surprising to hear for non-developers, and unfortunately, it is hard to explain concisely, but here's the run-down: To find something with the text "Elf" when you type in "Half-Elf", an obvious approach would be to split "Half" and "Elf" from the search input and check for both individually. However, this would then also match other Half-creatures (like Half-Demons, Half-Orcs, Half-...), making the search results practically useless. There are, of course, also ways to get around &lt;i&gt;those&lt;/i&gt; issues, but the "smarter" you try to make these kinds of algorithms, the more weird edge cases you introduce and the more likely it is that those won't be fixable by even more added "smartness". This gets even trickier when we remember that we also support community-made content, so we need a system that works reliably across all possible inputs.&lt;/p&gt;
+
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_2'&gt;&lt;/a&gt;2&lt;/p&gt; &lt;p&gt; This can be overridden if there is a need for it - we don't envision this to happen with the Half-Elf -&gt; Elf example, but there are many cross-connections between tags, and sometimes the relation might not always be what the artist had in mind when creating the mini.&lt;/p&gt;
+
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_3'&gt;&lt;/a&gt;3&lt;/p&gt; &lt;p&gt; We will, of course, also not have synonyms for every possible way to call things, that'd be the same impossible task as making all of those tags, but because synonyms aren't stored on the asset and instead are only in the search engine, we can continually update the list of available synonyms without us (or you!) needing to update each individual mini.&lt;/p&gt;
+
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_4'&gt;&lt;/a&gt;4&lt;/p&gt; &lt;p&gt; There is one limitation to custom tags: Any custom tag that is identical to a synonym or example_of term (eg: "dragonfolk") will be replaced by the tags the synonym points to, as it would break search otherwise&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/html&gt;
+</description><guid isPermaLink="false">https://lprod.dev/blog/search_postmortem_02_Tag_Relations.html</guid><pubDate>Wed, 05 Aug 2026 00:00:00 +0000</pubDate></item><item><title>Plasma Sprint and more</title><link>https://lprod.dev/blog/monthly_2025_04.html</link><description>So many phones!
 
 &lt;html&gt;
 &lt;p&gt;What happens when you put three mobile OS devs into one room for more than a few minutes?&lt;/p&gt;
@@ -463,56 +463,7 @@ I want to circle back to the Sprint and emphasize again how amazing it was - and
 
 
 &lt;/html&gt;
-</description><guid isPermaLink="false">https://lprod.dev/blog/monthly_2025_04.html</guid><pubDate>Wed, 30 Apr 2025 00:00:00 +0000</pubDate></item><item><title>What I did in KDE/Plasma Mobile land in July-ish</title><link>https://lprod.dev/blog/monthly_2024_07.html</link><description>Miscellaneous improvements
-
-&lt;html&gt;
-&lt;p&gt;After my gargantuan post around the overhauled navigation gestures (and a still-in-progress one about KWin corner touch gesture support I'll hopefully have ready soon:tm:) let's tackle a few more smaller things. I'll try to make these somewhat regular (dare I say maybe even monthly?), but let's see how that shakes out, probably more like every 2-3 months if at all.&lt;/p&gt;
-
-&lt;p&gt;As an exciting update, near the end of June (the 25th to be exact) I got accepted to the KDE dev team. This means I now have the ability to properly manage submitted issues on GitLab and, only slightly terrifyingly, I'm now allowed to push code changes to the main repositories and review MRs. Let's see when, if ever, this feeling of trepidation over having to make quadruple sure I don't accidentally do stupid stuff subsides. Should it even subside or is being very extra super duper careful a good thing. I'll keep you posted whenever I find an answer to that :D&lt;/p&gt;
-
-&lt;p&gt;Anyways, let's get to code changes:&lt;/p&gt;
-
-&lt;h1&gt;Merged Changes&lt;/h1&gt;
-
-&lt;p&gt;&lt;/p&gt;
-
-&lt;h2&gt;Task Switcher/Gesture Navigation&lt;/h2&gt;
-
-&lt;p&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;I sat down and overhauled some of the animations around the navigation gestures of the mobile task switcher: The diagonal quick switch should now look smoother and not be nearly-instantaneous and the flick to homescreen is now a tad smoother and actually makes the task preview smaller while animating instead of looking like it's opening the selected task before suddenly vanishing.&lt;/li&gt;&lt;li&gt;Fixed minor logic bug around task switcher quick switch gesture. It should now correctly open the task switcher when you're trying to quick switch towards the end of a list - if there's nothing to quick switch to, it's better to open the full task switcher instead of just returning to the app you were in before.&lt;/li&gt;&lt;li&gt;I added a task icon list to the task scrub gesture in the switcher to make it visually more distinct to the "normal" task switcher and provide more useful info about the open apps you can switch to. In case you didn't know: In gesture-only mode w (I'll admit this one is a bit older, but this is the first installment of this kind of post so I'm not tooooo strict on the "in July" part): &lt;img src="https://lprod.dev/blog/media/monthly_2024_07/taskswitcher_scrub_icon_list.png" alt=""&gt;&lt;/img&gt; I'm still tracking an issue with this where when the task list becomes too long it's not properly centered anymore, but that should be a fairly simple fix once I get to it.&lt;/li&gt;&lt;li&gt;The main task switcher opening gesture now stops tracking the finger 1:1 in the vertical direction once it's moved a bit past its "fully activated" point. This is a bit awkward to explain, but basically it makes it "more reluctant" to follow the finger infinitely far up. If that still doesn't make sense, here's a video: &lt;video controls&gt;
-            &lt;source src="https://lprod.dev/blog/media/monthly_2024_07/taskswitcher_tracking_reluctance.mp4"/&gt;
-            Video tag unsupported!&lt;/video&gt;&lt;/li&gt;&lt;li&gt;The task switcher gestures now have a haptic feedback in some places: When the conditions are met for the task switcher to open (eg: gesture progress is far enough and finger movement speed is slow enough) and when the task scrub mode starts there'll now be a bit of haptic feedback.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;/p&gt;
-
-&lt;h2&gt;Misc&lt;/h2&gt;
-
-&lt;p&gt;
-I've done some bug triaging and reproduction here and there, as well as tried to keep up to date on merge requests in the Plasma Mobile world. I still haven't really done a proper review and merge, but I'm trying to look through all of the other ones to hopefully learn how good reviews look like so at some point I'll be able to do them.&lt;/p&gt;
-
-&lt;h1&gt;Unfinished&lt;/h1&gt;
-
-&lt;p&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;I tried my hand at fixing the task switcher navigation gestures being always active instead of just when the gesture navigation mode is actually turned on. To do this properly we probably need to refactor the &lt;code&gt;mobileshellsettings&lt;/code&gt; plugin to be accessible via C++ (it's just a QML plugin currently), so let's see how that goes.&lt;/li&gt;&lt;li&gt;I started work on more mobile friendly notification popups. The new design uses a swipe-to-dismiss interaction instead of having a close button. While technically "working" from a functionality perspective, the visuals are kind of broken still. I hope to have this complete by 6.2, but there's still some open questions. I'll probably have to get in touch with more experienced Plasma devs to brainstorm why this is going wrong so badly, but I've not quite given up at bashing my head against this myself. Oh and before I forget: this also affects Plasma Desktop when in Touch/Tablet Mode. &lt;video controls&gt;
-            &lt;source src="https://lprod.dev/blog/media/monthly_2024_07/mobile_notifications_fail_1.mp4"/&gt;
-            Video tag unsupported!&lt;/video&gt;&lt;label class="media-caption"&gt;This was my first try, which was smooth but left behind the window shadow&lt;/label&gt; &lt;video controls&gt;
-            &lt;source src="https://lprod.dev/blog/media/monthly_2024_07/mobile_notifications_fail_2.webm"/&gt;
-            Video tag unsupported!&lt;/video&gt;&lt;label class="media-caption"&gt;And this my second try which is more technically correct and properly moves the window, but... I mean, you can see it yourself&lt;/label&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;/p&gt;
-
-&lt;h1&gt;Upcoming&lt;/h1&gt;
-
-&lt;p&gt;
-For the next month I wanna try and finish up my work on KWin touch corner gestures (and get another oversized blog post out about those) and then implement them into Plasma Mobile. Once that is done I want to do more bug fixing, triaging and looking at knocking out some tickets for planned bigger picture improvements for 6.2. Let's see next month if a) I get any of this done or b) I even manage to make a blog post since I'll not be home for a while&lt;/p&gt;
-
-
-&lt;/html&gt;
-</description><guid isPermaLink="false">https://lprod.dev/blog/monthly_2024_07.html</guid><pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate></item><item><title>KDE Akademy 2026</title><link>https://lprod.dev/blog/akademy_2026.html</link><description>My experiences at Akademy
+</description><guid isPermaLink="false">https://lprod.dev/blog/monthly_2025_04.html</guid><pubDate>Wed, 30 Apr 2025 00:00:00 +0000</pubDate></item><item><title>KDE Akademy 2026</title><link>https://lprod.dev/blog/akademy_2026.html</link><description>My experiences at Akademy
 
 &lt;html&gt;
 &lt;p&gt;It's been a hot minute since my last blog post, mostly because I was focusing on finally finishing my studies - while I'm not quite done yet (still missing one exam), I have a good reason to come out of hiding: KDE Akademy 2026 just happened and I was there!&lt;/p&gt;
@@ -543,63 +494,7 @@ Now unfortunately not everything was sunshine and roses - Wednesday was a day of
 
 
 &lt;/html&gt;
-</description><guid isPermaLink="false">https://lprod.dev/blog/akademy_2026.html</guid><pubDate>Thu, 24 Sep 2026 00:00:00 +0000</pubDate></item><item><title>My last 6 months in KDE/Plasma Mobile</title><link>https://lprod.dev/blog/monthly_2025_01.html</link><description>Learning experiences all around
-
-&lt;html&gt;
-&lt;p&gt;Uh. Has it really been almost half a year already? Whoops.&lt;/p&gt;
-
-&lt;p&gt;Unfortunately even with this many months I didn't get quite as much done in KDE-land as I hoped, for two main reasons:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;I've been bouncing back and forth between quite big tasks (for my current level of experience in the KDE stack), leading to a lot of time spent with few results. I've learned a lot, but there's not much to show for it yet.&lt;/li&gt;&lt;li&gt;A good amount of time was taken by preparations for the 2024 European Rocketry Challenge (EuRoC) in Portugal - this was my second time there with the TU Wien Space Team and while it was an absolute blast, prepping a student-build bi-liquid propelled rocket for launch is on the more time consuming side of things. Who'd have thought! Maybe I'll write a dedicated post for this some time in the future, we'll see.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;
-Back to KDE though: It wasn't all just learning - my phone also broke! Well. Kind of. Probably a loose contact in the SIM reader leading to it dropping connection to my SIM card a bit more often than I'd like.
-However this did push me to put said SIM into my old OnePlus 6T which just so happened to be running postmarketOS edge making me an official Linux Mobile daily-driver.&lt;/p&gt;
-
-&lt;p&gt;And I'm happy to report it mostly just worked. Sure, there's a few apps I'd like to have that aren't available on Linux Mobile (yet?), but what's there works and it's enough for me to use it.&lt;/p&gt;
-
-&lt;p&gt;Though there are certainly a number of more-than-a-bit-annoying bugs to be ironed out - so iron them out I will. For now my SIM card is back in my spotty Android phone until I fix a bug which sometimes duplicates incoming calls making them continue ringing while you've already picked up (less than ideal), but after that I think I'll stay on my 6T with Plasma Mobile for a longer while.&lt;/p&gt;
-
-&lt;p&gt;Now before I write another novel, let's get to the stuff I did actually finish in the last few months.&lt;/p&gt;
-
-&lt;h1&gt;Merged Changes&lt;/h1&gt;
-
-&lt;p&gt;&lt;/p&gt;
-
-&lt;h2&gt;Mobile Taskswitcher&lt;/h2&gt;
-
-&lt;p&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Fixed an issue with the animation opening the taskswitcher from homescreen&lt;/li&gt;&lt;li&gt;Fixed the icon list during task scrub mode sometimes being off center&lt;/li&gt;&lt;li&gt;Reintroduced maximizing the selected window when not in docked mode. Technically it shouldn't be necessary since our KWin configuration should force windows to be fullscreen already, but some apps managed to break out of that (mostly GTK based apps), so back in it goes.&lt;/li&gt;&lt;li&gt;Disable blue border on touch gestures in mobile environment - it's nice as an indicator for mouse based gestures, but unnecessary here.&lt;/li&gt;&lt;li&gt;Add double tap on navbar task switcher button to switch between the 2 most recent apps.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;/p&gt;
-
-&lt;h2&gt;Misc&lt;/h2&gt;
-
-&lt;p&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Disabled session restore on mobile (at least until a bug with dialer launching ontop of login screen soft-locking the phone is fixed)&lt;/li&gt;&lt;li&gt;This is not a change by me, but I wanted to mention it because it's great and I mentioned in my last post that I tried (and failed) working on that before: Micah Stanley did a marvelous job at new mobile friendly notifications!&lt;/li&gt;&lt;li&gt;I've also done my first MR reviews which was exciting and a lot more work than I anticipated. At this point I want to thank all the people who have spent time on my MRs already!&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;/p&gt;
-
-&lt;h1&gt;Unfinished&lt;/h1&gt;
-
-&lt;p&gt;
-I still haven't managed to get back to my touch corner gesture MR for KWin due to all the stuff that came in between like:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Fixing that the navigation gestures are still active while the navbar is enabled. Unfortunately this requires a change in how our setting system works and... CMake broke me here. I got pretty close to fixing this but had to leave it be for now for my own sanity's sake. I hope to get back to this soon since this is quite annoying.&lt;/li&gt;&lt;li&gt;Improving plasma-dialer's lockscreen behavior. Right now with session restore it restores above the initial login screen on mobile essentially soft-locking the phone if it happened to be running when the phone was shut down. A similar thing happens when a call is received during the lockscreen - I'm currently figuring out how to best fix that.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;/p&gt;
-
-&lt;p&gt;Well, that's all from me now. Hopefully I manage to do the next post in a more timely manner, but we'll see for how long my current bigger ticket items will keep me occupied for&lt;/p&gt;
-
-
-&lt;/html&gt;
-</description><guid isPermaLink="false">https://lprod.dev/blog/monthly_2025_01.html</guid><pubDate>Sat, 04 Jan 2025 00:00:00 +0000</pubDate></item><item><title>Revamping Plasma Mobile Navigation Gestures</title><link>https://lprod.dev/blog/plasmo_nav_gestures.html</link><description>Down the rabbit hole
+</description><guid isPermaLink="false">https://lprod.dev/blog/akademy_2026.html</guid><pubDate>Thu, 24 Sep 2026 00:00:00 +0000</pubDate></item><item><title>Revamping Plasma Mobile Navigation Gestures</title><link>https://lprod.dev/blog/plasmo_nav_gestures.html</link><description>Down the rabbit hole
 
 &lt;html&gt;
 &lt;p&gt;A few months ago I was kind of toying with the idea to start contributing to Plasma Mobile because I was getting increasingly fed up with Android and I realized if Linux Mobile was going to be my daily driver before I need to buy a new phone I better help out.&lt;/p&gt;
@@ -785,4 +680,109 @@ There's still some bugs to fix, some tasks for later MRs (though much fewer than
 
 
 &lt;/html&gt;
-</description><guid isPermaLink="false">https://lprod.dev/blog/plasmo_nav_gestures.html</guid><pubDate>Sun, 05 May 2024 00:00:00 +0000</pubDate></item></channel></rss>
+</description><guid isPermaLink="false">https://lprod.dev/blog/plasmo_nav_gestures.html</guid><pubDate>Sun, 05 May 2024 00:00:00 +0000</pubDate></item><item><title>What I did in KDE/Plasma Mobile land in July-ish</title><link>https://lprod.dev/blog/monthly_2024_07.html</link><description>Miscellaneous improvements
+
+&lt;html&gt;
+&lt;p&gt;After my gargantuan post around the overhauled navigation gestures (and a still-in-progress one about KWin corner touch gesture support I'll hopefully have ready soon:tm:) let's tackle a few more smaller things. I'll try to make these somewhat regular (dare I say maybe even monthly?), but let's see how that shakes out, probably more like every 2-3 months if at all.&lt;/p&gt;
+
+&lt;p&gt;As an exciting update, near the end of June (the 25th to be exact) I got accepted to the KDE dev team. This means I now have the ability to properly manage submitted issues on GitLab and, only slightly terrifyingly, I'm now allowed to push code changes to the main repositories and review MRs. Let's see when, if ever, this feeling of trepidation over having to make quadruple sure I don't accidentally do stupid stuff subsides. Should it even subside or is being very extra super duper careful a good thing. I'll keep you posted whenever I find an answer to that :D&lt;/p&gt;
+
+&lt;p&gt;Anyways, let's get to code changes:&lt;/p&gt;
+
+&lt;h1&gt;Merged Changes&lt;/h1&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2&gt;Task Switcher/Gesture Navigation&lt;/h2&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;I sat down and overhauled some of the animations around the navigation gestures of the mobile task switcher: The diagonal quick switch should now look smoother and not be nearly-instantaneous and the flick to homescreen is now a tad smoother and actually makes the task preview smaller while animating instead of looking like it's opening the selected task before suddenly vanishing.&lt;/li&gt;&lt;li&gt;Fixed minor logic bug around task switcher quick switch gesture. It should now correctly open the task switcher when you're trying to quick switch towards the end of a list - if there's nothing to quick switch to, it's better to open the full task switcher instead of just returning to the app you were in before.&lt;/li&gt;&lt;li&gt;I added a task icon list to the task scrub gesture in the switcher to make it visually more distinct to the "normal" task switcher and provide more useful info about the open apps you can switch to. In case you didn't know: In gesture-only mode w (I'll admit this one is a bit older, but this is the first installment of this kind of post so I'm not tooooo strict on the "in July" part): &lt;img src="https://lprod.dev/blog/media/monthly_2024_07/taskswitcher_scrub_icon_list.png" alt=""&gt;&lt;/img&gt; I'm still tracking an issue with this where when the task list becomes too long it's not properly centered anymore, but that should be a fairly simple fix once I get to it.&lt;/li&gt;&lt;li&gt;The main task switcher opening gesture now stops tracking the finger 1:1 in the vertical direction once it's moved a bit past its "fully activated" point. This is a bit awkward to explain, but basically it makes it "more reluctant" to follow the finger infinitely far up. If that still doesn't make sense, here's a video: &lt;video controls&gt;
+            &lt;source src="https://lprod.dev/blog/media/monthly_2024_07/taskswitcher_tracking_reluctance.mp4"/&gt;
+            Video tag unsupported!&lt;/video&gt;&lt;/li&gt;&lt;li&gt;The task switcher gestures now have a haptic feedback in some places: When the conditions are met for the task switcher to open (eg: gesture progress is far enough and finger movement speed is slow enough) and when the task scrub mode starts there'll now be a bit of haptic feedback.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2&gt;Misc&lt;/h2&gt;
+
+&lt;p&gt;
+I've done some bug triaging and reproduction here and there, as well as tried to keep up to date on merge requests in the Plasma Mobile world. I still haven't really done a proper review and merge, but I'm trying to look through all of the other ones to hopefully learn how good reviews look like so at some point I'll be able to do them.&lt;/p&gt;
+
+&lt;h1&gt;Unfinished&lt;/h1&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;I tried my hand at fixing the task switcher navigation gestures being always active instead of just when the gesture navigation mode is actually turned on. To do this properly we probably need to refactor the &lt;code&gt;mobileshellsettings&lt;/code&gt; plugin to be accessible via C++ (it's just a QML plugin currently), so let's see how that goes.&lt;/li&gt;&lt;li&gt;I started work on more mobile friendly notification popups. The new design uses a swipe-to-dismiss interaction instead of having a close button. While technically "working" from a functionality perspective, the visuals are kind of broken still. I hope to have this complete by 6.2, but there's still some open questions. I'll probably have to get in touch with more experienced Plasma devs to brainstorm why this is going wrong so badly, but I've not quite given up at bashing my head against this myself. Oh and before I forget: this also affects Plasma Desktop when in Touch/Tablet Mode. &lt;video controls&gt;
+            &lt;source src="https://lprod.dev/blog/media/monthly_2024_07/mobile_notifications_fail_1.mp4"/&gt;
+            Video tag unsupported!&lt;/video&gt;&lt;label class="media-caption"&gt;This was my first try, which was smooth but left behind the window shadow&lt;/label&gt; &lt;video controls&gt;
+            &lt;source src="https://lprod.dev/blog/media/monthly_2024_07/mobile_notifications_fail_2.webm"/&gt;
+            Video tag unsupported!&lt;/video&gt;&lt;label class="media-caption"&gt;And this my second try which is more technically correct and properly moves the window, but... I mean, you can see it yourself&lt;/label&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h1&gt;Upcoming&lt;/h1&gt;
+
+&lt;p&gt;
+For the next month I wanna try and finish up my work on KWin touch corner gestures (and get another oversized blog post out about those) and then implement them into Plasma Mobile. Once that is done I want to do more bug fixing, triaging and looking at knocking out some tickets for planned bigger picture improvements for 6.2. Let's see next month if a) I get any of this done or b) I even manage to make a blog post since I'll not be home for a while&lt;/p&gt;
+
+
+&lt;/html&gt;
+</description><guid isPermaLink="false">https://lprod.dev/blog/monthly_2024_07.html</guid><pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate></item><item><title>My last 6 months in KDE/Plasma Mobile</title><link>https://lprod.dev/blog/monthly_2025_01.html</link><description>Learning experiences all around
+
+&lt;html&gt;
+&lt;p&gt;Uh. Has it really been almost half a year already? Whoops.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately even with this many months I didn't get quite as much done in KDE-land as I hoped, for two main reasons:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;I've been bouncing back and forth between quite big tasks (for my current level of experience in the KDE stack), leading to a lot of time spent with few results. I've learned a lot, but there's not much to show for it yet.&lt;/li&gt;&lt;li&gt;A good amount of time was taken by preparations for the 2024 European Rocketry Challenge (EuRoC) in Portugal - this was my second time there with the TU Wien Space Team and while it was an absolute blast, prepping a student-build bi-liquid propelled rocket for launch is on the more time consuming side of things. Who'd have thought! Maybe I'll write a dedicated post for this some time in the future, we'll see.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;
+Back to KDE though: It wasn't all just learning - my phone also broke! Well. Kind of. Probably a loose contact in the SIM reader leading to it dropping connection to my SIM card a bit more often than I'd like.
+However this did push me to put said SIM into my old OnePlus 6T which just so happened to be running postmarketOS edge making me an official Linux Mobile daily-driver.&lt;/p&gt;
+
+&lt;p&gt;And I'm happy to report it mostly just worked. Sure, there's a few apps I'd like to have that aren't available on Linux Mobile (yet?), but what's there works and it's enough for me to use it.&lt;/p&gt;
+
+&lt;p&gt;Though there are certainly a number of more-than-a-bit-annoying bugs to be ironed out - so iron them out I will. For now my SIM card is back in my spotty Android phone until I fix a bug which sometimes duplicates incoming calls making them continue ringing while you've already picked up (less than ideal), but after that I think I'll stay on my 6T with Plasma Mobile for a longer while.&lt;/p&gt;
+
+&lt;p&gt;Now before I write another novel, let's get to the stuff I did actually finish in the last few months.&lt;/p&gt;
+
+&lt;h1&gt;Merged Changes&lt;/h1&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2&gt;Mobile Taskswitcher&lt;/h2&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Fixed an issue with the animation opening the taskswitcher from homescreen&lt;/li&gt;&lt;li&gt;Fixed the icon list during task scrub mode sometimes being off center&lt;/li&gt;&lt;li&gt;Reintroduced maximizing the selected window when not in docked mode. Technically it shouldn't be necessary since our KWin configuration should force windows to be fullscreen already, but some apps managed to break out of that (mostly GTK based apps), so back in it goes.&lt;/li&gt;&lt;li&gt;Disable blue border on touch gestures in mobile environment - it's nice as an indicator for mouse based gestures, but unnecessary here.&lt;/li&gt;&lt;li&gt;Add double tap on navbar task switcher button to switch between the 2 most recent apps.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2&gt;Misc&lt;/h2&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Disabled session restore on mobile (at least until a bug with dialer launching ontop of login screen soft-locking the phone is fixed)&lt;/li&gt;&lt;li&gt;This is not a change by me, but I wanted to mention it because it's great and I mentioned in my last post that I tried (and failed) working on that before: Micah Stanley did a marvelous job at new mobile friendly notifications!&lt;/li&gt;&lt;li&gt;I've also done my first MR reviews which was exciting and a lot more work than I anticipated. At this point I want to thank all the people who have spent time on my MRs already!&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h1&gt;Unfinished&lt;/h1&gt;
+
+&lt;p&gt;
+I still haven't managed to get back to my touch corner gesture MR for KWin due to all the stuff that came in between like:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Fixing that the navigation gestures are still active while the navbar is enabled. Unfortunately this requires a change in how our setting system works and... CMake broke me here. I got pretty close to fixing this but had to leave it be for now for my own sanity's sake. I hope to get back to this soon since this is quite annoying.&lt;/li&gt;&lt;li&gt;Improving plasma-dialer's lockscreen behavior. Right now with session restore it restores above the initial login screen on mobile essentially soft-locking the phone if it happened to be running when the phone was shut down. A similar thing happens when a call is received during the lockscreen - I'm currently figuring out how to best fix that.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Well, that's all from me now. Hopefully I manage to do the next post in a more timely manner, but we'll see for how long my current bigger ticket items will keep me occupied for&lt;/p&gt;
+
+
+&lt;/html&gt;
+</description><guid isPermaLink="false">https://lprod.dev/blog/monthly_2025_01.html</guid><pubDate>Sat, 04 Jan 2025 00:00:00 +0000</pubDate></item></channel></rss>
