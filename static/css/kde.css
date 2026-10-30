@@ -7,7 +7,7 @@
     --kde-separator-color: #4e5359;
 }
 
-:root:has(button.kde:hover, button.kde:focus, button.kde:active, button.kde:focus-within) {
+:root:has(button.kde:hover, button.kde:focus, button.kde:active, #kde-preview:focus-within) {
     --col-primary: white;
 
     --bg-primary: #202326;

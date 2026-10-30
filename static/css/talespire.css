@@ -60,7 +60,7 @@
     --ts-link-hover: var(--ts-default-theme-link-hover);
 }
 
-:root:has(button.talespire:hover, button.talespire:focus, button.talespire:active) {
+:root:has(button.talespire:hover, button.talespire:focus, button.talespire:active, #talespire-preview:focus-within) {
     --col-primary: var(--ts-default-theme-color-primary);
     --col-accent-primary: var(--ts-default-theme-accent-primary);
     --col-link: var(--ts-default-theme-link);

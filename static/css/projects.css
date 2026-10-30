@@ -121,6 +121,18 @@ button.selector:focus, button.selector:active {
     transform: translateX(5%);
 }
 
+a.button-link:has(> button) {
+    display: inline-block;
+    width: fit-content;
+    height: fit-content;
+
+    outline: none;
+}
+
+a.button-link:focus-visible button {
+    outline: 1px solid var(--accent-primary);
+}
+
 #filterSource {
     position: absolute;
     width: 0;
@@ -138,7 +150,8 @@ button.selector:focus, button.selector:active {
     height: fit-content;
 
     transition: all var(--trans-out) ease-in-out;
-    transform: translateX(100%);
+    transform-origin: right;
+    transform: scaleX(0.25) translateX(5%);
     opacity: 0;
 }
 
@@ -165,7 +178,7 @@ button.selector:focus, button.selector:active {
     opacity: 0;
 }
 
-#projects-container:not(:has(button:focus, #previe-container:focus-within)) #preview-placeholder
+#projects-container:not(:has(button:focus, #preview-container:focus-within)) #preview-placeholder
 {
     transition: all var(--trans-out) ease-in-out;
     transition-property: transform, opacity;
@@ -180,7 +193,8 @@ button.selector:focus, button.selector:active {
 #projects-container:has(button.education:focus, #education-preview:focus-within) #education-preview
 {
     transition: all var(--trans-in) ease-in-out;
-    transform: translateX(0);
+    transform-origin: right;
+    transform: scaleX(1) translateX(0);
     opacity: 1;
 }
 
