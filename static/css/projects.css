@@ -85,7 +85,7 @@ li {
 button.selector {
     position: relative;
 
-    border-radius: 5px;
+    border-radius: var(--border-radius-normal);
     border: var(--border-button) 1px solid;
 
     color: var(--col-primary);

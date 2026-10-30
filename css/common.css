@@ -22,6 +22,8 @@
     --trans-in: 0.2s;
     --trans-out: 0.3s;
 
+    --border-radius-normal: 0.4em;
+
     scroll-behavior: smooth;
 }
 
@@ -88,7 +90,7 @@ a.back-button:hover, a.back-button:visited:hover {
 
     color: var(--col-secondary);
     background: var(--bg-primary);
-    border-radius: 0.5em;
+    border-radius: var(--border-radius-normal);
 
     transition: all var(--trans-out) ease-in-out;
     transition-property: background, color;
@@ -185,6 +187,10 @@ footer code {
 @media (-webkit-min-device-pixel-ratio: 2) {
     body {
         font-size: 1.1em;
+    }
+
+    .page-heading {
+        padding-top: 0.35em;
     }
 
     @media (orientation: portrait) {

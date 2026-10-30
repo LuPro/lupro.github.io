@@ -2,10 +2,6 @@
     --content-max-width: 1600px
 }
 
-code, pre {
-    font-size: 1.1em;
-}
-
 .date {
     color: var(--col-secondary);
 }
@@ -37,7 +33,7 @@ li {
     padding: 0.4em 0.5em;
 
     background: var(--bg-secondary);
-    border-radius: 0.3em;
+    border-radius: var(--border-radius-normal);
 
     transition: all var(--trans-out) ease-in-out;
     transition-property: background;
