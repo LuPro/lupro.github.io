@@ -58,9 +58,46 @@ body {
 
 /* elements */
 
+#back-button-container {
+    position: sticky;
+
+    z-index: 1;
+
+    top: 0;
+    left: 0;
+    height: 0;
+}
+
+a.back-button:visited {
+    color: var(--col-secondary);
+    transition: none;
+}
+
+a.back-button:hover, a.back-button:visited:hover {
+    color: var(--col-primary);
+}
+
+.back-button {
+    position: relative;
+
+    top: 0.7em;
+    left: 0.4em;
+    transform: translateY(0.7em);
+
+    padding: 0.3em;
+
+    color: var(--col-secondary);
+    background: var(--bg-primary);
+    border-radius: 0.5em;
+
+    transition: all var(--trans-out) ease-in-out;
+    transition-property: background, color;
+}
+
 .byline, .date {
     display: block;
-    width: 100%;
+    width: 90%;
+    margin: auto;
     text-align: center;
     color: var(--col-primary);
 }
@@ -76,21 +113,21 @@ a {
     color: var(--col-link);
     text-decoration: none;
 
-    transition: color 0.1s ease-in-out;
+    transition: color var(--trans-out) ease-in-out;
 }
 
 a:hover, a:visited:hover {
     color: var(--col-link-hover);
-    transition: color 0.2s ease-in-out;
+    transition: color var(--trans-in) ease-in-out;
 }
 
 a:visited {
     color: var(--col-link-visited);
-    transition: color 0.2s ease-in-out;
+    transition: color var(--trans-in) ease-in-out;
 }
 
 header {
-    margin-top: 0.5em;
+    position: relative;
 }
 
 header:before {
@@ -117,6 +154,7 @@ header:before {
     text-align: center;
     margin-bottom: 0.2em;
     margin-top: 0;
+    padding-top: 0.25em;
 }
 
 main {
@@ -147,5 +185,19 @@ footer code {
 @media (-webkit-min-device-pixel-ratio: 2) {
     body {
         font-size: 1.1em;
+    }
+
+    @media (orientation: portrait) {
+        header {
+            margin-bottom: 1em;
+        }
+
+        .page-heading {
+            font-size: 1.8em;
+        }
+
+        .back-button {
+            font-size: 1em;
+        }
     }
 }

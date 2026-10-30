@@ -12,18 +12,18 @@
     --bg-space: #131340;
 }
 
-:root:has(button.tust:hover, button.tust:focus, button.tust:active, #tust-preview:focus-within) {
+:root:has(button.tust:hover, button.tust:focus, button.tust:active, #tust-preview:focus-within, body.tust) {
     --col-primary: white;
 
     --bg-primary: black;
     --bg-secondary: var(--bg-space);
 
     --col-focus-outline: #455a8e;
-}
 
-body:has(button.tust:hover, button.tust:focus, button.tust:active) {
-    transition: all var(--trans-in) ease-in-out;
-    transition-property: background;
+    body {
+        transition: all var(--trans-in) ease-in-out;
+        transition-property: background;
+    }
 }
 
 #tust-preview.selection-preview {

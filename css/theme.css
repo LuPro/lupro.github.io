@@ -16,25 +16,6 @@ code, pre {
     font-style: italic;
 }
 
-#banner {
-    position: sticky;
-    top: 0;
-    left: 0;
-    height: 0;
-
-    /*background-color: var(--bg-primary);*/
-}
-
-#banner a {
-    position: relative;
-    top: 0.7em;
-    left: 0.4em;
-    transform: translateY(0.7em);
-    padding: 0.3em;
-    background: var(--bg-primary);
-    border-radius: 0.5em;
-}
-
 li {
     padding-bottom: 0.2em;
 }

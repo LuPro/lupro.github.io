@@ -20,6 +20,31 @@ body {
     font-family: sans-serif;
 }
 
+.page-heading {
+    color: var(--col-primary);
+
+    transition: all var(--trans-out) ease-in-out;
+    transition-property: color;
+}
+
+.page-heading:before {
+    position: absolute;
+
+    content: "My Projects";
+    color: var(--col-primary);
+    opacity: 0;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, calc(-27%));
+
+    font: 0.85em "Talu";
+    font-variant: small-caps;
+
+    transition: all var(--trans-out) ease-in-out;
+    transition-property: opacity;
+}
+
 #previewer {
     width: 100px;
     height: 100px;

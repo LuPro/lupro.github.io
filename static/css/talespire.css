@@ -1,3 +1,11 @@
+/* Talu-regular */
+@font-face {
+    font-family: 'Talu';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/Talu-Regular.ttf') format('truetype');
+}
+
 :root {
     --bg-scroll: #fffdbd;
     --bg-scroll-edge: #e3cf7f;
@@ -60,11 +68,78 @@
 
     --bg-primary: var(--ts-default-theme-background-primary);
     --bg-secondary: var(--ts-default-theme-background-secondary);
+
+    body {
+        transition: all var(--trans-in) ease-in-out;
+        transition-property: background;
+    }
+
+    .page-heading {
+        color: transparent;
+
+        transition: all var(--trans-in) ease-in-out;
+        transition-property: color;
+    }
+
+    .page-heading:before, .ts-decor-container {
+        opacity: 1;
+
+        transition: all var(--trans-in) ease-in-out;
+        transition-property: opacity;
+    }
 }
 
-body:has(button.talespire:hover, button.talespire:focus, button.talespire:active) {
-    transition: all var(--trans-in) ease-in-out;
-    transition-property: background;
+.ts-decor-container {
+    position: absolute;
+
+    width: 100%;
+    height: 2.2em;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-top: -0.5em;
+
+    opacity: 0;
+    transition: all var(--trans-out) ease-in-out;
+    transition-property: opacity;
+}
+
+.ts-decor-container .spacer {
+    max-width: 9em;
+}
+
+.ts-squiggle {
+    height: 100%;
+    transform: scaleY(-1);
+}
+
+.ts-border {
+    height: 50%;
+    margin-top: -1.1em;
+
+    margin-left: -2em;
+    transform: scale(-1, -1);
+}
+
+.ts-border.mirrored {
+    margin-right: -2em;
+
+    transform: scaleY(-1);
+}
+
+.ts-squiggle.mirrored {
+    transform: scale(-1, -1);
+}
+
+.mirrored {
+    transform: scaleX(-1);
+}
+
+#talespire-preview.selection-preview {
+    font: 0.9em "Talu";
+    line-height: 1.5;
 }
 
 button.talespire:after {
@@ -99,7 +174,32 @@ button.talespire:after {
 }
 
 button.talespire:hover, button.talespire:focus, button.talespire:active {
+    color: transparent;
+}
+
+button.talespire:before {
+    content: "TaleSpire";
+
+    opacity: 0;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -45%);
+
     color: var(--col-scroll);
+    font: 1.1em "Talu";
+    font-variant: small-caps;
+
+    transition: all var(--trans-out) ease-in-out;
+    transition-property: opacity;
+}
+
+button.talespire:hover:before, button.talespire:focus:before, button.talespire:active:before {
+    opacity: 1;
+
+    transition: all var(--trans-in) ease-in-out;
+    transition-property: opacity;
 }
 
 button.talespire:hover:after, button.talespire:focus:after, button.talespire:active:after {
@@ -122,4 +222,10 @@ button.talespire:hover:after, button.talespire:focus:after, button.talespire:act
     mask-image: url("../assets/scroll_mask.svg");
     mask-size: 100% 100%;
     mask-repeat: no-repeat;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2) {
+    .ts-decor-container {
+        height: 1.7em !important;
+    }
 }

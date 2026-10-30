@@ -12,6 +12,46 @@
 
     --bg-primary: #202326;
     --bg-secondary: #292c30;
+
+    header:before {
+        background: var(--bg-secondary);
+        border-bottom: 1px solid var(--kde-separator-color);
+
+        transition: all var(--trans-in) ease-in-out;
+        transition-property: border, color, background;
+    }
+
+    .back-button {
+        color: transparent;
+        background: transparent;
+
+        transition: all var(--trans-in) ease-in-out;
+        transition-property: background, color;
+    }
+
+    .back-button:after {
+        opacity: 1;
+
+        transition: all var(--trans-in) ease-in-out;
+        transition-property: opacity;
+    }
+}
+
+.back-button:after {
+    position: absolute;
+    left: 0.5em;
+    top: 0.4em;
+
+    content: "";
+
+    width: 2.3em;
+    height: 2.3em;
+
+    background: url("../assets/breeze-back.svg") no-repeat;
+
+    opacity: 0;
+    transition: all var(--trans-out) ease-in-out;
+    transition-property: opacity;
 }
 
 button.kde:active, button.kde:focus {
@@ -22,12 +62,4 @@ button.kde:active, button.kde:focus {
 button.kde:hover {
     border-color: var(--kde-button-border-hover);
     background-color: var(--kde-button-bg);
-}
-
-:root:has(button.kde:hover, button.kde:focus, button.kde:active, button.kde:focus-within) header:before {
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--kde-separator-color);
-
-    transition: all var(--trans-in) ease-in-out;
-    transition-property: border, color, background;
 }
