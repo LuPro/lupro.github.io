@@ -7,8 +7,8 @@ from feedgen.feed import FeedGenerator
 
 from mdparser import MarkdownParser
 
-_base_url = "https://lprod.dev/"
-_base_blog_url = _base_url + "blog/"
+_base_url = "https://lprod.dev"
+_base_blog_url = "/blog/"
 
 
 def debug_parse_blog(path):
@@ -94,34 +94,34 @@ def parse_blogs(template):
 
     kde_feed = FeedGenerator()
     kde_feed.title("lprod KDE Blog")
-    kde_feed.link(href=_base_url + "kde_rss.xml", rel="alternate")
-    kde_feed.link(href=_base_url + "kde_rss.xml", rel="self")
+    kde_feed.link(href=_base_url + "/kde_rss.xml", rel="alternate")
+    kde_feed.link(href=_base_url + "/kde_rss.xml", rel="self")
     kde_feed.description("My exploits in and around KDE projects")
     kde_feed.language("en")
     kde_feed.lastBuildDate(datetime.now(timezone.utc))
 
     global_feed = FeedGenerator()
     global_feed.title("lprod Blog")
-    global_feed.link(href=_base_url + "rss.xml", rel="alternate")
-    global_feed.link(href=_base_url + "rss.xml", rel="self")
+    global_feed.link(href=_base_url + "/rss.xml", rel="alternate")
+    global_feed.link(href=_base_url + "/rss.xml", rel="self")
     global_feed.description("Random ramblings in various projects I work on")
     global_feed.language("en")
     global_feed.lastBuildDate(datetime.now(timezone.utc))
 
     for blog in blogs:
         global_entry = global_feed.add_entry()
-        global_entry.id(blog["url"])
+        global_entry.id(_base_url + blog["url"])
         global_entry.title(blog["title"])
-        global_entry.link(href=blog["url"])
+        global_entry.link(href=_base_url + blog["url"])
         global_entry.description(blog["embed_body"])
         global_entry.author({"name": "Luis Büchi"})
         global_entry.published(blog["date"])
 
         if "KDE" in blog["tags"]:
             kde_entry = kde_feed.add_entry()
-            kde_entry.id(blog["url"])
+            kde_entry.id(_base_url + blog["url"])
             kde_entry.title(blog["title"])
-            kde_entry.link(href=blog["url"])
+            kde_entry.link(href=_base_url + blog["url"])
             kde_entry.description(blog["embed_body"])
             kde_entry.author({"name": "Luis Büchi"})
             kde_entry.published(blog["date"])
