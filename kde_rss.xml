@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>lprod KDE Blog</title><link>https://lprod.dev/kde_rss.xml</link><description>My exploits in and around KDE projects</description><atom:link href="https://lprod.dev/kde_rss.xml" rel="self"/><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><language>en</language><lastBuildDate>Thu, 29 Oct 2026 22:19:00 +0000</lastBuildDate><item><title>Plasma Sprint and more</title><link>https://lprod.dev/blog/monthly_2025_04.html</link><description>So many phones!
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>lprod KDE Blog</title><link>https://lprod.dev/kde_rss.xml</link><description>My exploits in and around KDE projects</description><atom:link href="https://lprod.dev/kde_rss.xml" rel="self"/><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><language>en</language><lastBuildDate>Sat, 31 Oct 2026 19:49:02 +0000</lastBuildDate><item><title>Plasma Sprint and more</title><link>https://lprod.dev/blog/monthly_2025_04.html</link><description>So many phones!
 
 &lt;html&gt;
 &lt;p&gt;What happens when you put three mobile OS devs into one room for more than a few minutes?&lt;/p&gt;
@@ -63,7 +63,7 @@ I did make some progress on other tasks though, even if they (still) aren't done
 &lt;p&gt;
 I want to circle back to the Sprint and emphasize again how amazing it was - and not only that, since then I've kept my SIM card in my postmarketOS Plasma Mobile phone because the two dealbreaker bugs for me are now fixed. My Android will unfortunately stay with me for the foreseeable future mostly due to banking/payment apps, but it's a step in the right direction.&lt;/p&gt;
 
-&lt;p&gt;As an extra goodie for the end, I want to show off Balatro running natively on Plasma Mobile: &lt;a href="https://mastodon.gamedev.place/@l_prod/114401321865300843"&gt;https://mastodon.gamedev.place/@l_prod/114401321865300843&lt;/a&gt; (Tech can be so cool&lt;/p&gt;
+&lt;p&gt;As an extra goodie for the end, I want to show off Balatro running natively on Plasma Mobile: &lt;a href="https://mastodon.gamedev.place/@l_prod/114401321865300843"&gt;https://mastodon.gamedev.place/@l_prod/114401321865300843&lt;/a&gt; (Tech can be so cool)&lt;/p&gt;
 
 
 &lt;/html&gt;
@@ -94,7 +94,7 @@ Now unfortunately not everything was sunshine and roses - Wednesday was a day of
 
 &lt;p&gt;And the worst part: After that we went to a Buschenschank for a good old "Brettljausn" (not sure how to translate, but essentially a meat and cheese buffet) where I &lt;i&gt;also&lt;/i&gt; ate way too much since it's been way too long since my last proper Brettljausn.&lt;/p&gt;
 
-&lt;p&gt;And with that I think I covered everything I wanted to talk about - Thanks so much to everyone organizing and attending to make this such an unforgettable week! If you'll excuse me, I'll now fall into bed and sleep what feels like for several days straight&lt;/p&gt;
+&lt;p&gt;And with that I think I covered everything I wanted to talk about - Thanks so much to everyone organizing and attending to make this such an unforgettable week! If you'll excuse me, I'll now fall into bed and sleep what feels like for several days straight.&lt;/p&gt;
 
 
 &lt;/html&gt;
@@ -280,7 +280,7 @@ I've skipped over a lot of detail and some entire sidequests in this story (with
 &lt;h1&gt;Wrapping Up&lt;/h1&gt;
 
 &lt;p&gt;
-There's still some bugs to fix, some tasks for later MRs (though much fewer than I thought there would be) and some decisions to make, but for now this has been my small odyssey about first fixing then slightly extending then completely rewriting the task switcher and navigation gestures for Plasma Mobil&lt;/p&gt;
+There's still some bugs to fix, some tasks for later MRs (though much fewer than I thought there would be) and some decisions to make, but for now this has been my small odyssey about first fixing then slightly extending then completely rewriting the task switcher and navigation gestures for Plasma Mobile&lt;/p&gt;
 
 
 &lt;/html&gt;
@@ -329,7 +329,7 @@ I've done some bug triaging and reproduction here and there, as well as tried to
 &lt;h1&gt;Upcoming&lt;/h1&gt;
 
 &lt;p&gt;
-For the next month I wanna try and finish up my work on KWin touch corner gestures (and get another oversized blog post out about those) and then implement them into Plasma Mobile. Once that is done I want to do more bug fixing, triaging and looking at knocking out some tickets for planned bigger picture improvements for 6.2. Let's see next month if a) I get any of this done or b) I even manage to make a blog post since I'll not be home for a while&lt;/p&gt;
+For the next month I wanna try and finish up my work on KWin touch corner gestures (and get another oversized blog post out about those) and then implement them into Plasma Mobile. Once that is done I want to do more bug fixing, triaging and looking at knocking out some tickets for planned bigger picture improvements for 6.2. Let's see next month if a) I get any of this done or b) I even manage to make a blog post since I'll not be home for a while.&lt;/p&gt;
 
 
 &lt;/html&gt;
@@ -385,7 +385,7 @@ I still haven't managed to get back to my touch corner gesture MR for KWin due t
 &lt;/ul&gt;
 &lt;p&gt;&lt;/p&gt;
 
-&lt;p&gt;Well, that's all from me now. Hopefully I manage to do the next post in a more timely manner, but we'll see for how long my current bigger ticket items will keep me occupied for&lt;/p&gt;
+&lt;p&gt;Well, that's all from me now. Hopefully I manage to do the next post in a more timely manner, but we'll see for how long my current bigger ticket items will keep me occupied for.&lt;/p&gt;
 
 
 &lt;/html&gt;

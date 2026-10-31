@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>lprod Blog</title><link>https://lprod.dev/rss.xml</link><description>Random ramblings in various projects I work on</description><atom:link href="https://lprod.dev/rss.xml" rel="self"/><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><language>en</language><lastBuildDate>Thu, 29 Oct 2026 22:19:00 +0000</lastBuildDate><item><title>Search Postmortem Part 4</title><link>https://lprod.dev/blog/search_postmortem_04_Tag_Ranking.html</link><description>A deeper dive into TaleSpire's new search
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>lprod Blog</title><link>https://lprod.dev/rss.xml</link><description>Random ramblings in various projects I work on</description><atom:link href="https://lprod.dev/rss.xml" rel="self"/><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><language>en</language><lastBuildDate>Sat, 31 Oct 2026 19:49:02 +0000</lastBuildDate><item><title>Search Postmortem Part 4</title><link>https://lprod.dev/blog/search_postmortem_04_Tag_Ranking.html</link><description>A deeper dive into TaleSpire's new search
 
 &lt;html&gt;
 &lt;p&gt;After covering a lot of the broad ideas behind the tag system, I now want to turn some attention to the nitty-gritty: How do we go from "some text a player entered in the search field" to a list of (hopefully relevant) results?&lt;/p&gt;
@@ -133,7 +133,7 @@ And finally, we have a list of assets that have all the tags you searched for, s
 &lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_5'&gt;&lt;/a&gt;5&lt;/p&gt; &lt;p&gt; "Normal" resistors are quite simple components - essentially, they're just "worse wires". They're made to resist the flow of electricity more than a normal wire would, and that's all they do. They can become more complex depending on how accurately they need to be "worse" and how much power they need to be able to carry, but they're still overall quite simple.
 For other components like capacitors, inductors, diodes, ... the water-pipe analogy unfortunately stops working &lt;i&gt;very&lt;/i&gt; quickly, especially if we don't consider the DC steady state, but that's neither here nor there.&lt;/p&gt;
 
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_6'&gt;&lt;/a&gt;6&lt;/p&gt; &lt;p&gt; An interesting implementation detail is that we technically omit the last division (the outermost 1 / (...) ) because we only care about the ordering, not the actual final "resistance value", and all that 1 / (...) does is make large scores small and small scores large, without changing their order. Besides skipping one relatively costly division, another important benefit is that it doesn't matter in which order the scores get added up and we don't need to keep a list of all individual scores to combine at the end - we can just add the individual 1/score values together and the final sum is the final score which makes it delightfully simple to parallelize across threads for lightning fast live search&lt;/p&gt;
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_6'&gt;&lt;/a&gt;6&lt;/p&gt; &lt;p&gt; An interesting implementation detail is that we technically omit the last division (the outermost 1 / (...) ) because we only care about the ordering, not the actual final "resistance value", and all that 1 / (...) does is make large scores small and small scores large, without changing their order. Besides skipping one relatively costly division, another important benefit is that it doesn't matter in which order the scores get added up and we don't need to keep a list of all individual scores to combine at the end - we can just add the individual 1/score values together and the final sum is the final score which makes it delightfully simple to parallelize across threads for lightning fast live search.&lt;/p&gt;
 
 &lt;/div&gt;
 &lt;/html&gt;
@@ -209,7 +209,7 @@ In the end, we went for Alive/Undead/Enchanted, where "Alive" is the "default as
 
 &lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_3'&gt;&lt;/a&gt;3&lt;/p&gt; &lt;p&gt; "Stand-ins" as in, "Oh, I wanted to have a hawk, but that asset doesn't exist, let's instead see birds for the next best/closest thing".&lt;/p&gt;
 
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_4'&gt;&lt;/a&gt;4&lt;/p&gt; &lt;p&gt; &lt;i&gt;Technically&lt;/i&gt; Ursid or Ursidae, "ursine" is the accompanying adjective roughly meaning "resembling an Ursidae (bear)". The same goes for Canidae, Felidae, ... but in normal language use, the terms are often used interchangeably, and from what we could gather, the -ne adjectives were more common&lt;/p&gt;
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_4'&gt;&lt;/a&gt;4&lt;/p&gt; &lt;p&gt; &lt;i&gt;Technically&lt;/i&gt; Ursid or Ursidae, "ursine" is the accompanying adjective roughly meaning "resembling an Ursidae (bear)". The same goes for Canidae, Felidae, ... but in normal language use, the terms are often used interchangeably, and from what we could gather, the -ne adjectives were more common.&lt;/p&gt;
 
 &lt;/div&gt;
 &lt;/html&gt;
@@ -250,7 +250,7 @@ With all that out of the way, we've gone through the basics of our new tag syste
 
 &lt;p&gt;&lt;/p&gt;
 
-&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_0'&gt;&lt;/a&gt;0&lt;/p&gt; &lt;p&gt; Creating the tooling for custom synonym and example_of creation would also be surprisingly complex as all of this is interacting with a fairly large directed graph and making that intuitive and readable is challenging&lt;/p&gt;
+&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_0'&gt;&lt;/a&gt;0&lt;/p&gt; &lt;p&gt; Creating the tooling for custom synonym and example_of creation would also be surprisingly complex as all of this is interacting with a fairly large directed graph and making that intuitive and readable is challenging.&lt;/p&gt;
 
 &lt;/div&gt;
 &lt;/html&gt;
@@ -298,7 +298,7 @@ See you then!&lt;/p&gt;
 
 &lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_1'&gt;&lt;/a&gt;1&lt;/p&gt; &lt;p&gt; The only taxonomic classification&lt;a class='footnote-link' href='#footnote_2'&gt;[2]&lt;/a&gt; that Nematodes (wormy-looking things that account for 80% of all living animals in the world) and Earthworms have in common is that they're animals. That's it. There's no more taxonomic common ground between the two. They are pretty much as distant from each other as they are from humans. (And yes, I know Nematode is a Phylum and Earthworm a Suborder, which is a whole different story that a biologist should get into, not a software developer) Of course, when all is said and done, we require words that adequately describe the visuals of assets, so the "worm" tag does in fact exist, and it is useful - this was only to illustrate the impossibility of being "factual and objective". Also, don't even get me started on fish.&lt;/p&gt;
 
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_2'&gt;&lt;/a&gt;2&lt;/p&gt; &lt;p&gt; I didn't want to use recursive footnotes, yet here we are. I want to add at this point, while we're talking about "objective" classifiers, that as much as taxonomy is rooted in verifiable science, it is also still a bunch of subjective, human-made words trying to classify the unclassifiable reality into more-or-less neat boxes, because that’s what our human brains have evolved to prefer. In the end, as much as taxonomy is a science (and it is!), it is also an imprecise, subjective tool for humans to try to wrap their brains around the impossible complexity of life. Also, it often isn't all that useful for classifying things "based on looks" which we need for TaleSpire, as we've long since moved away from "look based taxonomy" like that&lt;/p&gt;
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_2'&gt;&lt;/a&gt;2&lt;/p&gt; &lt;p&gt; I didn't want to use recursive footnotes, yet here we are. I want to add at this point, while we're talking about "objective" classifiers, that as much as taxonomy is rooted in verifiable science, it is also still a bunch of subjective, human-made words trying to classify the unclassifiable reality into more-or-less neat boxes, because that’s what our human brains have evolved to prefer. In the end, as much as taxonomy is a science (and it is!), it is also an imprecise, subjective tool for humans to try to wrap their brains around the impossible complexity of life. Also, it often isn't all that useful for classifying things "based on looks" which we need for TaleSpire, as we've long since moved away from "look based taxonomy" like that.&lt;/p&gt;
 
 &lt;/div&gt;
 &lt;/html&gt;
@@ -391,7 +391,7 @@ There is however one more thing I want to mention. Whenever we give any tools to
 
 &lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_3'&gt;&lt;/a&gt;3&lt;/p&gt; &lt;p&gt; We will, of course, also not have synonyms for every possible way to call things, that'd be the same impossible task as making all of those tags, but because synonyms aren't stored on the asset and instead are only in the search engine, we can continually update the list of available synonyms without us (or you!) needing to update each individual mini.&lt;/p&gt;
 
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_4'&gt;&lt;/a&gt;4&lt;/p&gt; &lt;p&gt; There is one limitation to custom tags: Any custom tag that is identical to a synonym or example_of term (eg: "dragonfolk") will be replaced by the tags the synonym points to, as it would break search otherwise&lt;/p&gt;
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_4'&gt;&lt;/a&gt;4&lt;/p&gt; &lt;p&gt; There is one limitation to custom tags: Any custom tag that is identical to a synonym or example_of term (eg: "dragonfolk") will be replaced by the tags the synonym points to, as it would break search otherwise.&lt;/p&gt;
 
 &lt;/div&gt;
 &lt;/html&gt;
@@ -459,7 +459,7 @@ I did make some progress on other tasks though, even if they (still) aren't done
 &lt;p&gt;
 I want to circle back to the Sprint and emphasize again how amazing it was - and not only that, since then I've kept my SIM card in my postmarketOS Plasma Mobile phone because the two dealbreaker bugs for me are now fixed. My Android will unfortunately stay with me for the foreseeable future mostly due to banking/payment apps, but it's a step in the right direction.&lt;/p&gt;
 
-&lt;p&gt;As an extra goodie for the end, I want to show off Balatro running natively on Plasma Mobile: &lt;a href="https://mastodon.gamedev.place/@l_prod/114401321865300843"&gt;https://mastodon.gamedev.place/@l_prod/114401321865300843&lt;/a&gt; (Tech can be so cool&lt;/p&gt;
+&lt;p&gt;As an extra goodie for the end, I want to show off Balatro running natively on Plasma Mobile: &lt;a href="https://mastodon.gamedev.place/@l_prod/114401321865300843"&gt;https://mastodon.gamedev.place/@l_prod/114401321865300843&lt;/a&gt; (Tech can be so cool)&lt;/p&gt;
 
 
 &lt;/html&gt;
@@ -490,7 +490,7 @@ Now unfortunately not everything was sunshine and roses - Wednesday was a day of
 
 &lt;p&gt;And the worst part: After that we went to a Buschenschank for a good old "Brettljausn" (not sure how to translate, but essentially a meat and cheese buffet) where I &lt;i&gt;also&lt;/i&gt; ate way too much since it's been way too long since my last proper Brettljausn.&lt;/p&gt;
 
-&lt;p&gt;And with that I think I covered everything I wanted to talk about - Thanks so much to everyone organizing and attending to make this such an unforgettable week! If you'll excuse me, I'll now fall into bed and sleep what feels like for several days straight&lt;/p&gt;
+&lt;p&gt;And with that I think I covered everything I wanted to talk about - Thanks so much to everyone organizing and attending to make this such an unforgettable week! If you'll excuse me, I'll now fall into bed and sleep what feels like for several days straight.&lt;/p&gt;
 
 
 &lt;/html&gt;
@@ -676,7 +676,7 @@ I've skipped over a lot of detail and some entire sidequests in this story (with
 &lt;h1&gt;Wrapping Up&lt;/h1&gt;
 
 &lt;p&gt;
-There's still some bugs to fix, some tasks for later MRs (though much fewer than I thought there would be) and some decisions to make, but for now this has been my small odyssey about first fixing then slightly extending then completely rewriting the task switcher and navigation gestures for Plasma Mobil&lt;/p&gt;
+There's still some bugs to fix, some tasks for later MRs (though much fewer than I thought there would be) and some decisions to make, but for now this has been my small odyssey about first fixing then slightly extending then completely rewriting the task switcher and navigation gestures for Plasma Mobile&lt;/p&gt;
 
 
 &lt;/html&gt;
@@ -725,7 +725,7 @@ I've done some bug triaging and reproduction here and there, as well as tried to
 &lt;h1&gt;Upcoming&lt;/h1&gt;
 
 &lt;p&gt;
-For the next month I wanna try and finish up my work on KWin touch corner gestures (and get another oversized blog post out about those) and then implement them into Plasma Mobile. Once that is done I want to do more bug fixing, triaging and looking at knocking out some tickets for planned bigger picture improvements for 6.2. Let's see next month if a) I get any of this done or b) I even manage to make a blog post since I'll not be home for a while&lt;/p&gt;
+For the next month I wanna try and finish up my work on KWin touch corner gestures (and get another oversized blog post out about those) and then implement them into Plasma Mobile. Once that is done I want to do more bug fixing, triaging and looking at knocking out some tickets for planned bigger picture improvements for 6.2. Let's see next month if a) I get any of this done or b) I even manage to make a blog post since I'll not be home for a while.&lt;/p&gt;
 
 
 &lt;/html&gt;
@@ -781,7 +781,7 @@ I still haven't managed to get back to my touch corner gesture MR for KWin due t
 &lt;/ul&gt;
 &lt;p&gt;&lt;/p&gt;
 
-&lt;p&gt;Well, that's all from me now. Hopefully I manage to do the next post in a more timely manner, but we'll see for how long my current bigger ticket items will keep me occupied for&lt;/p&gt;
+&lt;p&gt;Well, that's all from me now. Hopefully I manage to do the next post in a more timely manner, but we'll see for how long my current bigger ticket items will keep me occupied for.&lt;/p&gt;
 
 
 &lt;/html&gt;

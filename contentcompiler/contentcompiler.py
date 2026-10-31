@@ -11,6 +11,14 @@ _base_url = "https://lprod.dev/"
 _base_blog_url = _base_url + "blog/"
 
 
+def debug_parse_blog(path):
+    with open(path, 'r') as blog_reader:
+        blog_source = blog_reader.read()
+        metadata, content = frontmatter.parse(blog_source)
+        parsed_tree = MarkdownParser().parse(content)
+        print(parsed_tree.dump())
+
+
 def populate_blog_template(md_data, template):
     metadata, content = frontmatter.parse(md_data)
 
@@ -168,7 +176,13 @@ def update_main_page(blogs, main_template, card_template):
 def main():
     arg_parser = argparse.ArgumentParser(
         description="Compile Markdown files into HTML files based on template")
+    arg_parser.add_argument('--manual', metavar='manual_source', help="Add path to a specific blog for parsing that one manually. Doesn't write an output file, just writes to stdout'")
     arguments = arg_parser.parse_args()
+
+    print("args", arguments)
+    if (arguments.manual != None):
+        debug_parse_blog(arguments.manual)
+        return
 
     post_template = ""
     with open('blog/blog_template.html', 'r') as template_reader:

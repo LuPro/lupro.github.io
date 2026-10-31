@@ -311,6 +311,8 @@ class MarkdownParser:
             self._consume()
 
         if end_index > start_index:
+            if (self._is_eof()):
+                end_index += 1
             text = self._data[start_index:end_index]
             children.append(TextNode(text))
         return children

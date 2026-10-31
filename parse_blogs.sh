@@ -12,5 +12,5 @@ if [ $(echo $?) = 1 ]; then
     pip install feedgen
 fi
 
-python contentcompiler/contentcompiler.py
+python contentcompiler/contentcompiler.py ${2} ${3}
 deactivate
