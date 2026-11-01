@@ -250,20 +250,6 @@ button.talespirey:hover {
     transition-property: background;
 }
 
-#texture-preview {
-    position: relative;
-    width: 800px;
-    height: 200px;
-
-    background: radial-gradient(ellipse 70% 100% at center, var(--bg-scroll) 50%, var(--bg-scroll-edge) 80%);
-    color: var(--col-scroll);
-
-    filter: url("#scroll-displacement") url("#scroll-noise");
-    mask-image: url("../assets/scroll_mask.svg");
-    mask-size: 100% 100%;
-    mask-repeat: no-repeat;
-}
-
 @media (-webkit-min-device-pixel-ratio: 2) {
     .ts-decor-container {
         height: 1.7em !important;

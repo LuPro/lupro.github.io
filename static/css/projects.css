@@ -44,12 +44,6 @@ body {
     transition-property: opacity;
 }
 
-#previewer {
-    width: 100px;
-    height: 100px;
-    background: conic-gradient(from 0deg at center, transparent 35%, white 40%, white 60%, transparent 65%);
-}
-
 #projects-container {
     display: flex;
     flex-wrap: wrap;
@@ -129,7 +123,7 @@ a.button-link:has(> button) {
 }
 
 a.button-link:focus-visible button {
-    outline: 1px solid var(--accent-primary);
+    outline: 2px solid var(--col-primary);
 }
 
 #filterSource {

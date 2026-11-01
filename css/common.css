@@ -40,7 +40,6 @@ body {
     background: var(--bg-primary);
     max-width: var(--content-max-width);
     margin: auto;
-    /*padding: 0 2em 2em 2em;*/
 
     color: var(--col-primary);
     font-family: "Noto Sans", sans-serif;
@@ -97,6 +96,11 @@ a.back-button:hover, a.back-button:visited:hover {
     color: var(--col-primary);
 }
 
+a.back-button:focus-visible {
+    color: var(--col-primary);
+    outline: 2px solid var(--col-primary);
+}
+
 .back-button {
     position: relative;
 
@@ -146,6 +150,14 @@ a:visited {
     transition: color var(--trans-in) ease-in-out;
 }
 
+img, video {
+    max-width: 65%;
+    max-height: 60vh;
+    display: block;
+    margin: 0.3em auto;
+    text-align: center;
+}
+
 header {
     position: relative;
 }
@@ -185,7 +197,7 @@ main {
 
 footer {
     position: fixed;
-    bottom: 0;
+    bottom: -1px;
     left: 0;
 
     color: var(--col-secondary);
@@ -209,6 +221,10 @@ footer code {
 
     .page-heading {
         padding-top: 0.35em;
+    }
+
+    img {
+        max-width: min(95%, 75vh);
     }
 
     @media (orientation: portrait) {

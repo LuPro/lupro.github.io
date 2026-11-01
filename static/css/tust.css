@@ -151,6 +151,13 @@ button.tust:not(:hover, :active, :focus) .mission-patch:nth-child(3) {
     transform: translate(2.5em, -1.5em);
 }
 
+#tust-preview.selection-preview ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+}
+
 button.spacey {
     position: relative;
     min-width: 12em;
@@ -209,7 +216,7 @@ button.spacey:hover:before {
 }
 
 button.spacey .mission-patch {
-    width: 2.5em;
+    width: auto;
     height: 2.5em;
 
     top: 50%;
@@ -221,7 +228,7 @@ button.spacey .mission-patch {
 }
 
 button.spacey:hover .mission-patch {
-    width: 3em;
+    width: auto;
     height: 3em;
 
     transition: all var(--trans-in) ease-in-out;
