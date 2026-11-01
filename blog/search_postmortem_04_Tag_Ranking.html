@@ -20,7 +20,6 @@
         <main>
         <div class="divider"></div>
 
-<html>
 <p>After covering a lot of the broad ideas behind the tag system, I now want to turn some attention to the nitty-gritty: How do we go from "some text a player entered in the search field" to a list of (hopefully relevant) results?</p>
 
 <h1>Finally, Text Ranking</h1>
@@ -34,7 +33,11 @@ When someone wants to search for a thing, they'll enter some text they feel has 
 The core of our text matching is a modified Levenshtein algorithm. Without becoming too technical, the so-called "Levenshtein-distance" is how many "steps" there are between two different words. This is easier to understand with some examples:</p>
 
 <ul>
-<li>"cow" and "cow" have a Levenshtein distance of 0 - they're identical.</li><li>"cow" and "crow" have a distance of 1 - you need to add one letter to go from cow to crow (and vice versa, remove one from crow to go to cow)</li><li>"pig" and "pug" also have a distance of 1 - you need to <i>change</i> one letter.</li><li>"barkeeper" and "blacksmith" have a distance of 7.</li>
+<li>"cow" and "cow" have a Levenshtein distance of 0 - they're identical.</li>
+<li>"cow" and "crow" have a distance of 1 - you need to add one letter to go from cow to crow (and vice versa, remove one from crow to go to cow)</li>
+<li>"pig" and "pug" also have a distance of 1 - you need to <i>change</i> one letter.</li>
+<li>"barkeeper" and "blacksmith" have a distance of 7.</li>
+
 </ul>
 <p>
 And so on.</p>
@@ -139,24 +142,22 @@ And finally, we have a list of assets that have all the tags you searched for, s
 
 <p></p>
 
-<div class='footnote'><p class='footnote-index'><a name='footnote_0'></a>0</p> <p> Additionally, our code doesn't really care for what algorithm we use there, as long as that algorithm spits out a "score" or "rank" of how good a certain text fits, so it might also happen that we rip out the Levenshtein distance altogether once we find a more suitable algorithm.</p>
+<div class='footnote'><p class='footnote-index'><a id='footnote_0'></a>0</p> <p> Additionally, our code doesn't really care for what algorithm we use there, as long as that algorithm spits out a "score" or "rank" of how good a certain text fits, so it might also happen that we rip out the Levenshtein distance altogether once we find a more suitable algorithm.</p>
 
-</div><div class='footnote'><p class='footnote-index'><a name='footnote_1'></a>1</p> <p> In this post I will be using the IEC symbols for electrical components, not the ANSI ones commonly used in North America.</p>
+</div><div class='footnote'><p class='footnote-index'><a id='footnote_1'></a>1</p> <p> In this post I will be using the IEC symbols for electrical components, not the ANSI ones commonly used in North America.</p>
 
-</div><div class='footnote'><p class='footnote-index'><a name='footnote_2'></a>2</p> <p> This isn't <i>quite</i> the whole story; there are circuits that don't nicely fit into series or parallel, like a Wheatstone bridge or star topology in multi-phase power circuits. However, series and parallel are enough for the purposes of this explanation.</p>
+</div><div class='footnote'><p class='footnote-index'><a id='footnote_2'></a>2</p> <p> This isn't <i>quite</i> the whole story; there are circuits that don't nicely fit into series or parallel, like a Wheatstone bridge or star topology in multi-phase power circuits. However, series and parallel are enough for the purposes of this explanation.</p>
 
-</div><div class='footnote'><p class='footnote-index'><a name='footnote_3'></a>3</p> <p> This is still in an "idealized world" in steady state, right now we only care about pure Ohmic loads, so no parasitic capacitance, induction, or non-linear elements.</p>
+</div><div class='footnote'><p class='footnote-index'><a id='footnote_3'></a>3</p> <p> This is still in an "idealized world" in steady state, right now we only care about pure Ohmic loads, so no parasitic capacitance, induction, or non-linear elements.</p>
 
-</div><div class='footnote'><p class='footnote-index'><a name='footnote_4'></a>4</p> <p> You do still lose pressure over long pipes due to friction between fluid and the pipe walls, which, in the end, will also reduce flow rates. However, that is more of a phenomenon for longer pipelines, so it is not as intuitively understandable.</p>
+</div><div class='footnote'><p class='footnote-index'><a id='footnote_4'></a>4</p> <p> You do still lose pressure over long pipes due to friction between fluid and the pipe walls, which, in the end, will also reduce flow rates. However, that is more of a phenomenon for longer pipelines, so it is not as intuitively understandable.</p>
 
-</div><div class='footnote'><p class='footnote-index'><a name='footnote_5'></a>5</p> <p> "Normal" resistors are quite simple components - essentially, they're just "worse wires". They're made to resist the flow of electricity more than a normal wire would, and that's all they do. They can become more complex depending on how accurately they need to be "worse" and how much power they need to be able to carry, but they're still overall quite simple.
+</div><div class='footnote'><p class='footnote-index'><a id='footnote_5'></a>5</p> <p> "Normal" resistors are quite simple components - essentially, they're just "worse wires". They're made to resist the flow of electricity more than a normal wire would, and that's all they do. They can become more complex depending on how accurately they need to be "worse" and how much power they need to be able to carry, but they're still overall quite simple.
 For other components like capacitors, inductors, diodes, ... the water-pipe analogy unfortunately stops working <i>very</i> quickly, especially if we don't consider the DC steady state, but that's neither here nor there.</p>
 
-</div><div class='footnote'><p class='footnote-index'><a name='footnote_6'></a>6</p> <p> An interesting implementation detail is that we technically omit the last division (the outermost 1 / (...) ) because we only care about the ordering, not the actual final "resistance value", and all that 1 / (...) does is make large scores small and small scores large, without changing their order. Besides skipping one relatively costly division, another important benefit is that it doesn't matter in which order the scores get added up and we don't need to keep a list of all individual scores to combine at the end - we can just add the individual 1/score values together and the final sum is the final score which makes it delightfully simple to parallelize across threads for lightning fast live search.</p>
+</div><div class='footnote'><p class='footnote-index'><a id='footnote_6'></a>6</p> <p> An interesting implementation detail is that we technically omit the last division (the outermost 1 / (...) ) because we only care about the ordering, not the actual final "resistance value", and all that 1 / (...) does is make large scores small and small scores large, without changing their order. Besides skipping one relatively costly division, another important benefit is that it doesn't matter in which order the scores get added up and we don't need to keep a list of all individual scores to combine at the end - we can just add the individual 1/score values together and the final sum is the final score which makes it delightfully simple to parallelize across threads for lightning fast live search.</p>
 
 </div>
-</html>
-
 
         </main>
         <footer>Luis / <code>lprod</code> 2026</footer>

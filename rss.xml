@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>lprod Blog</title><link>https://lprod.dev/rss.xml</link><description>Random ramblings in various projects I work on</description><atom:link href="https://lprod.dev/rss.xml" rel="self"/><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><language>en</language><lastBuildDate>Sat, 31 Oct 2026 19:57:14 +0000</lastBuildDate><item><title>Search Postmortem Part 4</title><link>https://lprod.dev/blog/search_postmortem_04_Tag_Ranking.html</link><description>A deeper dive into TaleSpire's new search
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>lprod Blog</title><link>https://lprod.dev/rss.xml</link><description>Random ramblings in various projects I work on</description><atom:link href="https://lprod.dev/rss.xml" rel="self"/><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><language>en</language><lastBuildDate>Sun, 01 Nov 2026 17:44:23 +0000</lastBuildDate><item><title>Search Postmortem Part 4</title><link>https://lprod.dev/blog/search_postmortem_04_Tag_Ranking.html</link><description>A deeper dive into TaleSpire's new search
 
-&lt;html&gt;
 &lt;p&gt;After covering a lot of the broad ideas behind the tag system, I now want to turn some attention to the nitty-gritty: How do we go from "some text a player entered in the search field" to a list of (hopefully relevant) results?&lt;/p&gt;
 
 &lt;h1&gt;Finally, Text Ranking&lt;/h1&gt;
@@ -15,7 +14,11 @@ When someone wants to search for a thing, they'll enter some text they feel has 
 The core of our text matching is a modified Levenshtein algorithm. Without becoming too technical, the so-called "Levenshtein-distance" is how many "steps" there are between two different words. This is easier to understand with some examples:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;"cow" and "cow" have a Levenshtein distance of 0 - they're identical.&lt;/li&gt;&lt;li&gt;"cow" and "crow" have a distance of 1 - you need to add one letter to go from cow to crow (and vice versa, remove one from crow to go to cow)&lt;/li&gt;&lt;li&gt;"pig" and "pug" also have a distance of 1 - you need to &lt;i&gt;change&lt;/i&gt; one letter.&lt;/li&gt;&lt;li&gt;"barkeeper" and "blacksmith" have a distance of 7.&lt;/li&gt;
+&lt;li&gt;"cow" and "cow" have a Levenshtein distance of 0 - they're identical.&lt;/li&gt;
+&lt;li&gt;"cow" and "crow" have a distance of 1 - you need to add one letter to go from cow to crow (and vice versa, remove one from crow to go to cow)&lt;/li&gt;
+&lt;li&gt;"pig" and "pug" also have a distance of 1 - you need to &lt;i&gt;change&lt;/i&gt; one letter.&lt;/li&gt;
+&lt;li&gt;"barkeeper" and "blacksmith" have a distance of 7.&lt;/li&gt;
+
 &lt;/ul&gt;
 &lt;p&gt;
 And so on.&lt;/p&gt;
@@ -120,26 +123,23 @@ And finally, we have a list of assets that have all the tags you searched for, s
 
 &lt;p&gt;&lt;/p&gt;
 
-&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_0'&gt;&lt;/a&gt;0&lt;/p&gt; &lt;p&gt; Additionally, our code doesn't really care for what algorithm we use there, as long as that algorithm spits out a "score" or "rank" of how good a certain text fits, so it might also happen that we rip out the Levenshtein distance altogether once we find a more suitable algorithm.&lt;/p&gt;
+&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_0'&gt;&lt;/a&gt;0&lt;/p&gt; &lt;p&gt; Additionally, our code doesn't really care for what algorithm we use there, as long as that algorithm spits out a "score" or "rank" of how good a certain text fits, so it might also happen that we rip out the Levenshtein distance altogether once we find a more suitable algorithm.&lt;/p&gt;
 
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_1'&gt;&lt;/a&gt;1&lt;/p&gt; &lt;p&gt; In this post I will be using the IEC symbols for electrical components, not the ANSI ones commonly used in North America.&lt;/p&gt;
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_1'&gt;&lt;/a&gt;1&lt;/p&gt; &lt;p&gt; In this post I will be using the IEC symbols for electrical components, not the ANSI ones commonly used in North America.&lt;/p&gt;
 
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_2'&gt;&lt;/a&gt;2&lt;/p&gt; &lt;p&gt; This isn't &lt;i&gt;quite&lt;/i&gt; the whole story; there are circuits that don't nicely fit into series or parallel, like a Wheatstone bridge or star topology in multi-phase power circuits. However, series and parallel are enough for the purposes of this explanation.&lt;/p&gt;
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_2'&gt;&lt;/a&gt;2&lt;/p&gt; &lt;p&gt; This isn't &lt;i&gt;quite&lt;/i&gt; the whole story; there are circuits that don't nicely fit into series or parallel, like a Wheatstone bridge or star topology in multi-phase power circuits. However, series and parallel are enough for the purposes of this explanation.&lt;/p&gt;
 
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_3'&gt;&lt;/a&gt;3&lt;/p&gt; &lt;p&gt; This is still in an "idealized world" in steady state, right now we only care about pure Ohmic loads, so no parasitic capacitance, induction, or non-linear elements.&lt;/p&gt;
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_3'&gt;&lt;/a&gt;3&lt;/p&gt; &lt;p&gt; This is still in an "idealized world" in steady state, right now we only care about pure Ohmic loads, so no parasitic capacitance, induction, or non-linear elements.&lt;/p&gt;
 
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_4'&gt;&lt;/a&gt;4&lt;/p&gt; &lt;p&gt; You do still lose pressure over long pipes due to friction between fluid and the pipe walls, which, in the end, will also reduce flow rates. However, that is more of a phenomenon for longer pipelines, so it is not as intuitively understandable.&lt;/p&gt;
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_4'&gt;&lt;/a&gt;4&lt;/p&gt; &lt;p&gt; You do still lose pressure over long pipes due to friction between fluid and the pipe walls, which, in the end, will also reduce flow rates. However, that is more of a phenomenon for longer pipelines, so it is not as intuitively understandable.&lt;/p&gt;
 
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_5'&gt;&lt;/a&gt;5&lt;/p&gt; &lt;p&gt; "Normal" resistors are quite simple components - essentially, they're just "worse wires". They're made to resist the flow of electricity more than a normal wire would, and that's all they do. They can become more complex depending on how accurately they need to be "worse" and how much power they need to be able to carry, but they're still overall quite simple.
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_5'&gt;&lt;/a&gt;5&lt;/p&gt; &lt;p&gt; "Normal" resistors are quite simple components - essentially, they're just "worse wires". They're made to resist the flow of electricity more than a normal wire would, and that's all they do. They can become more complex depending on how accurately they need to be "worse" and how much power they need to be able to carry, but they're still overall quite simple.
 For other components like capacitors, inductors, diodes, ... the water-pipe analogy unfortunately stops working &lt;i&gt;very&lt;/i&gt; quickly, especially if we don't consider the DC steady state, but that's neither here nor there.&lt;/p&gt;
 
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_6'&gt;&lt;/a&gt;6&lt;/p&gt; &lt;p&gt; An interesting implementation detail is that we technically omit the last division (the outermost 1 / (...) ) because we only care about the ordering, not the actual final "resistance value", and all that 1 / (...) does is make large scores small and small scores large, without changing their order. Besides skipping one relatively costly division, another important benefit is that it doesn't matter in which order the scores get added up and we don't need to keep a list of all individual scores to combine at the end - we can just add the individual 1/score values together and the final sum is the final score which makes it delightfully simple to parallelize across threads for lightning fast live search.&lt;/p&gt;
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_6'&gt;&lt;/a&gt;6&lt;/p&gt; &lt;p&gt; An interesting implementation detail is that we technically omit the last division (the outermost 1 / (...) ) because we only care about the ordering, not the actual final "resistance value", and all that 1 / (...) does is make large scores small and small scores large, without changing their order. Besides skipping one relatively costly division, another important benefit is that it doesn't matter in which order the scores get added up and we don't need to keep a list of all individual scores to combine at the end - we can just add the individual 1/score values together and the final sum is the final score which makes it delightfully simple to parallelize across threads for lightning fast live search.&lt;/p&gt;
 
-&lt;/div&gt;
-&lt;/html&gt;
-</description><guid isPermaLink="false">https://lprod.dev/blog/search_postmortem_04_Tag_Ranking.html</guid><pubDate>Mon, 31 Aug 2026 00:00:00 +0000</pubDate></item><item><title>Search Postmortem Part 5</title><link>https://lprod.dev/blog/search_postmortem_05_Fun_Sidenotes.html</link><description>A deeper dive into TaleSpire's new search
+&lt;/div&gt;</description><guid isPermaLink="false">https://lprod.dev/blog/search_postmortem_04_Tag_Ranking.html</guid><pubDate>Mon, 31 Aug 2026 00:00:00 +0000</pubDate></item><item><title>Search Postmortem Part 5</title><link>https://lprod.dev/blog/search_postmortem_05_Fun_Sidenotes.html</link><description>A deeper dive into TaleSpire's new search
 
-&lt;html&gt;
 &lt;p&gt;Hi!&lt;/p&gt;
 
 &lt;p&gt;This is the fifth and final part of the deep(er) dive into the new tag and search system &lt;/p&gt;
@@ -201,21 +201,18 @@ In the end, we went for Alive/Undead/Enchanted, where "Alive" is the "default as
 
 &lt;p&gt;And with this we have reached the end of this deep dive series into (some parts of) the new search and tag system! I hope you've enjoyed this slightly different kind of devlog, but now it's back to coding for me. See you in the next log!&lt;/p&gt;
 
-&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_0'&gt;&lt;/a&gt;0&lt;/p&gt; &lt;p&gt; I'm a bit annoyed at that term in English - while German does also have "Großkatze" (which literally translates to "big cat"), we also have "Raubkatze" which roughly translates to something akin to "cat of prey" (like bird of prey), or more literally "Preying Cat" which - in my opinion - does a better job at distinguishing domesticated/"pet" cats from wild cats (and especially the big ones), even though I know our fuzzy little house friends are also vicious hunters in their own right.&lt;/p&gt;
+&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_0'&gt;&lt;/a&gt;0&lt;/p&gt; &lt;p&gt; I'm a bit annoyed at that term in English - while German does also have "Großkatze" (which literally translates to "big cat"), we also have "Raubkatze" which roughly translates to something akin to "cat of prey" (like bird of prey), or more literally "Preying Cat" which - in my opinion - does a better job at distinguishing domesticated/"pet" cats from wild cats (and especially the big ones), even though I know our fuzzy little house friends are also vicious hunters in their own right.&lt;/p&gt;
 
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_1'&gt;&lt;/a&gt;1&lt;/p&gt; &lt;p&gt; We also added a "house cat" example_of which points to both feline and domestic to be able to find specifically just pet cats quicker.&lt;/p&gt;
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_1'&gt;&lt;/a&gt;1&lt;/p&gt; &lt;p&gt; We also added a "house cat" example_of which points to both feline and domestic to be able to find specifically just pet cats quicker.&lt;/p&gt;
 
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_2'&gt;&lt;/a&gt;2&lt;/p&gt; &lt;p&gt; I've already touched on this a bit in part 2 about tag relations - it might of course be that there is a more pronounced visual difference in whatever fantasy world you are playing in, but since TaleSpire strives to be as system- and world-agnostic as reasonably possible, we can't really account for that. In most worlds, the differences are minor to non-existent, especially with our "zoomed out miniature" style.&lt;/p&gt;
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_2'&gt;&lt;/a&gt;2&lt;/p&gt; &lt;p&gt; I've already touched on this a bit in part 2 about tag relations - it might of course be that there is a more pronounced visual difference in whatever fantasy world you are playing in, but since TaleSpire strives to be as system- and world-agnostic as reasonably possible, we can't really account for that. In most worlds, the differences are minor to non-existent, especially with our "zoomed out miniature" style.&lt;/p&gt;
 
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_3'&gt;&lt;/a&gt;3&lt;/p&gt; &lt;p&gt; "Stand-ins" as in, "Oh, I wanted to have a hawk, but that asset doesn't exist, let's instead see birds for the next best/closest thing".&lt;/p&gt;
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_3'&gt;&lt;/a&gt;3&lt;/p&gt; &lt;p&gt; "Stand-ins" as in, "Oh, I wanted to have a hawk, but that asset doesn't exist, let's instead see birds for the next best/closest thing".&lt;/p&gt;
 
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_4'&gt;&lt;/a&gt;4&lt;/p&gt; &lt;p&gt; &lt;i&gt;Technically&lt;/i&gt; Ursid or Ursidae, "ursine" is the accompanying adjective roughly meaning "resembling an Ursidae (bear)". The same goes for Canidae, Felidae, ... but in normal language use, the terms are often used interchangeably, and from what we could gather, the -ne adjectives were more common.&lt;/p&gt;
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_4'&gt;&lt;/a&gt;4&lt;/p&gt; &lt;p&gt; &lt;i&gt;Technically&lt;/i&gt; Ursid or Ursidae, "ursine" is the accompanying adjective roughly meaning "resembling an Ursidae (bear)". The same goes for Canidae, Felidae, ... but in normal language use, the terms are often used interchangeably, and from what we could gather, the -ne adjectives were more common.&lt;/p&gt;
 
-&lt;/div&gt;
-&lt;/html&gt;
-</description><guid isPermaLink="false">https://lprod.dev/blog/search_postmortem_05_Fun_Sidenotes.html</guid><pubDate>Wed, 14 Oct 2026 00:00:00 +0000</pubDate></item><item><title>Search Postmortem Part 3</title><link>https://lprod.dev/blog/search_postmortem_03_Custom_Assets.html</link><description>A deeper dive into TaleSpire's new search
+&lt;/div&gt;</description><guid isPermaLink="false">https://lprod.dev/blog/search_postmortem_05_Fun_Sidenotes.html</guid><pubDate>Wed, 14 Oct 2026 00:00:00 +0000</pubDate></item><item><title>Search Postmortem Part 3</title><link>https://lprod.dev/blog/search_postmortem_03_Custom_Assets.html</link><description>A deeper dive into TaleSpire's new search
 
-&lt;html&gt;
 &lt;p&gt;While I already talked a bit about tag discoverability and consistency, especially the latter is a bit more involved and will need more explanation.&lt;/p&gt;
 
 &lt;p&gt;It's already tricky enough to get any &lt;i&gt;two&lt;/i&gt; people to agree on how to tag things, however this problem gets exponentially harder once we consider the practically unlimited number of community content creators who are also creating assets for TaleSpire - so for us it was extremely important to provide good tools that allow such a large and diverse group of people to still land on a mostly consistent set of tags.
@@ -250,13 +247,10 @@ With all that out of the way, we've gone through the basics of our new tag syste
 
 &lt;p&gt;&lt;/p&gt;
 
-&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_0'&gt;&lt;/a&gt;0&lt;/p&gt; &lt;p&gt; Creating the tooling for custom synonym and example_of creation would also be surprisingly complex as all of this is interacting with a fairly large directed graph and making that intuitive and readable is challenging.&lt;/p&gt;
+&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_0'&gt;&lt;/a&gt;0&lt;/p&gt; &lt;p&gt; Creating the tooling for custom synonym and example_of creation would also be surprisingly complex as all of this is interacting with a fairly large directed graph and making that intuitive and readable is challenging.&lt;/p&gt;
 
-&lt;/div&gt;
-&lt;/html&gt;
-</description><guid isPermaLink="false">https://lprod.dev/blog/search_postmortem_03_Custom_Assets.html</guid><pubDate>Mon, 24 Aug 2026 00:00:00 +0000</pubDate></item><item><title>Search Postmortem Part 1</title><link>https://lprod.dev/blog/search_postmortem_01_Tags_Basics.html</link><description>A deeper dive into TaleSpire's new search
+&lt;/div&gt;</description><guid isPermaLink="false">https://lprod.dev/blog/search_postmortem_03_Custom_Assets.html</guid><pubDate>Mon, 24 Aug 2026 00:00:00 +0000</pubDate></item><item><title>Search Postmortem Part 1</title><link>https://lprod.dev/blog/search_postmortem_01_Tags_Basics.html</link><description>A deeper dive into TaleSpire's new search
 
-&lt;html&gt;
 &lt;h1&gt;Tags&lt;/h1&gt;
 
 &lt;p&gt;
@@ -296,15 +290,12 @@ See you then!&lt;/p&gt;
 &lt;p&gt;
 [0]: Everything is already set up for tiles and props to use the new tag system, but we have not finalized the actual list of new tags for them, which is a significant part of the work.&lt;/p&gt;
 
-&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_1'&gt;&lt;/a&gt;1&lt;/p&gt; &lt;p&gt; The only taxonomic classification&lt;a class='footnote-link' href='#footnote_2'&gt;[2]&lt;/a&gt; that Nematodes (wormy-looking things that account for 80% of all living animals in the world) and Earthworms have in common is that they're animals. That's it. There's no more taxonomic common ground between the two. They are pretty much as distant from each other as they are from humans. (And yes, I know Nematode is a Phylum and Earthworm a Suborder, which is a whole different story that a biologist should get into, not a software developer) Of course, when all is said and done, we require words that adequately describe the visuals of assets, so the "worm" tag does in fact exist, and it is useful - this was only to illustrate the impossibility of being "factual and objective". Also, don't even get me started on fish.&lt;/p&gt;
+&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_1'&gt;&lt;/a&gt;1&lt;/p&gt; &lt;p&gt; The only taxonomic classification&lt;a class='footnote-link' href='#footnote_2'&gt;[2]&lt;/a&gt; that Nematodes (wormy-looking things that account for 80% of all living animals in the world) and Earthworms have in common is that they're animals. That's it. There's no more taxonomic common ground between the two. They are pretty much as distant from each other as they are from humans. (And yes, I know Nematode is a Phylum and Earthworm a Suborder, which is a whole different story that a biologist should get into, not a software developer) Of course, when all is said and done, we require words that adequately describe the visuals of assets, so the "worm" tag does in fact exist, and it is useful - this was only to illustrate the impossibility of being "factual and objective". Also, don't even get me started on fish.&lt;/p&gt;
 
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_2'&gt;&lt;/a&gt;2&lt;/p&gt; &lt;p&gt; I didn't want to use recursive footnotes, yet here we are. I want to add at this point, while we're talking about "objective" classifiers, that as much as taxonomy is rooted in verifiable science, it is also still a bunch of subjective, human-made words trying to classify the unclassifiable reality into more-or-less neat boxes, because that’s what our human brains have evolved to prefer. In the end, as much as taxonomy is a science (and it is!), it is also an imprecise, subjective tool for humans to try to wrap their brains around the impossible complexity of life. Also, it often isn't all that useful for classifying things "based on looks" which we need for TaleSpire, as we've long since moved away from "look based taxonomy" like that.&lt;/p&gt;
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_2'&gt;&lt;/a&gt;2&lt;/p&gt; &lt;p&gt; I didn't want to use recursive footnotes, yet here we are. I want to add at this point, while we're talking about "objective" classifiers, that as much as taxonomy is rooted in verifiable science, it is also still a bunch of subjective, human-made words trying to classify the unclassifiable reality into more-or-less neat boxes, because that’s what our human brains have evolved to prefer. In the end, as much as taxonomy is a science (and it is!), it is also an imprecise, subjective tool for humans to try to wrap their brains around the impossible complexity of life. Also, it often isn't all that useful for classifying things "based on looks" which we need for TaleSpire, as we've long since moved away from "look based taxonomy" like that.&lt;/p&gt;
 
-&lt;/div&gt;
-&lt;/html&gt;
-</description><guid isPermaLink="false">https://lprod.dev/blog/search_postmortem_01_Tags_Basics.html</guid><pubDate>Wed, 29 Jul 2026 00:00:00 +0000</pubDate></item><item><title>Search Postmortem Part 2</title><link>https://lprod.dev/blog/search_postmortem_02_Tag_Relations.html</link><description>A deeper dive into TaleSpire's new search
+&lt;/div&gt;</description><guid isPermaLink="false">https://lprod.dev/blog/search_postmortem_01_Tags_Basics.html</guid><pubDate>Wed, 29 Jul 2026 00:00:00 +0000</pubDate></item><item><title>Search Postmortem Part 2</title><link>https://lprod.dev/blog/search_postmortem_02_Tag_Relations.html</link><description>A deeper dive into TaleSpire's new search
 
-&lt;html&gt;
 &lt;h1&gt;Tag Relations&lt;/h1&gt;
 
 &lt;p&gt;
@@ -363,16 +354,19 @@ All of the above techniques, paired with name search, deliver quite nice results
 
 &lt;ul&gt;
 &lt;li&gt;You can still find an eagle by searching for "eagle" (which suggests "bird", but still searches for "eagle" in the name of assets), without us needing a tag for every single species (real and fantastical) in existence.&lt;/li&gt;
+
 &lt;/ul&gt;
 &lt;p&gt;&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;You can find decent stand-in assets in case the exact thing you were searching for doesn't exist: Maybe there is no eagle miniature, but there is a hawk, which is an okay stand-in and findable by the "next closest group", which is "bird".&lt;/li&gt;
+
 &lt;/ul&gt;
 &lt;p&gt;&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;You can search for names and words that are familiar to you and consistently find the related assets; Both "dragonfolk" as well as "dragonborn" will correctly work for searching.&lt;/li&gt;
+
 &lt;/ul&gt;
 &lt;p&gt;
 There is however one more thing I want to mention. Whenever we give any tools to all of you, we're responsible for keeping them working (potentially forever). This is no less true for tags than it is for TaleSpire's slab strings. However because synonyms and example_ofs aren't stored on the assets themselves, but are encoded and recognized in the  search engine, so it is something we (Bouncyrock) can adjust and expand on more easily over time.&lt;/p&gt;
@@ -383,21 +377,18 @@ There is however one more thing I want to mention. Whenever we give any tools to
 
 &lt;p&gt;&lt;/p&gt;
 
-&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_0'&gt;&lt;/a&gt;0&lt;/p&gt; &lt;p&gt; It might be that in your specific world/game setting, this is not the case, which illustrates the other issue with widely used fantasy terms: They don't always mean exactly the same thing in all games/worlds, yet TaleSpire tries to be as widely applicable to as many games as possible, so we do have to make some compromises here and there.&lt;/p&gt;
+&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_0'&gt;&lt;/a&gt;0&lt;/p&gt; &lt;p&gt; It might be that in your specific world/game setting, this is not the case, which illustrates the other issue with widely used fantasy terms: They don't always mean exactly the same thing in all games/worlds, yet TaleSpire tries to be as widely applicable to as many games as possible, so we do have to make some compromises here and there.&lt;/p&gt;
 
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_1'&gt;&lt;/a&gt;1&lt;/p&gt; &lt;p&gt; This might be surprising to hear for non-developers, and unfortunately, it is hard to explain concisely, but here's the run-down: To find something with the text "Elf" when you type in "Half-Elf", an obvious approach would be to split "Half" and "Elf" from the search input and check for both individually. However, this would then also match other Half-creatures (like Half-Demons, Half-Orcs, Half-...), making the search results practically useless. There are, of course, also ways to get around &lt;i&gt;those&lt;/i&gt; issues, but the "smarter" you try to make these kinds of algorithms, the more weird edge cases you introduce and the more likely it is that those won't be fixable by even more added "smartness". This gets even trickier when we remember that we also support community-made content, so we need a system that works reliably across all possible inputs.&lt;/p&gt;
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_1'&gt;&lt;/a&gt;1&lt;/p&gt; &lt;p&gt; This might be surprising to hear for non-developers, and unfortunately, it is hard to explain concisely, but here's the run-down: To find something with the text "Elf" when you type in "Half-Elf", an obvious approach would be to split "Half" and "Elf" from the search input and check for both individually. However, this would then also match other Half-creatures (like Half-Demons, Half-Orcs, Half-...), making the search results practically useless. There are, of course, also ways to get around &lt;i&gt;those&lt;/i&gt; issues, but the "smarter" you try to make these kinds of algorithms, the more weird edge cases you introduce and the more likely it is that those won't be fixable by even more added "smartness". This gets even trickier when we remember that we also support community-made content, so we need a system that works reliably across all possible inputs.&lt;/p&gt;
 
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_2'&gt;&lt;/a&gt;2&lt;/p&gt; &lt;p&gt; This can be overridden if there is a need for it - we don't envision this to happen with the Half-Elf -&gt; Elf example, but there are many cross-connections between tags, and sometimes the relation might not always be what the artist had in mind when creating the mini.&lt;/p&gt;
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_2'&gt;&lt;/a&gt;2&lt;/p&gt; &lt;p&gt; This can be overridden if there is a need for it - we don't envision this to happen with the Half-Elf -&gt; Elf example, but there are many cross-connections between tags, and sometimes the relation might not always be what the artist had in mind when creating the mini.&lt;/p&gt;
 
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_3'&gt;&lt;/a&gt;3&lt;/p&gt; &lt;p&gt; We will, of course, also not have synonyms for every possible way to call things, that'd be the same impossible task as making all of those tags, but because synonyms aren't stored on the asset and instead are only in the search engine, we can continually update the list of available synonyms without us (or you!) needing to update each individual mini.&lt;/p&gt;
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_3'&gt;&lt;/a&gt;3&lt;/p&gt; &lt;p&gt; We will, of course, also not have synonyms for every possible way to call things, that'd be the same impossible task as making all of those tags, but because synonyms aren't stored on the asset and instead are only in the search engine, we can continually update the list of available synonyms without us (or you!) needing to update each individual mini.&lt;/p&gt;
 
-&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a name='footnote_4'&gt;&lt;/a&gt;4&lt;/p&gt; &lt;p&gt; There is one limitation to custom tags: Any custom tag that is identical to a synonym or example_of term (eg: "dragonfolk") will be replaced by the tags the synonym points to, as it would break search otherwise.&lt;/p&gt;
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_4'&gt;&lt;/a&gt;4&lt;/p&gt; &lt;p&gt; There is one limitation to custom tags: Any custom tag that is identical to a synonym or example_of term (eg: "dragonfolk") will be replaced by the tags the synonym points to, as it would break search otherwise.&lt;/p&gt;
 
-&lt;/div&gt;
-&lt;/html&gt;
-</description><guid isPermaLink="false">https://lprod.dev/blog/search_postmortem_02_Tag_Relations.html</guid><pubDate>Wed, 05 Aug 2026 00:00:00 +0000</pubDate></item><item><title>Plasma Sprint and more</title><link>https://lprod.dev/blog/monthly_2025_04.html</link><description>So many phones!
+&lt;/div&gt;</description><guid isPermaLink="false">https://lprod.dev/blog/search_postmortem_02_Tag_Relations.html</guid><pubDate>Wed, 05 Aug 2026 00:00:00 +0000</pubDate></item><item><title>Plasma Sprint and more</title><link>https://lprod.dev/blog/monthly_2025_04.html</link><description>So many phones!
 
-&lt;html&gt;
 &lt;p&gt;What happens when you put three mobile OS devs into one room for more than a few minutes?&lt;/p&gt;
 
 &lt;p&gt;&lt;img src="https://lprod.dev/blog/media/monthly_2025_04/phooones.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
@@ -432,12 +423,14 @@ As far as merged changes go, it's... short this time around since free time wasn
 
 &lt;ul&gt;
 &lt;li&gt;Made some interactions with the modem asynchronous to improve UI performance (these could potentially freeze the UI for a short time).&lt;/li&gt;
+
 &lt;/ul&gt;
 &lt;p&gt;
 Feels a bit weird to have a list for one item, so let's make it two:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;This wasn't me, but Devin fixed the navigation gestures being enabled when the navbar was active which was &lt;i&gt;terrible&lt;/i&gt; user experience and I'm so grateful for this finally being fixed because this bug absolutely broke me. Thanks Devin for saving my sanity!&lt;/li&gt;
+
 &lt;/ul&gt;
 &lt;p&gt;&lt;/p&gt;
 
@@ -447,10 +440,13 @@ Feels a bit weird to have a list for one item, so let's make it two:&lt;/p&gt;
 I did make some progress on other tasks though, even if they (still) aren't done yet:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;On the sprint I had a good long chat with Xaver about my corner touch gesture MR for KWin in preparation for feature parity between navbar and gesture navigation. He has been working on a refactor of the gesture code in KWin which decouples touch and mouse gestures from each other and we came to the conclusion that it's more sensible to base my work on his refactor as it then has to touch a lot less code and stops sharing code paths with other mostly unrelated features.&lt;/li&gt;&lt;ul&gt;
+&lt;li&gt;On the sprint I had a good long chat with Xaver about my corner touch gesture MR for KWin in preparation for feature parity between navbar and gesture navigation. He has been working on a refactor of the gesture code in KWin which decouples touch and mouse gestures from each other and we came to the conclusion that it's more sensible to base my work on his refactor as it then has to touch a lot less code and stops sharing code paths with other mostly unrelated features.&lt;/li&gt;
+&lt;ul&gt;
 &lt;li&gt;As part of that conversation we also touched on incorporating some of the custom gesture logic I created for the task switcher gesture into KWin directly, as that currently still lives in the Plasma Mobile repo.&lt;/li&gt;
+
 &lt;/ul&gt;
 &lt;li&gt;I've restarted work on my "refactor" of the mobile task switcher again to make it more maintainable and performant by annotating types and following some rules to allow Qt to create a precompiled binary of the QML files using qmlcachegen.&lt;/li&gt;
+
 &lt;/ul&gt;
 &lt;p&gt;&lt;/p&gt;
 
@@ -461,11 +457,8 @@ I want to circle back to the Sprint and emphasize again how amazing it was - and
 
 &lt;p&gt;As an extra goodie for the end, I want to show off Balatro running natively on Plasma Mobile: &lt;a href="https://mastodon.gamedev.place/@l_prod/114401321865300843"&gt;https://mastodon.gamedev.place/@l_prod/114401321865300843&lt;/a&gt; (Tech can be so cool)&lt;/p&gt;
 
-
-&lt;/html&gt;
 </description><guid isPermaLink="false">https://lprod.dev/blog/monthly_2025_04.html</guid><pubDate>Wed, 30 Apr 2025 00:00:00 +0000</pubDate></item><item><title>KDE Akademy 2026</title><link>https://lprod.dev/blog/akademy_2026.html</link><description>My experiences at Akademy
 
-&lt;html&gt;
 &lt;p&gt;It's been a hot minute since my last blog post, mostly because I was focusing on finally finishing my studies - while I'm not quite done yet (still missing one exam), I have a good reason to come out of hiding: KDE Akademy 2026 just happened and I was there!&lt;/p&gt;
 
 &lt;h1&gt;Talks&lt;/h1&gt;
@@ -492,11 +485,8 @@ Now unfortunately not everything was sunshine and roses - Wednesday was a day of
 
 &lt;p&gt;And with that I think I covered everything I wanted to talk about - Thanks so much to everyone organizing and attending to make this such an unforgettable week! If you'll excuse me, I'll now fall into bed and sleep what feels like for several days straight.&lt;/p&gt;
 
-
-&lt;/html&gt;
 </description><guid isPermaLink="false">https://lprod.dev/blog/akademy_2026.html</guid><pubDate>Thu, 24 Sep 2026 00:00:00 +0000</pubDate></item><item><title>Revamping Plasma Mobile Navigation Gestures</title><link>https://lprod.dev/blog/plasmo_nav_gestures.html</link><description>Down the rabbit hole
 
-&lt;html&gt;
 &lt;p&gt;A few months ago I was kind of toying with the idea to start contributing to Plasma Mobile because I was getting increasingly fed up with Android and I realized if Linux Mobile was going to be my daily driver before I need to buy a new phone I better help out.&lt;/p&gt;
 
 &lt;p&gt;Then, after a few trivial commits I've seen that for the Plasma 6 release the navigation gestures were (at least temporarily) turned off - and since I am a &lt;b&gt;&lt;i&gt;very&lt;/i&gt;&lt;/b&gt; big fan of navigation gestures &lt;s&gt;because they are objectively the best way to interact with a phone&lt;/s&gt; I just couldn't have that and I went about fixing them.&lt;/p&gt;
@@ -678,11 +668,8 @@ I've skipped over a lot of detail and some entire sidequests in this story (with
 &lt;p&gt;
 There's still some bugs to fix, some tasks for later MRs (though much fewer than I thought there would be) and some decisions to make, but for now this has been my small odyssey about first fixing then slightly extending then completely rewriting the task switcher and navigation gestures for Plasma Mobile&lt;/p&gt;
 
-
-&lt;/html&gt;
 </description><guid isPermaLink="false">https://lprod.dev/blog/plasmo_nav_gestures.html</guid><pubDate>Sun, 05 May 2024 00:00:00 +0000</pubDate></item><item><title>What I did in KDE/Plasma Mobile land in July-ish</title><link>https://lprod.dev/blog/monthly_2024_07.html</link><description>Miscellaneous improvements
 
-&lt;html&gt;
 &lt;p&gt;After my gargantuan post around the overhauled navigation gestures (and a still-in-progress one about KWin corner touch gesture support I'll hopefully have ready soon:tm:) let's tackle a few more smaller things. I'll try to make these somewhat regular (dare I say maybe even monthly?), but let's see how that shakes out, probably more like every 2-3 months if at all.&lt;/p&gt;
 
 &lt;p&gt;As an exciting update, near the end of June (the 25th to be exact) I got accepted to the KDE dev team. This means I now have the ability to properly manage submitted issues on GitLab and, only slightly terrifyingly, I'm now allowed to push code changes to the main repositories and review MRs. Let's see when, if ever, this feeling of trepidation over having to make quadruple sure I don't accidentally do stupid stuff subsides. Should it even subside or is being very extra super duper careful a good thing. I'll keep you posted whenever I find an answer to that :D&lt;/p&gt;
@@ -698,9 +685,14 @@ There's still some bugs to fix, some tasks for later MRs (though much fewer than
 &lt;p&gt;&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;I sat down and overhauled some of the animations around the navigation gestures of the mobile task switcher: The diagonal quick switch should now look smoother and not be nearly-instantaneous and the flick to homescreen is now a tad smoother and actually makes the task preview smaller while animating instead of looking like it's opening the selected task before suddenly vanishing.&lt;/li&gt;&lt;li&gt;Fixed minor logic bug around task switcher quick switch gesture. It should now correctly open the task switcher when you're trying to quick switch towards the end of a list - if there's nothing to quick switch to, it's better to open the full task switcher instead of just returning to the app you were in before.&lt;/li&gt;&lt;li&gt;I added a task icon list to the task scrub gesture in the switcher to make it visually more distinct to the "normal" task switcher and provide more useful info about the open apps you can switch to. In case you didn't know: In gesture-only mode w (I'll admit this one is a bit older, but this is the first installment of this kind of post so I'm not tooooo strict on the "in July" part): &lt;img src="https://lprod.dev/blog/media/monthly_2024_07/taskswitcher_scrub_icon_list.png" alt=""&gt;&lt;/img&gt; I'm still tracking an issue with this where when the task list becomes too long it's not properly centered anymore, but that should be a fairly simple fix once I get to it.&lt;/li&gt;&lt;li&gt;The main task switcher opening gesture now stops tracking the finger 1:1 in the vertical direction once it's moved a bit past its "fully activated" point. This is a bit awkward to explain, but basically it makes it "more reluctant" to follow the finger infinitely far up. If that still doesn't make sense, here's a video: &lt;video controls&gt;
+&lt;li&gt;I sat down and overhauled some of the animations around the navigation gestures of the mobile task switcher: The diagonal quick switch should now look smoother and not be nearly-instantaneous and the flick to homescreen is now a tad smoother and actually makes the task preview smaller while animating instead of looking like it's opening the selected task before suddenly vanishing.&lt;/li&gt;
+&lt;li&gt;Fixed minor logic bug around task switcher quick switch gesture. It should now correctly open the task switcher when you're trying to quick switch towards the end of a list - if there's nothing to quick switch to, it's better to open the full task switcher instead of just returning to the app you were in before.&lt;/li&gt;
+&lt;li&gt;I added a task icon list to the task scrub gesture in the switcher to make it visually more distinct to the "normal" task switcher and provide more useful info about the open apps you can switch to. (I'll admit this one is a bit older, but this is the first installment of this kind of post so I'm not tooooo strict on the "in July" part): &lt;img src="https://lprod.dev/blog/media/monthly_2024_07/taskswitcher_scrub_icon_list.png" alt=""&gt;&lt;/img&gt; I'm still tracking an issue with this where when the task list becomes too long it's not properly centered anymore, but that should be a fairly simple fix once I get to it.&lt;/li&gt;
+&lt;li&gt;The main task switcher opening gesture now stops tracking the finger 1:1 in the vertical direction once it's moved a bit past its "fully activated" point. This is a bit awkward to explain, but basically it makes it "more reluctant" to follow the finger infinitely far up. If that still doesn't make sense, here's a video: &lt;video controls&gt;
             &lt;source src="https://lprod.dev/blog/media/monthly_2024_07/taskswitcher_tracking_reluctance.mp4"/&gt;
-            Video tag unsupported!&lt;/video&gt;&lt;/li&gt;&lt;li&gt;The task switcher gestures now have a haptic feedback in some places: When the conditions are met for the task switcher to open (eg: gesture progress is far enough and finger movement speed is slow enough) and when the task scrub mode starts there'll now be a bit of haptic feedback.&lt;/li&gt;
+            Video tag unsupported!&lt;/video&gt;&lt;/li&gt;
+&lt;li&gt;The task switcher gestures now have a haptic feedback in some places: When the conditions are met for the task switcher to open (eg: gesture progress is far enough and finger movement speed is slow enough) and when the task scrub mode starts there'll now be a bit of haptic feedback.&lt;/li&gt;
+
 &lt;/ul&gt;
 &lt;p&gt;&lt;/p&gt;
 
@@ -714,11 +706,13 @@ I've done some bug triaging and reproduction here and there, as well as tried to
 &lt;p&gt;&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;I tried my hand at fixing the task switcher navigation gestures being always active instead of just when the gesture navigation mode is actually turned on. To do this properly we probably need to refactor the &lt;code&gt;mobileshellsettings&lt;/code&gt; plugin to be accessible via C++ (it's just a QML plugin currently), so let's see how that goes.&lt;/li&gt;&lt;li&gt;I started work on more mobile friendly notification popups. The new design uses a swipe-to-dismiss interaction instead of having a close button. While technically "working" from a functionality perspective, the visuals are kind of broken still. I hope to have this complete by 6.2, but there's still some open questions. I'll probably have to get in touch with more experienced Plasma devs to brainstorm why this is going wrong so badly, but I've not quite given up at bashing my head against this myself. Oh and before I forget: this also affects Plasma Desktop when in Touch/Tablet Mode. &lt;video controls&gt;
+&lt;li&gt;I tried my hand at fixing the task switcher navigation gestures being always active instead of just when the gesture navigation mode is actually turned on. To do this properly we probably need to refactor the &lt;code&gt;mobileshellsettings&lt;/code&gt; plugin to be accessible via C++ (it's just a QML plugin currently), so let's see how that goes.&lt;/li&gt;
+&lt;li&gt;I started work on more mobile friendly notification popups. The new design uses a swipe-to-dismiss interaction instead of having a close button. While technically "working" from a functionality perspective, the visuals are kind of broken still. I hope to have this complete by 6.2, but there's still some open questions. I'll probably have to get in touch with more experienced Plasma devs to brainstorm why this is going wrong so badly, but I've not quite given up at bashing my head against this myself. Oh and before I forget: this also affects Plasma Desktop when in Touch/Tablet Mode. &lt;video controls&gt;
             &lt;source src="https://lprod.dev/blog/media/monthly_2024_07/mobile_notifications_fail_1.mp4"/&gt;
             Video tag unsupported!&lt;/video&gt;&lt;label class="media-caption"&gt;This was my first try, which was smooth but left behind the window shadow&lt;/label&gt; &lt;video controls&gt;
             &lt;source src="https://lprod.dev/blog/media/monthly_2024_07/mobile_notifications_fail_2.webm"/&gt;
             Video tag unsupported!&lt;/video&gt;&lt;label class="media-caption"&gt;And this my second try which is more technically correct and properly moves the window, but... I mean, you can see it yourself&lt;/label&gt;&lt;/li&gt;
+
 &lt;/ul&gt;
 &lt;p&gt;&lt;/p&gt;
 
@@ -727,17 +721,16 @@ I've done some bug triaging and reproduction here and there, as well as tried to
 &lt;p&gt;
 For the next month I wanna try and finish up my work on KWin touch corner gestures (and get another oversized blog post out about those) and then implement them into Plasma Mobile. Once that is done I want to do more bug fixing, triaging and looking at knocking out some tickets for planned bigger picture improvements for 6.2. Let's see next month if a) I get any of this done or b) I even manage to make a blog post since I'll not be home for a while.&lt;/p&gt;
 
-
-&lt;/html&gt;
 </description><guid isPermaLink="false">https://lprod.dev/blog/monthly_2024_07.html</guid><pubDate>Sun, 28 Jul 2024 00:00:00 +0000</pubDate></item><item><title>My last 6 months in KDE/Plasma Mobile</title><link>https://lprod.dev/blog/monthly_2025_01.html</link><description>Learning experiences all around
 
-&lt;html&gt;
 &lt;p&gt;Uh. Has it really been almost half a year already? Whoops.&lt;/p&gt;
 
 &lt;p&gt;Unfortunately even with this many months I didn't get quite as much done in KDE-land as I hoped, for two main reasons:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;I've been bouncing back and forth between quite big tasks (for my current level of experience in the KDE stack), leading to a lot of time spent with few results. I've learned a lot, but there's not much to show for it yet.&lt;/li&gt;&lt;li&gt;A good amount of time was taken by preparations for the 2024 European Rocketry Challenge (EuRoC) in Portugal - this was my second time there with the TU Wien Space Team and while it was an absolute blast, prepping a student-build bi-liquid propelled rocket for launch is on the more time consuming side of things. Who'd have thought! Maybe I'll write a dedicated post for this some time in the future, we'll see.&lt;/li&gt;
+&lt;li&gt;I've been bouncing back and forth between quite big tasks (for my current level of experience in the KDE stack), leading to a lot of time spent with few results. I've learned a lot, but there's not much to show for it yet.&lt;/li&gt;
+&lt;li&gt;A good amount of time was taken by preparations for the 2024 European Rocketry Challenge (EuRoC) in Portugal - this was my second time there with the TU Wien Space Team and while it was an absolute blast, prepping a student-build bi-liquid propelled rocket for launch is on the more time consuming side of things. Who'd have thought! Maybe I'll write a dedicated post for this some time in the future, we'll see.&lt;/li&gt;
+
 &lt;/ul&gt;
 &lt;p&gt;
 Back to KDE though: It wasn't all just learning - my phone also broke! Well. Kind of. Probably a loose contact in the SIM reader leading to it dropping connection to my SIM card a bit more often than I'd like.
@@ -758,7 +751,12 @@ However this did push me to put said SIM into my old OnePlus 6T which just so ha
 &lt;p&gt;&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Fixed an issue with the animation opening the taskswitcher from homescreen&lt;/li&gt;&lt;li&gt;Fixed the icon list during task scrub mode sometimes being off center&lt;/li&gt;&lt;li&gt;Reintroduced maximizing the selected window when not in docked mode. Technically it shouldn't be necessary since our KWin configuration should force windows to be fullscreen already, but some apps managed to break out of that (mostly GTK based apps), so back in it goes.&lt;/li&gt;&lt;li&gt;Disable blue border on touch gestures in mobile environment - it's nice as an indicator for mouse based gestures, but unnecessary here.&lt;/li&gt;&lt;li&gt;Add double tap on navbar task switcher button to switch between the 2 most recent apps.&lt;/li&gt;
+&lt;li&gt;Fixed an issue with the animation opening the taskswitcher from homescreen&lt;/li&gt;
+&lt;li&gt;Fixed the icon list during task scrub mode sometimes being off center&lt;/li&gt;
+&lt;li&gt;Reintroduced maximizing the selected window when not in docked mode. Technically it shouldn't be necessary since our KWin configuration should force windows to be fullscreen already, but some apps managed to break out of that (mostly GTK based apps), so back in it goes.&lt;/li&gt;
+&lt;li&gt;Disable blue border on touch gestures in mobile environment - it's nice as an indicator for mouse based gestures, but unnecessary here.&lt;/li&gt;
+&lt;li&gt;Add double tap on navbar task switcher button to switch between the 2 most recent apps.&lt;/li&gt;
+
 &lt;/ul&gt;
 &lt;p&gt;&lt;/p&gt;
 
@@ -767,7 +765,10 @@ However this did push me to put said SIM into my old OnePlus 6T which just so ha
 &lt;p&gt;&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Disabled session restore on mobile (at least until a bug with dialer launching ontop of login screen soft-locking the phone is fixed)&lt;/li&gt;&lt;li&gt;This is not a change by me, but I wanted to mention it because it's great and I mentioned in my last post that I tried (and failed) working on that before: Micah Stanley did a marvelous job at new mobile friendly notifications!&lt;/li&gt;&lt;li&gt;I've also done my first MR reviews which was exciting and a lot more work than I anticipated. At this point I want to thank all the people who have spent time on my MRs already!&lt;/li&gt;
+&lt;li&gt;Disabled session restore on mobile (at least until a bug with dialer launching ontop of login screen soft-locking the phone is fixed)&lt;/li&gt;
+&lt;li&gt;This is not a change by me, but I wanted to mention it because it's great and I mentioned in my last post that I tried (and failed) working on that before: Micah Stanley did a marvelous job at new mobile friendly notifications!&lt;/li&gt;
+&lt;li&gt;I've also done my first MR reviews which was exciting and a lot more work than I anticipated. At this point I want to thank all the people who have spent time on my MRs already!&lt;/li&gt;
+
 &lt;/ul&gt;
 &lt;p&gt;&lt;/p&gt;
 
@@ -777,12 +778,12 @@ However this did push me to put said SIM into my old OnePlus 6T which just so ha
 I still haven't managed to get back to my touch corner gesture MR for KWin due to all the stuff that came in between like:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Fixing that the navigation gestures are still active while the navbar is enabled. Unfortunately this requires a change in how our setting system works and... CMake broke me here. I got pretty close to fixing this but had to leave it be for now for my own sanity's sake. I hope to get back to this soon since this is quite annoying.&lt;/li&gt;&lt;li&gt;Improving plasma-dialer's lockscreen behavior. Right now with session restore it restores above the initial login screen on mobile essentially soft-locking the phone if it happened to be running when the phone was shut down. A similar thing happens when a call is received during the lockscreen - I'm currently figuring out how to best fix that.&lt;/li&gt;
+&lt;li&gt;Fixing that the navigation gestures are still active while the navbar is enabled. Unfortunately this requires a change in how our setting system works and... CMake broke me here. I got pretty close to fixing this but had to leave it be for now for my own sanity's sake. I hope to get back to this soon since this is quite annoying.&lt;/li&gt;
+&lt;li&gt;Improving plasma-dialer's lockscreen behavior. Right now with session restore it restores above the initial login screen on mobile essentially soft-locking the phone if it happened to be running when the phone was shut down. A similar thing happens when a call is received during the lockscreen - I'm currently figuring out how to best fix that.&lt;/li&gt;
+
 &lt;/ul&gt;
 &lt;p&gt;&lt;/p&gt;
 
 &lt;p&gt;Well, that's all from me now. Hopefully I manage to do the next post in a more timely manner, but we'll see for how long my current bigger ticket items will keep me occupied for.&lt;/p&gt;
 
-
-&lt;/html&gt;
 </description><guid isPermaLink="false">https://lprod.dev/blog/monthly_2025_01.html</guid><pubDate>Sat, 04 Jan 2025 00:00:00 +0000</pubDate></item></channel></rss>

@@ -20,7 +20,6 @@
         <main>
         <div class="divider"></div>
 
-<html>
 <h1>Tag Relations</h1>
 
 <p>
@@ -79,16 +78,19 @@ All of the above techniques, paired with name search, deliver quite nice results
 
 <ul>
 <li>You can still find an eagle by searching for "eagle" (which suggests "bird", but still searches for "eagle" in the name of assets), without us needing a tag for every single species (real and fantastical) in existence.</li>
+
 </ul>
 <p></p>
 
 <ul>
 <li>You can find decent stand-in assets in case the exact thing you were searching for doesn't exist: Maybe there is no eagle miniature, but there is a hawk, which is an okay stand-in and findable by the "next closest group", which is "bird".</li>
+
 </ul>
 <p></p>
 
 <ul>
 <li>You can search for names and words that are familiar to you and consistently find the related assets; Both "dragonfolk" as well as "dragonborn" will correctly work for searching.</li>
+
 </ul>
 <p>
 There is however one more thing I want to mention. Whenever we give any tools to all of you, we're responsible for keeping them working (potentially forever). This is no less true for tags than it is for TaleSpire's slab strings. However because synonyms and example_ofs aren't stored on the assets themselves, but are encoded and recognized in the  search engine, so it is something we (Bouncyrock) can adjust and expand on more easily over time.</p>
@@ -99,19 +101,17 @@ There is however one more thing I want to mention. Whenever we give any tools to
 
 <p></p>
 
-<div class='footnote'><p class='footnote-index'><a name='footnote_0'></a>0</p> <p> It might be that in your specific world/game setting, this is not the case, which illustrates the other issue with widely used fantasy terms: They don't always mean exactly the same thing in all games/worlds, yet TaleSpire tries to be as widely applicable to as many games as possible, so we do have to make some compromises here and there.</p>
+<div class='footnote'><p class='footnote-index'><a id='footnote_0'></a>0</p> <p> It might be that in your specific world/game setting, this is not the case, which illustrates the other issue with widely used fantasy terms: They don't always mean exactly the same thing in all games/worlds, yet TaleSpire tries to be as widely applicable to as many games as possible, so we do have to make some compromises here and there.</p>
 
-</div><div class='footnote'><p class='footnote-index'><a name='footnote_1'></a>1</p> <p> This might be surprising to hear for non-developers, and unfortunately, it is hard to explain concisely, but here's the run-down: To find something with the text "Elf" when you type in "Half-Elf", an obvious approach would be to split "Half" and "Elf" from the search input and check for both individually. However, this would then also match other Half-creatures (like Half-Demons, Half-Orcs, Half-...), making the search results practically useless. There are, of course, also ways to get around <i>those</i> issues, but the "smarter" you try to make these kinds of algorithms, the more weird edge cases you introduce and the more likely it is that those won't be fixable by even more added "smartness". This gets even trickier when we remember that we also support community-made content, so we need a system that works reliably across all possible inputs.</p>
+</div><div class='footnote'><p class='footnote-index'><a id='footnote_1'></a>1</p> <p> This might be surprising to hear for non-developers, and unfortunately, it is hard to explain concisely, but here's the run-down: To find something with the text "Elf" when you type in "Half-Elf", an obvious approach would be to split "Half" and "Elf" from the search input and check for both individually. However, this would then also match other Half-creatures (like Half-Demons, Half-Orcs, Half-...), making the search results practically useless. There are, of course, also ways to get around <i>those</i> issues, but the "smarter" you try to make these kinds of algorithms, the more weird edge cases you introduce and the more likely it is that those won't be fixable by even more added "smartness". This gets even trickier when we remember that we also support community-made content, so we need a system that works reliably across all possible inputs.</p>
 
-</div><div class='footnote'><p class='footnote-index'><a name='footnote_2'></a>2</p> <p> This can be overridden if there is a need for it - we don't envision this to happen with the Half-Elf -> Elf example, but there are many cross-connections between tags, and sometimes the relation might not always be what the artist had in mind when creating the mini.</p>
+</div><div class='footnote'><p class='footnote-index'><a id='footnote_2'></a>2</p> <p> This can be overridden if there is a need for it - we don't envision this to happen with the Half-Elf -> Elf example, but there are many cross-connections between tags, and sometimes the relation might not always be what the artist had in mind when creating the mini.</p>
 
-</div><div class='footnote'><p class='footnote-index'><a name='footnote_3'></a>3</p> <p> We will, of course, also not have synonyms for every possible way to call things, that'd be the same impossible task as making all of those tags, but because synonyms aren't stored on the asset and instead are only in the search engine, we can continually update the list of available synonyms without us (or you!) needing to update each individual mini.</p>
+</div><div class='footnote'><p class='footnote-index'><a id='footnote_3'></a>3</p> <p> We will, of course, also not have synonyms for every possible way to call things, that'd be the same impossible task as making all of those tags, but because synonyms aren't stored on the asset and instead are only in the search engine, we can continually update the list of available synonyms without us (or you!) needing to update each individual mini.</p>
 
-</div><div class='footnote'><p class='footnote-index'><a name='footnote_4'></a>4</p> <p> There is one limitation to custom tags: Any custom tag that is identical to a synonym or example_of term (eg: "dragonfolk") will be replaced by the tags the synonym points to, as it would break search otherwise.</p>
+</div><div class='footnote'><p class='footnote-index'><a id='footnote_4'></a>4</p> <p> There is one limitation to custom tags: Any custom tag that is identical to a synonym or example_of term (eg: "dragonfolk") will be replaced by the tags the synonym points to, as it would break search otherwise.</p>
 
 </div>
-</html>
-
 
         </main>
         <footer>Luis / <code>lprod</code> 2026</footer>

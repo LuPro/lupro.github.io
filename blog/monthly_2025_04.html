@@ -20,7 +20,6 @@
         <main>
         <div class="divider"></div>
 
-<html>
 <p>What happens when you put three mobile OS devs into one room for more than a few minutes?</p>
 
 <p><img src="media/monthly_2025_04/phooones.jpg" alt=""></img></p>
@@ -55,12 +54,14 @@ As far as merged changes go, it's... short this time around since free time wasn
 
 <ul>
 <li>Made some interactions with the modem asynchronous to improve UI performance (these could potentially freeze the UI for a short time).</li>
+
 </ul>
 <p>
 Feels a bit weird to have a list for one item, so let's make it two:</p>
 
 <ul>
 <li>This wasn't me, but Devin fixed the navigation gestures being enabled when the navbar was active which was <i>terrible</i> user experience and I'm so grateful for this finally being fixed because this bug absolutely broke me. Thanks Devin for saving my sanity!</li>
+
 </ul>
 <p></p>
 
@@ -70,10 +71,13 @@ Feels a bit weird to have a list for one item, so let's make it two:</p>
 I did make some progress on other tasks though, even if they (still) aren't done yet:</p>
 
 <ul>
-<li>On the sprint I had a good long chat with Xaver about my corner touch gesture MR for KWin in preparation for feature parity between navbar and gesture navigation. He has been working on a refactor of the gesture code in KWin which decouples touch and mouse gestures from each other and we came to the conclusion that it's more sensible to base my work on his refactor as it then has to touch a lot less code and stops sharing code paths with other mostly unrelated features.</li><ul>
+<li>On the sprint I had a good long chat with Xaver about my corner touch gesture MR for KWin in preparation for feature parity between navbar and gesture navigation. He has been working on a refactor of the gesture code in KWin which decouples touch and mouse gestures from each other and we came to the conclusion that it's more sensible to base my work on his refactor as it then has to touch a lot less code and stops sharing code paths with other mostly unrelated features.</li>
+<ul>
 <li>As part of that conversation we also touched on incorporating some of the custom gesture logic I created for the task switcher gesture into KWin directly, as that currently still lives in the Plasma Mobile repo.</li>
+
 </ul>
 <li>I've restarted work on my "refactor" of the mobile task switcher again to make it more maintainable and performant by annotating types and following some rules to allow Qt to create a precompiled binary of the QML files using qmlcachegen.</li>
+
 </ul>
 <p></p>
 
@@ -84,8 +88,6 @@ I want to circle back to the Sprint and emphasize again how amazing it was - and
 
 <p>As an extra goodie for the end, I want to show off Balatro running natively on Plasma Mobile: <a href="https://mastodon.gamedev.place/@l_prod/114401321865300843">https://mastodon.gamedev.place/@l_prod/114401321865300843</a> (Tech can be so cool)</p>
 
-
-</html>
 
 
         </main>
