@@ -1,3 +1,11 @@
+/* Noto Sans Regular */
+@font-face {
+    font-family: 'Noto Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: url('static/fonts/NotoSans-Regular.ttf') format('truetype');
+}
+
 :root {
     --col-primary: white;
     --col-secondary: #aaaaaa;
