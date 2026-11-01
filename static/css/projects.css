@@ -86,6 +86,8 @@ button.selector {
 
     overflow: visible;
 
+    cursor: pointer;
+
     padding: 1em;
     width: var(--project-button-width);
 
@@ -120,6 +122,41 @@ a.button-link:has(> button) {
     height: fit-content;
 
     outline: none;
+}
+
+a.button-link > button {
+    cursor: pointer;
+}
+
+a.button-link button.link {
+    background: none;
+    border: none;
+    color: var(--col-link);
+
+    padding: 0;
+    margin: 0;
+    font-size: unset;
+
+    transition: all var(--trans-out) ease-in-out;
+    transition-property: color;
+}
+
+a.button-link:hover button.link, a.button-link:visited:hover button.link {
+    background: none;
+    border: none;
+    color: var(--col-link-hover);
+
+    transition: all var(--trans-in) ease-in-out;
+    transition-property: color;
+}
+
+a.button-link:visited button.link {
+    background: none;
+    border: none;
+    color: var(--col-link-visited);
+
+    transition: all var(--trans-in) ease-in-out;
+    transition-property: color;
 }
 
 a.button-link:focus-visible button {
