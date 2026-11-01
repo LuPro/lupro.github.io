@@ -86,6 +86,8 @@ button.selector {
 
     overflow: visible;
 
+    cursor: pointer;
+
     padding: 1em;
     width: var(--project-button-width);
 
@@ -120,6 +122,10 @@ a.button-link:has(> button) {
     height: fit-content;
 
     outline: none;
+}
+
+a.button-link > button {
+    cursor: pointer;
 }
 
 a.button-link:focus-visible button {
