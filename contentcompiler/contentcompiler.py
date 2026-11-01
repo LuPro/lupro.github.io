@@ -146,28 +146,59 @@ def populate_card_template(data, template):
     return template
 
 
-def update_main_page(blogs, main_template, card_template):
+def update_main_page(blogs, main_template, filtered_page_template, card_template):
     cards = []
-    blogList = ""
+    blog_list = ""
 
+    # All blogs
     blogs.sort(key=lambda x: x["date"], reverse=True)
+
+    # Blogs sorted by their first tags for individual index pages
+    filtered_blogs = {}
 
     for blog in blogs:
         iconSrc = ""
         altText = ""
-        if "TaleSpire" in blog["tags"]:
+        main_tag = blog["tags"][0]
+
+        if main_tag == "TaleSpire":
             iconSrc = "static/assets/talespire-logo.svg"
             altText = "TaleSpire Logo"
-        elif "KDE" in blog["tags"]:
+        elif main_tag == "KDE":
             iconSrc = "static/assets/kde-logo-blue.svg"
             altText = "KDE Logo"
 
-        blogList += '<li>{}: <img class="icon" src="{}" alt="{}"/><a href="{}">{}</a></li>'.format(blog["datestr"], iconSrc, altText, blog["url"], blog["title"])
+        entry = '<li>{}: <img class="icon" src="{}" alt="{}"/><a href="{}">{}</a></li>'.format(blog["datestr"], iconSrc, altText, blog["url"], blog["title"])
+
+        if (main_tag not in filtered_blogs):
+            filtered_blogs[main_tag] = {
+                "cards": [],
+                "blogs": []
+            }
+
+        card = populate_card_template(blog, card_template)
+
+        # fill global list
+        blog_list += entry
         if (len(cards) < 3):
-            cards.append(populate_card_template(blog, card_template))
+            cards.append(card)
+
+        # fill filtered list
+        filtered_blogs[main_tag]["blogs"].append(entry)
+        if (len(filtered_blogs[main_tag]["cards"]) < 3):
+            filtered_blogs[blog["tags"][0]]["cards"].append(card)
 
     main_template = main_template.replace("$GALLERY", "\n".join(cards))
-    main_template = main_template.replace("$BLOGS", blogList)
+    main_template = main_template.replace("$BLOGS", blog_list)
+
+    for tag, blog_elements in filtered_blogs.items():
+        template_copy = filtered_page_template
+
+        template_copy = template_copy.replace("$MAIN_TAG", tag)
+        template_copy = template_copy.replace("$BLOGS", "\n".join(blog_elements["blogs"]))
+        template_copy = template_copy.replace("$GALLERY", "\n".join(blog_elements["cards"]))
+        with open(f"{tag.lower()}_blog.html", "w") as page_writer:
+            page_writer.write(template_copy)
 
     with open("index.html", "w") as index_writer:
         index_writer.write(main_template)
@@ -179,7 +210,6 @@ def main():
     arg_parser.add_argument('--manual', metavar='manual_source', help="Add path to a specific blog for parsing that one manually. Doesn't write an output file, just writes to stdout'")
     arguments = arg_parser.parse_args()
 
-    print("args", arguments)
     if (arguments.manual != None):
         debug_parse_blog(arguments.manual)
         return
@@ -198,7 +228,11 @@ def main():
     with open('main_page_template.html', 'r') as template_reader:
         main_template = template_reader.read()
 
-    update_main_page(blogs, main_template, blog_template)
+    filtered_page_template = ""
+    with open('tagged_blog_index_template.html', 'r') as template_reader:
+        filtered_page_template = template_reader.read()
+
+    update_main_page(blogs, main_template, filtered_page_template, blog_template)
 
 
 if __name__ == '__main__':

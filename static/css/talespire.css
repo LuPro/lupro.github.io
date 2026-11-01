@@ -210,6 +210,46 @@ button.talespire:hover:after, button.talespire:focus:after, button.talespire:act
     transform: scaleX(1);
 }
 
+.button-container {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5em;
+}
+
+a:has(button.talespirey) {
+    width: 80%;
+    margin: auto;
+}
+
+button.talespirey {
+    color: var(--ts-color-primary);
+    background: var(--ts-button-background);
+
+    width: 100%;
+
+    font: 1.2em "Talu";
+    font-weight: bold;
+    alignment-baseline: baseline;
+
+    border: none;
+    border-radius: var(--border-radius-large);
+
+    padding: 0.7em 0.5em 0.5em;
+
+    transition: all var(--trans-out) ease-in-out;
+    transition-property: background;
+}
+
+button.talespirey:hover {
+    background: var(--ts-button-hover);
+
+    transition: all var(--trans-in) ease-in-out;
+    transition-property: background;
+}
+
 #texture-preview {
     position: relative;
     width: 800px;

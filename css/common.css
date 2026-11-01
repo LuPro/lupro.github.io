@@ -23,6 +23,7 @@
     --trans-out: 0.3s;
 
     --border-radius-normal: 0.4em;
+    --border-radius-large: 0.7em;
 
     scroll-behavior: smooth;
 }
@@ -34,10 +35,15 @@ body {
     /*padding: 0 2em 2em 2em;*/
 
     color: var(--col-primary);
-    font-family: sans-serif;
+    font-family: "Noto Sans", sans-serif;
 
     overflow-x: hidden;
     overflow-y: scroll;
+}
+
+h1, h2, h3 {
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 400;
 }
 
 /* containers */

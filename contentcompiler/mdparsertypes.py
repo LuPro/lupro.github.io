@@ -25,10 +25,10 @@ class Tree:
         return out
 
     def html(self: Self, external: bool = False) -> str:
-        out = "<html>\n"
+        out = ""
         for child in self.children:
             out += child.html(external)
-        return out + "\n</html>\n"
+        return out
 
 # Block Nodes
 
@@ -140,7 +140,7 @@ class ListElementNode(Node):
         out = "<li>"
         for child in self.children:
             out += child.html(external)
-        return out + "</li>"
+        return out + "</li>\n"
 
 
 @dataclass
@@ -282,7 +282,7 @@ class FootnoteTargetNode(Node):
         return (" " * 4 * indent) + f"FootnoteTargetNode: {self.index}, {self.paragraph.dump(indent + 1)}\n"
 
     def html(self: Self, external: bool) -> str:
-        return f"<div class='footnote'><p class='footnote-index'><a name='footnote_{self.index}'></a>{self.index}</p> {self.paragraph.html(external)}</div>"
+        return f"<div class='footnote'><p class='footnote-index'><a id='footnote_{self.index}'></a>{self.index}</p> {self.paragraph.html(external)}</div>"
 
 
 @dataclass
