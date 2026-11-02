@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>lprod Blog</title><link>https://lprod.dev/rss.xml</link><description>Random ramblings in various projects I work on</description><atom:link href="https://lprod.dev/rss.xml" rel="self"/><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><language>en</language><lastBuildDate>Sun, 01 Nov 2026 17:44:23 +0000</lastBuildDate><item><title>Search Postmortem Part 4</title><link>https://lprod.dev/blog/search_postmortem_04_Tag_Ranking.html</link><description>A deeper dive into TaleSpire's new search
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>lprod Blog</title><link>https://lprod.dev/rss.xml</link><description>Random ramblings in various projects I work on</description><atom:link href="https://lprod.dev/rss.xml" rel="self"/><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><language>en</language><lastBuildDate>Mon, 02 Nov 2026 22:04:54 +0000</lastBuildDate><item><title>Search Postmortem Part 4</title><link>https://lprod.dev/blog/search_postmortem_04_Tag_Ranking.html</link><description>A deeper dive into TaleSpire's new search
 
 &lt;p&gt;After covering a lot of the broad ideas behind the tag system, I now want to turn some attention to the nitty-gritty: How do we go from "some text a player entered in the search field" to a list of (hopefully relevant) results?&lt;/p&gt;
 
@@ -37,15 +37,15 @@ Searching does two separate processes, both using the Levenshtein distance detai
 
 &lt;p&gt;For asset search we have a few different behaviors:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/search_postmortem/search_freetext.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class="centered-media" src="https://lprod.dev/blog/media/search_postmortem/search_freetext.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;p&gt;No active tags, but free text: We will show all assets that match reasonably close to said input, ordered by closest to furthest match.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/search_postmortem/search_tags.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class="centered-media" src="https://lprod.dev/blog/media/search_postmortem/search_tags.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;p&gt;Only active tags, no free text: We show all assets that match all the active tags.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/search_postmortem/search_freetext_tags.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class="centered-media" src="https://lprod.dev/blog/media/search_postmortem/search_freetext_tags.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;p&gt;
 Both active tags and free text: We show the same set of assets as if no free text were entered, but order the results by their closeness to the free text.&lt;/p&gt;
@@ -59,15 +59,15 @@ Okay, maybe it's a large detour.&lt;/p&gt;
 
 &lt;p&gt;In electronics, there are two basic ways to connect two components together: In Series or Parallel&lt;a class='footnote-link' href='#footnote_1'&gt;[1]&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/search_postmortem/ee_series_vs_parallel.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class="centered-media" src="https://lprod.dev/blog/media/search_postmortem/ee_series_vs_parallel.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;p&gt;To make more complex circuits, you just create a large combination of components connected in series or parallel&lt;a class='footnote-link' href='#footnote_2'&gt;[2]&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/search_postmortem/ee_large_network.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class="centered-media" src="https://lprod.dev/blog/media/search_postmortem/ee_large_network.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;p&gt;While all this can become very complex, especially with alternating current (AC) rather than direct current (DC), for what we care about, we can look at the simplest possible case: Resistors in a DC system&lt;a class='footnote-link' href='#footnote_3'&gt;[3]&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/search_postmortem/ee_ac_vs_dc.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class="centered-media" src="https://lprod.dev/blog/media/search_postmortem/ee_ac_vs_dc.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;p&gt;A commonly known factoid is that "electricity takes the path of least resistance" - but what does that even mean?&lt;/p&gt;
 
@@ -78,7 +78,7 @@ If the resistance of one path is sufficiently lower than all other paths, only n
 
 &lt;p&gt;For DC systems, the often-used analogy of electricity behaving like water in pipes is actually surprisingly apt. A pipe (wire) has lower resistance if its diameter is larger, thus allowing more water (electricity) to flow through it more easily. Intuitively it's also obvious that if you have a water tank (power source) with one pipe (wire) going out of it, and then add a second larger pipe (second wire with lower resistance) overall there will be more water flowing out of the tank (more electricity out of the power source) - however, crucially, both pipes (wires) still carry water (electricity), it's &lt;i&gt;not&lt;/i&gt; just the largest of the pipes (lowest resistance wire) that has water (electricity) in it.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/search_postmortem/ee_pipe_vs_parallel.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class="centered-media" src="https://lprod.dev/blog/media/search_postmortem/ee_pipe_vs_parallel.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;p&gt;This is what a "parallel" connection is: Both pipes (wires) are "next to" each other, instead of "one after another".&lt;/p&gt;
 
@@ -88,11 +88,11 @@ If the resistance of one path is sufficiently lower than all other paths, only n
 
 &lt;p&gt;To put this in more direct words: The total resistance of two (or more) resistors in series is their individual resistances added up:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/search_postmortem/ee_resistance_series_white.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class="centered-media" src="https://lprod.dev/blog/media/search_postmortem/ee_resistance_series_white.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;p&gt;The formula for resistors in parallel is a bit trickier and, unfortunately, not quite as intuitive:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/search_postmortem/ee_resistance_parallel_white.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class="centered-media" src="https://lprod.dev/blog/media/search_postmortem/ee_resistance_parallel_white.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;p&gt;However, we don't need to understand the formula itself as long as we understand some of its properties:&lt;/p&gt;
 
@@ -331,19 +331,19 @@ As an example, there are many different birds like ostriches, pheasants, geese, 
 
 &lt;p&gt;To make this less abstract, here are some screenshots from our graph database - red means "example_of", orange are synonyms and blue are "true" tags. Let's start with an overview over the mammal taxonomy:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/search_postmortem/graph_db_mammal.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class="centered-media" src="https://lprod.dev/blog/media/search_postmortem/graph_db_mammal.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;p&gt;Now let's look at catfolk: It's an example_of pointing to both "human" and "feline":&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/search_postmortem/graph_db_catfolk.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class="centered-media" src="https://lprod.dev/blog/media/search_postmortem/graph_db_catfolk.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;p&gt;Jobs were also an interesting challenge - see all the synonyms of "merchant":&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/search_postmortem/graph_db_jobs.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class="centered-media" src="https://lprod.dev/blog/media/search_postmortem/graph_db_jobs.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;p&gt;And here you can see why I did zoomed-in pictures before: This is the whole tag (and synonym/example_of) set for minis:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/search_postmortem/graph_db_all.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class="centered-media" src="https://lprod.dev/blog/media/search_postmortem/graph_db_all.png" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;/p&gt;
 
@@ -391,7 +391,7 @@ There is however one more thing I want to mention. Whenever we give any tools to
 
 &lt;p&gt;What happens when you put three mobile OS devs into one room for more than a few minutes?&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/monthly_2025_04/phooones.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class="centered-media" src="https://lprod.dev/blog/media/monthly_2025_04/phooones.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;p&gt;Fun times, that's what!&lt;/p&gt;
 
@@ -616,14 +616,14 @@ smoothing_factor = delta_time/desired_time_constant
 &lt;p&gt;
 And now with a simple check on &lt;code&gt;if speed &gt; threshold&lt;/code&gt; we can detect flicks! And voila - an upwards flick goes to homescreen!&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/plasmo_nav_gestures/nav_gestures_ready_for_review_1.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class="centered-media" src="https://lprod.dev/blog/media/plasmo_nav_gestures/nav_gestures_ready_for_review_1.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;h2&gt;2D gestures&lt;/h2&gt;
 
 &lt;p&gt;
 Well, I know I said I'll replicate the old gesture behavior without touching any functionality and keep any extra features for followup MRs, but the gesture feels kinda bad when it only goes up and down and doesn't follow the finger left and right as well - and thanks to our previous excursion into KWin it also magically exposes the orthogonal gesture position, so we can just really quickly hook that up and have X and Y tracking.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/plasmo_nav_gestures/nav_gestures_ready_for_review_2.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class="centered-media" src="https://lprod.dev/blog/media/plasmo_nav_gestures/nav_gestures_ready_for_review_2.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;h2&gt;States?!?!?!&lt;/h2&gt;
 
@@ -632,7 +632,7 @@ As a remnant from Devin's move to a KWin effect there was a bit of a mess of wha
 
 &lt;p&gt;No problem, I can refactor that and take some work off of Devin.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/plasmo_nav_gestures/nav_gestures_ready_for_review_3.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class="centered-media" src="https://lprod.dev/blog/media/plasmo_nav_gestures/nav_gestures_ready_for_review_3.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;h2&gt;Quick task switch gesture&lt;/h2&gt;
 
@@ -641,7 +641,7 @@ But you know what, now the task switcher code feels really clean and nice and it
 
 &lt;p&gt;Ah to hell with it, let's add that as well!&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/plasmo_nav_gestures/nav_gestures_ready_for_review_4.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class="centered-media" src="https://lprod.dev/blog/media/plasmo_nav_gestures/nav_gestures_ready_for_review_4.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;h2&gt;Task Scrub&lt;/h2&gt;
 
@@ -654,7 +654,7 @@ Remember how I said I have &lt;i&gt;opinions&lt;/i&gt; on what good gestures are
 
 &lt;p&gt;So how about a bespoke "task scrub" gesture that activates on a mostly-horizontal gesture invocation and allows to scrub through a large number of recent tasks.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="https://lprod.dev/blog/media/plasmo_nav_gestures/nav_gestures_ready_for_review_5.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class="centered-media" src="https://lprod.dev/blog/media/plasmo_nav_gestures/nav_gestures_ready_for_review_5.jpg" alt=""&gt;&lt;/img&gt;&lt;/p&gt;
 
 &lt;h1&gt;Right.&lt;/h1&gt;
 
@@ -687,8 +687,8 @@ There's still some bugs to fix, some tasks for later MRs (though much fewer than
 &lt;ul&gt;
 &lt;li&gt;I sat down and overhauled some of the animations around the navigation gestures of the mobile task switcher: The diagonal quick switch should now look smoother and not be nearly-instantaneous and the flick to homescreen is now a tad smoother and actually makes the task preview smaller while animating instead of looking like it's opening the selected task before suddenly vanishing.&lt;/li&gt;
 &lt;li&gt;Fixed minor logic bug around task switcher quick switch gesture. It should now correctly open the task switcher when you're trying to quick switch towards the end of a list - if there's nothing to quick switch to, it's better to open the full task switcher instead of just returning to the app you were in before.&lt;/li&gt;
-&lt;li&gt;I added a task icon list to the task scrub gesture in the switcher to make it visually more distinct to the "normal" task switcher and provide more useful info about the open apps you can switch to. (I'll admit this one is a bit older, but this is the first installment of this kind of post so I'm not tooooo strict on the "in July" part): &lt;img src="https://lprod.dev/blog/media/monthly_2024_07/taskswitcher_scrub_icon_list.png" alt=""&gt;&lt;/img&gt; I'm still tracking an issue with this where when the task list becomes too long it's not properly centered anymore, but that should be a fairly simple fix once I get to it.&lt;/li&gt;
-&lt;li&gt;The main task switcher opening gesture now stops tracking the finger 1:1 in the vertical direction once it's moved a bit past its "fully activated" point. This is a bit awkward to explain, but basically it makes it "more reluctant" to follow the finger infinitely far up. If that still doesn't make sense, here's a video: &lt;video controls&gt;
+&lt;li&gt;I added a task icon list to the task scrub gesture in the switcher to make it visually more distinct to the "normal" task switcher and provide more useful info about the open apps you can switch to. (I'll admit this one is a bit older, but this is the first installment of this kind of post so I'm not tooooo strict on the "in July" part): &lt;img class="centered-media" src="https://lprod.dev/blog/media/monthly_2024_07/taskswitcher_scrub_icon_list.png" alt=""&gt;&lt;/img&gt; I'm still tracking an issue with this where when the task list becomes too long it's not properly centered anymore, but that should be a fairly simple fix once I get to it.&lt;/li&gt;
+&lt;li&gt;The main task switcher opening gesture now stops tracking the finger 1:1 in the vertical direction once it's moved a bit past its "fully activated" point. This is a bit awkward to explain, but basically it makes it "more reluctant" to follow the finger infinitely far up. If that still doesn't make sense, here's a video: &lt;video class="centered-media" controls&gt;
             &lt;source src="https://lprod.dev/blog/media/monthly_2024_07/taskswitcher_tracking_reluctance.mp4"/&gt;
             Video tag unsupported!&lt;/video&gt;&lt;/li&gt;
 &lt;li&gt;The task switcher gestures now have a haptic feedback in some places: When the conditions are met for the task switcher to open (eg: gesture progress is far enough and finger movement speed is slow enough) and when the task scrub mode starts there'll now be a bit of haptic feedback.&lt;/li&gt;
@@ -707,9 +707,9 @@ I've done some bug triaging and reproduction here and there, as well as tried to
 
 &lt;ul&gt;
 &lt;li&gt;I tried my hand at fixing the task switcher navigation gestures being always active instead of just when the gesture navigation mode is actually turned on. To do this properly we probably need to refactor the &lt;code&gt;mobileshellsettings&lt;/code&gt; plugin to be accessible via C++ (it's just a QML plugin currently), so let's see how that goes.&lt;/li&gt;
-&lt;li&gt;I started work on more mobile friendly notification popups. The new design uses a swipe-to-dismiss interaction instead of having a close button. While technically "working" from a functionality perspective, the visuals are kind of broken still. I hope to have this complete by 6.2, but there's still some open questions. I'll probably have to get in touch with more experienced Plasma devs to brainstorm why this is going wrong so badly, but I've not quite given up at bashing my head against this myself. Oh and before I forget: this also affects Plasma Desktop when in Touch/Tablet Mode. &lt;video controls&gt;
+&lt;li&gt;I started work on more mobile friendly notification popups. The new design uses a swipe-to-dismiss interaction instead of having a close button. While technically "working" from a functionality perspective, the visuals are kind of broken still. I hope to have this complete by 6.2, but there's still some open questions. I'll probably have to get in touch with more experienced Plasma devs to brainstorm why this is going wrong so badly, but I've not quite given up at bashing my head against this myself. Oh and before I forget: this also affects Plasma Desktop when in Touch/Tablet Mode. &lt;video class="centered-media" controls&gt;
             &lt;source src="https://lprod.dev/blog/media/monthly_2024_07/mobile_notifications_fail_1.mp4"/&gt;
-            Video tag unsupported!&lt;/video&gt;&lt;label class="media-caption"&gt;This was my first try, which was smooth but left behind the window shadow&lt;/label&gt; &lt;video controls&gt;
+            Video tag unsupported!&lt;/video&gt;&lt;label class="media-caption"&gt;This was my first try, which was smooth but left behind the window shadow&lt;/label&gt; &lt;video class="centered-media" controls&gt;
             &lt;source src="https://lprod.dev/blog/media/monthly_2024_07/mobile_notifications_fail_2.webm"/&gt;
             Video tag unsupported!&lt;/video&gt;&lt;label class="media-caption"&gt;And this my second try which is more technically correct and properly moves the window, but... I mean, you can see it yourself&lt;/label&gt;&lt;/li&gt;
 

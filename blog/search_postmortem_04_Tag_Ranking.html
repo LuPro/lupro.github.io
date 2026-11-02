@@ -56,15 +56,15 @@ Searching does two separate processes, both using the Levenshtein distance detai
 
 <p>For asset search we have a few different behaviors:</p>
 
-<p><img src="media/search_postmortem/search_freetext.png" alt=""></img></p>
+<p><img class="centered-media" src="media/search_postmortem/search_freetext.png" alt=""></img></p>
 
 <p>No active tags, but free text: We will show all assets that match reasonably close to said input, ordered by closest to furthest match.</p>
 
-<p><img src="media/search_postmortem/search_tags.png" alt=""></img></p>
+<p><img class="centered-media" src="media/search_postmortem/search_tags.png" alt=""></img></p>
 
 <p>Only active tags, no free text: We show all assets that match all the active tags.</p>
 
-<p><img src="media/search_postmortem/search_freetext_tags.png" alt=""></img></p>
+<p><img class="centered-media" src="media/search_postmortem/search_freetext_tags.png" alt=""></img></p>
 
 <p>
 Both active tags and free text: We show the same set of assets as if no free text were entered, but order the results by their closeness to the free text.</p>
@@ -78,15 +78,15 @@ Okay, maybe it's a large detour.</p>
 
 <p>In electronics, there are two basic ways to connect two components together: In Series or Parallel<a class='footnote-link' href='#footnote_1'>[1]</a>.</p>
 
-<p><img src="media/search_postmortem/ee_series_vs_parallel.png" alt=""></img></p>
+<p><img class="centered-media" src="media/search_postmortem/ee_series_vs_parallel.png" alt=""></img></p>
 
 <p>To make more complex circuits, you just create a large combination of components connected in series or parallel<a class='footnote-link' href='#footnote_2'>[2]</a></p>
 
-<p><img src="media/search_postmortem/ee_large_network.png" alt=""></img></p>
+<p><img class="centered-media" src="media/search_postmortem/ee_large_network.png" alt=""></img></p>
 
 <p>While all this can become very complex, especially with alternating current (AC) rather than direct current (DC), for what we care about, we can look at the simplest possible case: Resistors in a DC system<a class='footnote-link' href='#footnote_3'>[3]</a>.</p>
 
-<p><img src="media/search_postmortem/ee_ac_vs_dc.png" alt=""></img></p>
+<p><img class="centered-media" src="media/search_postmortem/ee_ac_vs_dc.png" alt=""></img></p>
 
 <p>A commonly known factoid is that "electricity takes the path of least resistance" - but what does that even mean?</p>
 
@@ -97,7 +97,7 @@ If the resistance of one path is sufficiently lower than all other paths, only n
 
 <p>For DC systems, the often-used analogy of electricity behaving like water in pipes is actually surprisingly apt. A pipe (wire) has lower resistance if its diameter is larger, thus allowing more water (electricity) to flow through it more easily. Intuitively it's also obvious that if you have a water tank (power source) with one pipe (wire) going out of it, and then add a second larger pipe (second wire with lower resistance) overall there will be more water flowing out of the tank (more electricity out of the power source) - however, crucially, both pipes (wires) still carry water (electricity), it's <i>not</i> just the largest of the pipes (lowest resistance wire) that has water (electricity) in it.</p>
 
-<p><img src="media/search_postmortem/ee_pipe_vs_parallel.png" alt=""></img></p>
+<p><img class="centered-media" src="media/search_postmortem/ee_pipe_vs_parallel.png" alt=""></img></p>
 
 <p>This is what a "parallel" connection is: Both pipes (wires) are "next to" each other, instead of "one after another".</p>
 
@@ -107,11 +107,11 @@ If the resistance of one path is sufficiently lower than all other paths, only n
 
 <p>To put this in more direct words: The total resistance of two (or more) resistors in series is their individual resistances added up:</p>
 
-<p><img src="media/search_postmortem/ee_resistance_series_white.png" alt=""></img></p>
+<p><img class="centered-media" src="media/search_postmortem/ee_resistance_series_white.png" alt=""></img></p>
 
 <p>The formula for resistors in parallel is a bit trickier and, unfortunately, not quite as intuitive:</p>
 
-<p><img src="media/search_postmortem/ee_resistance_parallel_white.png" alt=""></img></p>
+<p><img class="centered-media" src="media/search_postmortem/ee_resistance_parallel_white.png" alt=""></img></p>
 
 <p>However, we don't need to understand the formula itself as long as we understand some of its properties:</p>
 

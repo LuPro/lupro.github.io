@@ -150,7 +150,7 @@ a:visited {
     transition: color var(--trans-in) ease-in-out;
 }
 
-img, video {
+.centered-media {
     max-width: 65%;
     max-height: 60vh;
     display: block;
@@ -223,7 +223,7 @@ footer code {
         padding-top: 0.35em;
     }
 
-    img {
+    .centered-media {
         max-width: min(95%, 75vh);
     }
 

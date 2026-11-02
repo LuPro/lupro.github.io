@@ -223,9 +223,9 @@ class MediaNode(Node):
         if external:
             base_path = _external_media_base_path
         if self.type == "image":
-            out = f"<img src=\"{base_path + self.source}\" alt=\"{self.text}\"></img>"
+            out = f"<img class=\"centered-media\" src=\"{base_path + self.source}\" alt=\"{self.text}\"></img>"
         elif self.type == "video":
-            out = f"""<video controls>
+            out = f"""<video class=\"centered-media\" controls>
             <source src=\"{base_path + self.source}\"/>
             Video tag unsupported!</video>"""
         if self.text != "":
