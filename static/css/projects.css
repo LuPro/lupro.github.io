@@ -132,6 +132,18 @@ a.button-link:focus-visible button {
     outline: 2px solid var(--col-primary);
 }
 
+button.apple-compat-button {
+    font: unset;
+    margin: 0;
+    padding: 0;
+
+    background: transparent;
+    color: unset;
+    border: none;
+
+    cursor: pointer;
+}
+
 #filterSource {
     position: absolute;
     width: 0;
