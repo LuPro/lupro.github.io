@@ -1,0 +1,19 @@
+button {
+    padding: 0.5em;
+}
+
+button.test:active, button.active:active {
+    background: hotpink;
+}
+
+button.test:hover, button.hover:hover {
+    background: lightblue;
+}
+
+button.test:focus, button.focus:focus {
+    background: green;
+}
+
+div.test {
+    height: 150vh;
+}
