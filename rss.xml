@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>lprod Blog</title><link>https://lprod.dev/rss.xml</link><description>Random ramblings in various projects I work on</description><atom:link href="https://lprod.dev/rss.xml" rel="self"/><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><language>en</language><lastBuildDate>Fri, 06 Nov 2026 21:19:39 +0000</lastBuildDate><item><title>Webdev without JS</title><link>https://lprod.dev/blog/website_upgrade_2026_11.html</link><description>Making a website without JS in 2026? In this economy?
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>lprod Blog</title><link>https://lprod.dev/rss.xml</link><description>Random ramblings in various projects I work on</description><atom:link href="https://lprod.dev/rss.xml" rel="self"/><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><language>en</language><lastBuildDate>Fri, 06 Nov 2026 21:21:35 +0000</lastBuildDate><item><title>Webdev without JS</title><link>https://lprod.dev/blog/webdev_without_js.html</link><description>Making a website without JS in 2026? In this economy?
 
 &lt;p&gt;While finishing up my last round of improvements on this here website I thought it might be interesting enough to warrant a blog post.&lt;/p&gt;
 
@@ -86,7 +86,7 @@ Also, since I had to do a lot more esoteric CSS work it's probably not as mainta
 
 &lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_3'&gt;&lt;/a&gt;3&lt;/p&gt; &lt;p&gt; Just keep in mind to also set the z-index of the currently active element to be higher than the hidden stuff, otherwise you can't interace with it. Oops.&lt;/p&gt;
 
-&lt;/div&gt;</description><guid isPermaLink="false">https://lprod.dev/blog/website_upgrade_2026_11.html</guid><pubDate>Fri, 06 Nov 2026 00:00:00 +0000</pubDate></item><item><title>Search Postmortem Part 4</title><link>https://lprod.dev/blog/search_postmortem_04_Tag_Ranking.html</link><description>A deeper dive into TaleSpire's new search
+&lt;/div&gt;</description><guid isPermaLink="false">https://lprod.dev/blog/webdev_without_js.html</guid><pubDate>Fri, 06 Nov 2026 00:00:00 +0000</pubDate></item><item><title>Search Postmortem Part 4</title><link>https://lprod.dev/blog/search_postmortem_04_Tag_Ranking.html</link><description>A deeper dive into TaleSpire's new search
 
 &lt;p&gt;After covering a lot of the broad ideas behind the tag system, I now want to turn some attention to the nitty-gritty: How do we go from "some text a player entered in the search field" to a list of (hopefully relevant) results?&lt;/p&gt;
 
