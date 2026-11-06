@@ -5,6 +5,7 @@ date: 2026-11-06T22:15:00
 preview: I'll ramble a bit about my trial and tribulations upgrading this website
 tags:
     - Misc
+    - WebDev
 ---
 
 While finishing up my last round of improvements on this here website I thought it might be interesting enough to warrant a blog post.
