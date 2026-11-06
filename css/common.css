@@ -133,6 +133,10 @@ a.back-button:focus-visible {
     transform: translateY(0.25em);
 }
 
+img.icon[src=""] {
+    opacity: 0;
+}
+
 a {
     color: var(--col-link);
     text-decoration: none;

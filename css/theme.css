@@ -1,5 +1,5 @@
 :root {
-    --content-max-width: 1600px
+    --content-max-width: 55em;
 }
 
 .date {
