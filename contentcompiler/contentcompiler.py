@@ -148,7 +148,7 @@ def populate_card_template(data, template):
 
 def update_main_page(blogs, main_template, filtered_page_template, card_template):
     cards = []
-    blog_list = ""
+    blog_list = []
 
     # All blogs
     blogs.sort(key=lambda x: x["date"], reverse=True)
@@ -179,7 +179,7 @@ def update_main_page(blogs, main_template, filtered_page_template, card_template
         card = populate_card_template(blog, card_template)
 
         # fill global list
-        blog_list += entry
+        blog_list.append(entry)
         if (len(cards) < 3):
             cards.append(card)
 
@@ -189,7 +189,7 @@ def update_main_page(blogs, main_template, filtered_page_template, card_template
             filtered_blogs[blog["tags"][0]]["cards"].append(card)
 
     main_template = main_template.replace("$GALLERY", "\n".join(cards))
-    main_template = main_template.replace("$BLOGS", blog_list)
+    main_template = main_template.replace("$BLOGS", "\n".join(blog_list))
 
     for tag, blog_elements in filtered_blogs.items():
         template_copy = filtered_page_template
