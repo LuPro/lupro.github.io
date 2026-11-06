@@ -1,5 +1,92 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>lprod Blog</title><link>https://lprod.dev/rss.xml</link><description>Random ramblings in various projects I work on</description><atom:link href="https://lprod.dev/rss.xml" rel="self"/><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><language>en</language><lastBuildDate>Mon, 02 Nov 2026 22:04:54 +0000</lastBuildDate><item><title>Search Postmortem Part 4</title><link>https://lprod.dev/blog/search_postmortem_04_Tag_Ranking.html</link><description>A deeper dive into TaleSpire's new search
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>lprod Blog</title><link>https://lprod.dev/rss.xml</link><description>Random ramblings in various projects I work on</description><atom:link href="https://lprod.dev/rss.xml" rel="self"/><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><language>en</language><lastBuildDate>Fri, 06 Nov 2026 21:06:03 +0000</lastBuildDate><item><title>Webdev without JS</title><link>https://lprod.dev/blog/website_upgrade_2026_11.html</link><description>Making a website without JS in 2026? In this economy?
+
+&lt;p&gt;While finishing up my last round of improvements on this here website I thought it might be interesting enough to warrant a blog post.&lt;/p&gt;
+
+&lt;p&gt;I've recently had a bit of inspiration looking at some other smaller blogs and personal websites that were more in the style of the "olden web" with more playful and... "maximalist" designs for the lack of a better term.
+While I didn't want to go all that way into early 2000s web design, I did want to copy some of that playfulness and character and try and combine it somewhat with the modern minimalist aesthetic. The result of that is the still quite boring, but a &lt;i&gt;touch&lt;/i&gt; more playful &lt;a href="/static/html/projects.html"&gt;projects&lt;/a&gt; page - I do wanna tweak the default style to have a bit more character (more like, any character at all), but I am quite happy about how the style switching has turned out when going to the individual sections and some of the flourishes in those.&lt;/p&gt;
+
+&lt;p&gt;What I am not happy about is the actual implementation though, and I want to talk about that. That page in particular, but the whole website really is built with as little JavaScript as possible - as of right now "as little as possible" means none.
+I don't actually have something against JS per se and I'm quite confident using it due to my work on the &lt;a href="https://github.com/SpaceTeam/web_ecui_houbolt"&gt;Mission Control web interface&lt;/a&gt; for the TU Wien Space Team's &lt;a href="/static/html/projects/tust_liquids.html"&gt;bi-liquid rockets&lt;/a&gt;, but I like the idea of keeping this website small and lightweight and I kind of wanted to challenge myself how far I could go with just using HTML and CSS&lt;a class='footnote-link' href='#footnote_0'&gt;[0]&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1&gt;Not far it seems&lt;/h1&gt;
+
+&lt;p&gt;
+When I imagined what such a project page could look like I immediately envisioned something like a conversation selection you would find in a CRPG with a handful of "conversation options" that lead to some response&lt;a class='footnote-link' href='#footnote_1'&gt;[1]&lt;/a&gt; - so the requirements are clear: A list of options and a container next to (or under) those that shows some more info depending on the selected item.&lt;/p&gt;
+
+&lt;p&gt;But, how the hell do I do this without JS? Using just HTML and CSS it's not that easy to make something conditionally appear or disappear.&lt;/p&gt;
+
+&lt;h1&gt;Or is it?&lt;/h1&gt;
+
+&lt;p&gt;
+CSS selectors have gotten quite powerful over the years, so it ended up not actually being that hard:&lt;/p&gt;
+
+&lt;pre&gt;
+#container:has(button.one:focus) #one-content
+&lt;/pre&gt;
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Using this handy selector&lt;a class='footnote-link' href='#footnote_2'&gt;[2]&lt;/a&gt; I could apply a style to the content container of a given button with said button has focus. Now the default style just need to move it out of the way and make it invisible, while the focus style undoes that and we're off to the races.&lt;/p&gt;
+
+&lt;h1&gt;Keeping focus&lt;/h1&gt;
+
+&lt;p&gt;
+However, this doesn't work if you have more stuff to interact with inside that content, since as soon as the main "selection button" loses focus, the content disappears. That is luckily also fixed quite quickly by adding the following:&lt;/p&gt;
+
+&lt;pre&gt;
+#container:has(button.one:focus, #one-content:focus-within) #one-content
+&lt;/pre&gt;
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;This isn't &lt;i&gt;perfect&lt;/i&gt;, since this will only work when you click on something that is actually focusable, so clicking on random text would still hide the content, but this is good enough for what I need it for, at least for now.&lt;/p&gt;
+
+&lt;h1&gt;Keyboard Navigation&lt;/h1&gt;
+
+&lt;p&gt;
+Initially I was quite happy with the styling which hides the unfocused content. It was just &lt;code&gt;translate&lt;/code&gt;ing the containers off-screen - which looked quite smart when animating in and out.
+However, I do try to keep everything I do as accessible as possible, so I tested keyboard navigation by tabbing through and oh boy did things fall apart. Turns out when you move things off screen and set opacity to 0, but don't &lt;code&gt;display: none&lt;/code&gt; it, the browser will still happily scroll to it while tabbing - even if overflow is disabled.&lt;/p&gt;
+
+&lt;p&gt;Well, no biggie, instead of moving it off screen, move it only slightly and scale it, this gives almost the same effect while keeping all elements on screen&lt;a class='footnote-link' href='#footnote_3'&gt;[3]&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1&gt;Apple&lt;/h1&gt;
+
+&lt;p&gt;
+With all that solved I had a nicely working projects page that - after a decent chunk of work - even looked and behaved well on mobile! All was good and everyone lived happily ever after, that is, until I wanted to show my new projects page to my brother on his iPhone.&lt;/p&gt;
+
+&lt;h2&gt;:focus&lt;/h2&gt;
+
+&lt;p&gt;
+Now, I don't want to entirely shit on Apple here, I kind of understand some of their reasoning behind this, but: Safari, both on macOS and iOS, does not give out :focus so willy-nilly. Importantly, they don't give focus on click of a button (apparently only text inputs get focused with a click?). Now, if we recall the sections from above, I kind of require focus on my elements for my trick to make this kind of site work without JS.&lt;/p&gt;
+
+&lt;p&gt;And here's where I became unhappy with the implementation: I couldn't find a way to do it. I had to settle. I had to use JS.&lt;/p&gt;
+
+&lt;p&gt;It is almost nothing, just a single &lt;code&gt;onclick="focus()"&lt;/code&gt; on each input element so Safari actually focuses the damn thing, but technically it is now not a JS free website anymore.
+However, it will still work perfectly on all browsers but Safari without JS, since that &lt;code&gt;focus()&lt;/code&gt; call is redundant on them, so I say it's close enough - especially considering I don't have an Apple device accessible to test on, so I can't really do proper development iterations.&lt;/p&gt;
+
+&lt;h2&gt;:focus 2 Electric Boogaloo&lt;/h2&gt;
+
+&lt;p&gt;
+But this is not the end of the story, because Apple, in their infinite wisdom is even stingier with allowing :focus - apparently, they don't allow it at all for &lt;code&gt;a&lt;/code&gt; elements, which makes links impossible to click when they're in the content containers since they make the main button lose focus which immediately hides the content.&lt;/p&gt;
+
+&lt;p&gt;So I had to add the most awful of hacks and put a button (which is focusable) inside of the &lt;code&gt;a&lt;/code&gt; tag just so Safari would finally be happy.&lt;/p&gt;
+
+&lt;h1&gt;Wrapping up&lt;/h1&gt;
+
+&lt;p&gt;
+Knowing what I know now, would I recommend doing this to someone else? I'm not sure, I enjoyed it and the end result is nice enough, but I would be lying if I said it didn't take significantly longer than just using even small amounts of JS.
+Also, since I had to do a lot more esoteric CSS work it's probably not as maintainable and definitely not as easily extendible with new content as a few lines of straightforward JS are, but to hell with it, I still like it!&lt;/p&gt;
+
+&lt;p&gt;And that's where I'll leave it be for now, thanks for reading and until the next one!&lt;/p&gt;
+
+&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_0'&gt;&lt;/a&gt;0&lt;/p&gt; &lt;p&gt; Part of that mindset was also inspired by the insanity that is &lt;a href="https://lyra.horse/css-clicker/"&gt;CSS Clicker&lt;/a&gt;. I still have not the slightest clue how such a thing is even remotely possible.&lt;/p&gt;
+
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_1'&gt;&lt;/a&gt;1&lt;/p&gt; &lt;p&gt; The design didn't end up going that way, but it might still in the future. I wanted to get the content and basic setup done and out first before I spend days tweaking a design I might not end up liking.&lt;/p&gt;
+
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_2'&gt;&lt;/a&gt;2&lt;/p&gt; &lt;p&gt; For brevity's sake I've renamed the IDs since the real ones are a decent bit longer.&lt;/p&gt;
+
+&lt;/div&gt;&lt;div class='footnote'&gt;&lt;p class='footnote-index'&gt;&lt;a id='footnote_3'&gt;&lt;/a&gt;3&lt;/p&gt; &lt;p&gt; Just keep in mind to also set the z-index of the currently active element to be higher than the hidden stuff, otherwise you can't interace with it. Oops.&lt;/p&gt;
+
+&lt;/div&gt;</description><guid isPermaLink="false">https://lprod.dev/blog/website_upgrade_2026_11.html</guid><pubDate>Fri, 06 Nov 2026 00:00:00 +0000</pubDate></item><item><title>Search Postmortem Part 4</title><link>https://lprod.dev/blog/search_postmortem_04_Tag_Ranking.html</link><description>A deeper dive into TaleSpire's new search
 
 &lt;p&gt;After covering a lot of the broad ideas behind the tag system, I now want to turn some attention to the nitty-gritty: How do we go from "some text a player entered in the search field" to a list of (hopefully relevant) results?&lt;/p&gt;
 
