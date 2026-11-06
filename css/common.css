@@ -203,6 +203,7 @@ footer {
     position: fixed;
     bottom: -1px;
     left: 0;
+    z-index: 10;
 
     color: var(--col-secondary);
     background: radial-gradient(ellipse at bottom, var(--bg-secondary) 0%, transparent 70%);
