@@ -1,7 +1,7 @@
 ---
 title: Webdev without JS
 description: Making a website without JS in 2026? In this economy?
-date: 2026-11-06T20:35:00
+date: 2026-11-06T22:15:00
 preview: I'll ramble a bit about my trial and tribulations upgrading this website
 tags:
     - Misc
