@@ -93,13 +93,13 @@
     position: absolute;
 
     width: 100%;
-    height: 2.2em;
+    height: 2.2rem;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    margin-top: -0.5em;
+    margin-top: 0;
 
     opacity: 0;
     transition: all var(--trans-out) ease-in-out;
@@ -107,7 +107,7 @@
 }
 
 .ts-decor-container .spacer {
-    max-width: 9em;
+    max-width: 5em;
 }
 
 .ts-squiggle {
@@ -117,14 +117,14 @@
 
 .ts-border {
     height: 50%;
-    margin-top: -1.1em;
+    margin-top: -0.7em;
 
-    margin-left: -2em;
+    margin-left: -0.9em;
     transform: scale(-1, -1);
 }
 
 .ts-border.mirrored {
-    margin-right: -2em;
+    margin-right: -0.9em;
 
     transform: scaleY(-1);
 }
@@ -252,6 +252,16 @@ button.talespirey:hover {
 
 @media (-webkit-min-device-pixel-ratio: 2) {
     .ts-decor-container {
-        height: 1.7em !important;
+        height: 1.5rem;
+    }
+
+    .ts-border {
+        margin-top: -0.6em;
+
+        margin-left: -0.6em;
+    }
+
+    .ts-border.mirrored {
+        margin-right: -0.6em;
     }
 }
