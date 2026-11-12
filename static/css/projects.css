@@ -2,7 +2,7 @@
     --accent-primary: lightblue; /* todo */
 
 
-    --content-max-width: 1600px;
+    --content-max-width: 80em;
 
     --project-button-width: 25em;
 }
